@@ -7,10 +7,9 @@
   let { data, children } = $props();
 
   const NAV = [
-    { href: '/', label: 'Mi cadena' },
+    { href: '/', label: 'Inicio' },
     { href: '/mi-produccion', label: 'Mi producción' },
     { href: '/justicia', label: 'Justicia' },
-    { href: '/registrar', label: 'Registrar' },
   ];
 
   const path = $derived($page.url.pathname);
