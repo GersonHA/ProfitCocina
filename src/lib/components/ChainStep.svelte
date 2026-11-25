@@ -174,6 +174,9 @@
             <input type="number" bind:value={silver} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
         </div>
+        <p class="mt-2 text-xs text-stone-500">
+          El costo de los terneros y la comida sale de cuando los compraste (pasos de arriba); aquí solo se consumen.
+        </p>
       {:else}
         <div class="grid grid-cols-3 gap-2">
           <label class="block">

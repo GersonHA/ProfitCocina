@@ -61,6 +61,7 @@ const CHAINS: Record<string, Chain> = {
     nodes: ['T8_FARM_COW_BABY', 'T8_FARM_COW_GROWN', 'T8_MEAT'],
     steps: [
       { id: 'comprar-ternero', label: 'Comprar terneros', kind: 'comprar', processType: 'cria', outputItem: 'T8_FARM_COW_BABY' },
+      { id: 'comprar-comida', label: 'Comprar comida (calabazas)', kind: 'comprar', processType: 'cria', outputItem: 'T8_PUMPKIN' },
       { id: 'criar-vaca', label: 'Criar vacas', kind: 'criar', processType: 'cria', inputItem: 'T8_FARM_COW_BABY', outputItem: 'T8_FARM_COW_GROWN', feedItem: 'T8_PUMPKIN' },
       { id: 'carnear', label: 'Carnear (Butcher)', kind: 'refinar', processType: 'refinado', station: 'Butcher', inputItem: 'T8_FARM_COW_GROWN', outputItem: 'T8_MEAT' },
     ],
