@@ -119,12 +119,15 @@ Son datos de demostración; no sirven en producción.
 
 ## Estado y hoja de ruta
 
-- [x] **Fase 0 — Cimientos (en curso)**:
+- [x] **Fase 0 — Cimientos**:
   - [x] Repo, motor de costos puro, Test D verde, typecheck limpio.
   - [x] Esquema SQL con RLS validado en Supabase local (grupos, invitaciones, catálogo, procesos, Kardex, auditoría); aislamiento entre usuarios probado.
-  - [ ] Edge Functions base (registrar proceso/compra/ajuste + recompute del Kardex).
-  - [ ] App SvelteKit (`adapter-static`) con login y pantalla *Registrar*.
-- [ ] **Fase 1 — MVP (recolección de datos)**: catálogo importado, proceso genérico por lotes, Kardex, subproductos, ajustes/conteo, compras entre miembros, ventas, snapshots de precios manuales, import/export CSV. *Gate: Test D en integración.*
+  - [x] App SvelteKit (`adapter-static`) con login, íconos reales de Albion.
+- [ ] **Fase 1 — MVP (recolección de datos, en curso)**:
+  - [x] Edge Function `recompute` del Kardex (corre el motor server-side, escritura atómica).
+  - [x] Pantalla *Registrar* un lote y *Mi producción* (inventario + Kardex), verificadas end-to-end.
+  - [ ] Compras entre miembros, ventas de mercado, ajustes/conteo (UI).
+  - [ ] Catálogo completo importado, snapshots de precios manuales, import/export CSV.
 - [ ] **Fase 2 — Análisis**: métricas de justicia, comparador de modelos, liquidaciones. *Gate: Tests A, B, C.*
 - [ ] **Fase 3 — Precios automáticos** (API + catálogo completo con encantamientos).
 - [ ] **Fase 4 — Planificador** (ranking, sensibilidad).

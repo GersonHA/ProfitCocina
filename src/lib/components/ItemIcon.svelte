@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { base } from '$app/paths';
   import { produceMeta } from '$lib/items';
+  import ItemImg from './ItemImg.svelte';
 
   let {
     produce,
@@ -10,16 +10,4 @@
   const meta = $derived(produceMeta(produce));
 </script>
 
-{#if meta}
-  <img
-    src="{base}/items/{meta.id}.png"
-    alt={meta.nombre}
-    title={meta.nombre}
-    width={size}
-    height={size}
-    loading="lazy"
-    class="inline-block rounded align-middle"
-  />
-{:else}
-  <span class="inline-block align-middle" style="font-size: {size * 0.8}px">📦</span>
-{/if}
+<ItemImg itemId={meta?.id} nombre={meta?.nombre} {size} />
