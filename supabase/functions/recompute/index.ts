@@ -188,11 +188,16 @@ Deno.serve(async (req: Request) => {
     });
     if (applyErr) return json({ error: applyErr.message }, 400);
 
+    // Solo nos importan los errores del usuario recalculado. En una compra entre
+    // miembros el motor también toca al vendedor; como aquí no cargamos la
+    // producción del vendedor, su "stock negativo" es espurio y se descarta.
+    const errors = result.errors.filter((e) => e.userId === uid);
+
     return json({
       ok: true,
       items: balances.length,
       movements: movements.length,
-      errors: result.errors,
+      errors,
     });
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);

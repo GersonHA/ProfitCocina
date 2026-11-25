@@ -1,4 +1,4 @@
-/** Registrar un lote: necesita sesión, el grupo activo y el catálogo de items. */
+/** Todas las pantallas de registro comparten sesión, grupo activo y catálogo. */
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 
