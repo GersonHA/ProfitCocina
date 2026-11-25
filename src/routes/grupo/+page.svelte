@@ -1,6 +1,7 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
   import ItemIcon from '$lib/components/ItemIcon.svelte';
+  import MemberEditor from '$lib/components/MemberEditor.svelte';
   import { createMember } from '$lib/admin';
 
   let { data } = $props();
@@ -75,16 +76,20 @@
       </h2>
       <ul class="divide-y divide-stone-800">
         {#each data.roster as r}
-          <li class="flex items-center justify-between py-2.5">
-            <span class="flex items-center gap-2.5">
-              <ItemIcon produce={r.produce} size={32} />
-              <span class="font-medium">{r.nick}</span>
-              {#if r.role === 'admin'}
-                <span class="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">admin</span>
-              {/if}
-            </span>
-            <span class="text-sm text-stone-400">{r.produce}</span>
-          </li>
+          {#if isAdmin && data.groupId}
+            <MemberEditor member={r} groupId={data.groupId} isSelf={r.userId === data.meId} />
+          {:else}
+            <li class="flex items-center justify-between py-2.5">
+              <span class="flex items-center gap-2.5">
+                <ItemIcon produce={r.produce} size={32} />
+                <span class="font-medium">{r.nick}</span>
+                {#if r.role === 'admin'}
+                  <span class="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">admin</span>
+                {/if}
+              </span>
+              <span class="text-sm text-stone-400">{r.produce}</span>
+            </li>
+          {/if}
         {/each}
       </ul>
     </div>

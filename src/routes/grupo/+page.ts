@@ -8,6 +8,7 @@ import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 
 interface RosterRow {
+  userId: string;
   nick: string;
   produce: string;
   role: string;
@@ -77,6 +78,7 @@ export async function load() {
       const p = byId.get(m.user_id);
       const esp = (p?.especializaciones ?? {}) as { produce?: string };
       return {
+        userId: m.user_id,
         nick: p?.nick ?? '—',
         produce: esp.produce ?? '—',
         role: m.role,
@@ -88,6 +90,8 @@ export async function load() {
 
   return {
     email: session.user.email ?? '',
+    meId: me,
+    groupId: first?.groupId ?? null,
     nick: profile?.nick ?? null,
     premium: profile?.premium ?? true,
     produce: esp.produce ?? null,
