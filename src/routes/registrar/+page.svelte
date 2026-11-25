@@ -5,6 +5,7 @@
     { href: '/registrar/mercado', emoji: '🏪', title: 'Mercado', desc: 'Compra o venta en el mercado.' },
     { href: '/registrar/compra-miembro', emoji: '🤝', title: 'Comprar a un miembro', desc: 'Al costo del vendedor.' },
     { href: '/registrar/ajuste', emoji: '⚖️', title: 'Ajuste de stock', desc: 'Conteo, pérdida o consumo.' },
+    { href: '/precios', emoji: '💲', title: 'Precios de mercado', desc: 'Anota los precios para el comparador de justicia.' },
     { href: '/registrar/lote', emoji: '🌾', title: 'Lote (avanzado)', desc: 'Formulario completo: entradas, gastos, salidas.' },
   ];
 </script>
