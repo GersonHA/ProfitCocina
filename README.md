@@ -87,6 +87,7 @@ npm install          # dependencias de desarrollo
 npm test             # corre las pruebas del motor (Vitest)
 npm run test:watch   # en modo watch
 npm run typecheck    # TypeScript estricto, sin emitir
+npm run items:download  # descarga íconos de Albion a static/items/ (render oficial)
 ```
 
 ### Supabase local (Docker)
