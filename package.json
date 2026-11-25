@@ -1,0 +1,18 @@
+{
+  "name": "profit-cocina",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Plataforma colaborativa de producción y cocina para Albion Online: registra datos reales (procesos por lote, Kardex valorizado, compras entre miembros y ventas) y compara modelos de precio para medir la justicia del acuerdo.",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^26.6.10",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.2"
+  }
+}

@@ -1,0 +1,33 @@
+# Dependencias
+node_modules/
+.pnp
+.pnp.js
+
+# Build / SvelteKit
+.svelte-kit/
+build/
+dist/
+
+# Entorno
+.env
+.env.*
+!.env.example
+
+# Supabase local (Docker)
+supabase/.branches/
+supabase/.temp/
+
+# Editor / SO
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs y cobertura
+*.log
+npm-debug.log*
+coverage/
+
+# Repo de referencia (NO forma parte de este proyecto)
+caerleon-profit-web/
