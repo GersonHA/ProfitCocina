@@ -19,6 +19,7 @@ export interface ChainStep {
   inputItem?: string; // item que se consume
   outputItem: string; // producto principal (o la semilla/cría que se compra)
   subproductItem?: string; // p. ej. semillas devueltas al cosechar
+  feedItem?: string; // comida que se consume para criar (p. ej. calabaza para las vacas)
 }
 
 export interface Chain {
@@ -60,7 +61,7 @@ const CHAINS: Record<string, Chain> = {
     nodes: ['T8_FARM_COW_BABY', 'T8_FARM_COW_GROWN', 'T8_MEAT'],
     steps: [
       { id: 'comprar-ternero', label: 'Comprar terneros', kind: 'comprar', processType: 'cria', outputItem: 'T8_FARM_COW_BABY' },
-      { id: 'criar-vaca', label: 'Criar vacas', kind: 'criar', processType: 'cria', inputItem: 'T8_FARM_COW_BABY', outputItem: 'T8_FARM_COW_GROWN' },
+      { id: 'criar-vaca', label: 'Criar vacas', kind: 'criar', processType: 'cria', inputItem: 'T8_FARM_COW_BABY', outputItem: 'T8_FARM_COW_GROWN', feedItem: 'T8_PUMPKIN' },
       { id: 'carnear', label: 'Carnear (Butcher)', kind: 'refinar', processType: 'refinado', station: 'Butcher', inputItem: 'T8_FARM_COW_GROWN', outputItem: 'T8_MEAT' },
     ],
   },

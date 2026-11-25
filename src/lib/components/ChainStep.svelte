@@ -23,6 +23,7 @@
   let inputQty = $state<number | null>(null);
   let outputQty = $state<number | null>(null);
   let subQty = $state<number | null>(null);
+  let feedQty = $state<number | null>(null);
   let silver = $state<number | null>(null);
   let price = $state<number | null>(null);
   let fecha = $state(hoy());
@@ -31,7 +32,7 @@
   let ok = $state(false);
 
   function reset() {
-    inputQty = outputQty = subQty = silver = price = null;
+    inputQty = outputQty = subQty = feedQty = silver = price = null;
   }
 
   async function submit(e: SubmitEvent) {
@@ -63,10 +64,15 @@
         if (e1) throw e1;
         const pid = proc.id;
 
+        const ins: Array<{ process_id: string; item_id: string; qty: number }> = [];
         if (step.inputItem && (inputQty ?? 0) > 0) {
-          const { error: e2 } = await supabase
-            .from('process_inputs')
-            .insert({ process_id: pid, item_id: step.inputItem, qty: inputQty });
+          ins.push({ process_id: pid, item_id: step.inputItem, qty: inputQty! });
+        }
+        if (step.feedItem && (feedQty ?? 0) > 0) {
+          ins.push({ process_id: pid, item_id: step.feedItem, qty: feedQty! });
+        }
+        if (ins.length) {
+          const { error: e2 } = await supabase.from('process_inputs').insert(ins);
           if (e2) throw e2;
         }
 
@@ -145,7 +151,7 @@
           </label>
         </div>
       {:else if step.kind === 'criar'}
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-2 gap-2">
           <label class="block">
             <span class="mb-1 block text-xs text-stone-400">{nombre(step.inputItem)} usados</span>
             <input type="number" bind:value={inputQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
@@ -154,8 +160,17 @@
             <span class="mb-1 block text-xs text-stone-400">{nombre(step.outputItem)} obtenidas</span>
             <input type="number" bind:value={outputQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
+          {#if step.feedItem}
+            <label class="block">
+              <span class="mb-1 flex items-center gap-1.5 text-xs text-stone-400">
+                <ItemImg itemId={step.feedItem} nombre={nombre(step.feedItem)} size={16} />
+                {nombre(step.feedItem)} (comida)
+              </span>
+              <input type="number" bind:value={feedQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+            </label>
+          {/if}
           <label class="block">
-            <span class="mb-1 block text-xs text-stone-400">Comida (silver)</span>
+            <span class="mb-1 block text-xs text-stone-400">Silver (estación/otros)</span>
             <input type="number" bind:value={silver} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
         </div>
