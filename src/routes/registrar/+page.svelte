@@ -2,11 +2,10 @@
   let { data } = $props();
 
   const CARDS = [
-    { href: '/cadena', emoji: '🔗', title: 'Mi cadena (recomendado)', desc: 'Registro guiado paso a paso de tu producción.' },
-    { href: '/registrar/lote', emoji: '🌾', title: 'Lote (avanzado)', desc: 'Formulario completo: entradas, gastos, salidas.' },
     { href: '/registrar/mercado', emoji: '🏪', title: 'Mercado', desc: 'Compra o venta en el mercado.' },
     { href: '/registrar/compra-miembro', emoji: '🤝', title: 'Comprar a un miembro', desc: 'Al costo del vendedor.' },
     { href: '/registrar/ajuste', emoji: '⚖️', title: 'Ajuste de stock', desc: 'Conteo, pérdida o consumo.' },
+    { href: '/registrar/lote', emoji: '🌾', title: 'Lote (avanzado)', desc: 'Formulario completo: entradas, gastos, salidas.' },
   ];
 </script>
 

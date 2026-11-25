@@ -1,60 +1,66 @@
 <script lang="ts">
-  import ItemIcon from '$lib/components/ItemIcon.svelte';
+  import ItemImg from '$lib/components/ItemImg.svelte';
+  import ChainStep from '$lib/components/ChainStep.svelte';
 
   let { data } = $props();
+
+  function nombre(id: string): string {
+    return data.names[id] ?? id;
+  }
+  function saldo(id: string) {
+    return data.balances[id] ?? { qty: 0, avg: 0 };
+  }
+  function fmt(n: number): string {
+    return Math.round(n).toLocaleString('es-ES');
+  }
 </script>
 
 <section class="space-y-6">
-  <div>
-    <h1 class="text-2xl font-semibold">
-      Hola, {data.nick ?? data.email} 👋
-    </h1>
-    <p class="mt-1 flex items-center gap-1.5 text-sm text-stone-400">
-      Produces <ItemIcon produce={data.produce} size={22} />
-      <span class="text-stone-200">{data.produce ?? '—'}</span>
-      · Premium: <span class="text-stone-200">{data.premium ? 'sí' : 'no'}</span>
-    </p>
-  </div>
-
-  <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-5">
-    <h2 class="mb-3 text-sm font-medium tracking-wide text-stone-400 uppercase">Tus grupos</h2>
-    {#if data.memberships.length === 0}
-      <p class="text-stone-400">Todavía no estás en ningún grupo.</p>
-    {:else}
-      <ul class="space-y-2">
-        {#each data.memberships as m}
-          <li class="flex items-center justify-between rounded-lg bg-stone-800/50 px-3 py-2">
-            <span>{m.name}</span>
-            <span class="text-xs text-stone-400">{m.server} · {m.role}</span>
-          </li>
-        {/each}
-      </ul>
-    {/if}
-  </div>
-
-  {#if data.roster.length > 0}
-    <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-5">
-      <h2 class="mb-3 text-sm font-medium tracking-wide text-stone-400 uppercase">
-        Equipo de {data.groupName}
-      </h2>
-      <ul class="divide-y divide-stone-800">
-        {#each data.roster as r}
-          <li class="flex items-center justify-between py-2.5">
-            <span class="flex items-center gap-2.5">
-              <ItemIcon produce={r.produce} size={32} />
-              <span class="font-medium">{r.nick}</span>
-              {#if r.role === 'admin'}
-                <span class="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">admin</span>
-              {/if}
-            </span>
-            <span class="text-sm text-stone-400">{r.produce}</span>
-          </li>
-        {/each}
-      </ul>
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold">Hola, {data.nick ?? 'cocinero'} 👋</h1>
+      <p class="text-sm text-stone-400">Tu cadena de producción</p>
     </div>
-  {/if}
+    <a href="/mi-produccion" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">
+      Mi producción
+    </a>
+  </div>
 
-  <p class="text-center text-xs text-stone-600">
-    Fase 0 — esqueleto de la app. Registrar lotes, Kardex y comparador vienen en las siguientes fases.
-  </p>
+  {#if !data.group}
+    <p class="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">No tienes un grupo activo.</p>
+  {:else if !data.chain}
+    <p class="rounded-lg bg-stone-800/50 px-3 py-2 text-sm text-stone-400">
+      No tienes una cadena configurada para “{data.produce ?? '—'}”.
+      Usa <a href="/registrar/lote" class="underline">el formulario avanzado</a>.
+    </p>
+  {:else}
+    <!-- Cadena dibujada -->
+    <div class="flex flex-wrap items-stretch gap-2">
+      {#each data.chain.nodes as node, i}
+        <div class="flex-1 rounded-xl border border-stone-800 bg-stone-900/50 p-3 text-center">
+          <ItemImg itemId={node} nombre={nombre(node)} size={40} />
+          <div class="mt-1 text-xs font-medium">{nombre(node)}</div>
+          <div class="text-xs text-stone-400 tabular-nums">{fmt(saldo(node).qty)}</div>
+          {#if saldo(node).avg > 0}
+            <div class="text-[10px] text-amber-400 tabular-nums">@ {fmt(saldo(node).avg)}</div>
+          {/if}
+        </div>
+        {#if i < data.chain.nodes.length - 1}
+          <div class="flex items-center text-stone-600">▶</div>
+        {/if}
+      {/each}
+    </div>
+
+    <!-- Pasos -->
+    <div class="space-y-2">
+      <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Registrar un paso</h2>
+      {#each data.chain.steps as step (step.id)}
+        <ChainStep {step} groupId={data.group.id} names={data.names} />
+      {/each}
+    </div>
+
+    <p class="text-center text-xs text-stone-600">
+      ¿Un caso raro? Usa el <a href="/registrar/lote" class="underline">formulario avanzado</a>.
+    </p>
+  {/if}
 </section>

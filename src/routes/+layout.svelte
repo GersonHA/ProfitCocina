@@ -7,10 +7,9 @@
   let { data, children } = $props();
 
   const NAV = [
-    { href: '/', label: 'Inicio' },
-    { href: '/cadena', label: 'Mi cadena' },
-    { href: '/registrar', label: 'Registrar' },
+    { href: '/', label: 'Mi cadena' },
     { href: '/mi-produccion', label: 'Mi producción' },
+    { href: '/registrar', label: 'Registrar' },
   ];
 
   const path = $derived($page.url.pathname);
@@ -51,10 +50,10 @@
       </div>
       {#if data.group}
         <div class="border-t border-stone-800/60 bg-stone-900/40">
-          <div class="mx-auto max-w-3xl px-4 py-1.5 text-xs text-stone-500">
-            Grupo activo: <span class="text-stone-300">{data.group.name}</span>
-            · {data.group.server}
-          </div>
+          <a href="/grupo" class="mx-auto block max-w-3xl px-4 py-1.5 text-xs text-stone-500 hover:text-stone-300">
+            Grupo: <span class="text-stone-300">{data.group.name}</span>
+            · {data.group.server} <span class="text-stone-600">· ver equipo →</span>
+          </a>
         </div>
       {/if}
     </header>

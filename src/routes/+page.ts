@@ -1,98 +1,35 @@
-/**
- * Pantalla de inicio: requiere sesión. Trae tu perfil, tus grupos y, del primer
- * grupo, el equipo (quién produce qué). Dos consultas para el roster porque no
- * hay FK directa entre group_members y profiles; RLS permite ver a tus
- * compañeros de grupo (shares_group).
- */
+/** Mi cadena: registro guiado paso a paso según el recurso que produce el usuario. */
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
+import { getChain } from '$lib/chains';
 
-interface RosterRow {
-  nick: string;
-  produce: string;
-  role: string;
-}
-
-interface MembershipRow {
-  role: string;
-  groupId: string;
-  name: string;
-  server: string;
-}
-
-/** El join embebido de PostgREST puede venir como objeto o como array: lo normalizamos. */
-function oneGroup(g: unknown): { name?: string; server?: string } | null {
-  if (!g) return null;
-  return Array.isArray(g) ? (g[0] ?? null) : (g as { name?: string; server?: string });
-}
-
-export async function load() {
-  const { data: { session } } = await supabase.auth.getSession();
+export async function load({ parent }) {
+  const { session, group } = await parent();
   if (!session) throw redirect(303, '/login');
-
   const me = session.user.id;
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('nick, premium, especializaciones')
+    .select('nick, especializaciones')
     .eq('user_id', me)
     .single();
+  const produce = (profile?.especializaciones as { produce?: string } | null)?.produce ?? null;
+  const chain = getChain(produce);
 
-  const { data: membershipsRaw } = await supabase
-    .from('group_members')
-    .select('role, group_id, groups(name, server)')
-    .eq('user_id', me);
+  const balances: Record<string, { qty: number; avg: number }> = {};
+  const names: Record<string, string> = {};
 
-  const memberships: MembershipRow[] = (membershipsRaw ?? []).map((m) => {
-    const g = oneGroup(m.groups);
-    return {
-      role: m.role,
-      groupId: m.group_id,
-      name: g?.name ?? 'Grupo',
-      server: g?.server ?? '',
-    };
-  });
+  if (group) {
+    const { data: bal } = await supabase
+      .from('inventory_balances')
+      .select('item_id, qty, avg_cost')
+      .eq('group_id', group.id)
+      .eq('user_id', me);
+    for (const b of bal ?? []) balances[b.item_id] = { qty: Number(b.qty), avg: Number(b.avg_cost) };
 
-  let groupName: string | null = null;
-  let roster: RosterRow[] = [];
-
-  const first = memberships[0];
-  if (first) {
-    groupName = first.name;
-
-    const { data: members } = await supabase
-      .from('group_members')
-      .select('user_id, role')
-      .eq('group_id', first.groupId);
-
-    const ids = (members ?? []).map((m) => m.user_id);
-    const { data: profiles } = await supabase
-      .from('profiles')
-      .select('user_id, nick, especializaciones')
-      .in('user_id', ids);
-
-    const byId = new Map((profiles ?? []).map((p) => [p.user_id, p]));
-
-    roster = (members ?? []).map((m) => {
-      const p = byId.get(m.user_id);
-      const esp = (p?.especializaciones ?? {}) as { produce?: string };
-      return {
-        nick: p?.nick ?? '—',
-        produce: esp.produce ?? '—',
-        role: m.role,
-      };
-    });
+    const { data: items } = await supabase.from('items').select('item_id, name_es');
+    for (const it of items ?? []) names[it.item_id] = it.name_es;
   }
 
-  const esp = (profile?.especializaciones ?? {}) as { produce?: string };
-
-  return {
-    email: session.user.email ?? '',
-    nick: profile?.nick ?? null,
-    premium: profile?.premium ?? true,
-    produce: esp.produce ?? null,
-    memberships,
-    groupName,
-    roster,
-  };
+  return { group, produce, chain, balances, names, nick: profile?.nick ?? null };
 }
