@@ -89,6 +89,31 @@ npm run test:watch   # en modo watch
 npm run typecheck    # TypeScript estricto, sin emitir
 ```
 
+### Supabase local (Docker)
+
+```bash
+npm run db:start     # levanta el stack (Studio en http://127.0.0.1:54323)
+npm run db:reset     # reaplica la migración desde cero
+npm run db:stop      # apaga el stack
+```
+
+### Usuarios de prueba (solo local)
+
+```bash
+npm run db:seed      # crea los 3 usuarios (Admin API, idempotente)
+# nicks + recurso que produce + grupo "Cocina de Amigos" con los tres:
+docker exec -i supabase_db_ProfitCocina psql -U postgres -d postgres < supabase/tests/seed_group.sql
+```
+
+| Email | Contraseña | Nick | Produce | Rol en el grupo |
+|---|---|---|---|---|
+| `gerson@cocina.test` | `cocina1234` | Gerson | pan | admin |
+| `amigoa@cocina.test` | `cocina1234` | Amigo A | ternera | miembro |
+| `amigob@cocina.test` | `cocina1234` | Amigo B | calabaza | miembro |
+
+Grupo de prueba: **Cocina de Amigos** · código de invitación `COCINA`.
+Son datos de demostración; no sirven en producción.
+
 ---
 
 ## Estado y hoja de ruta
