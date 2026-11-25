@@ -17,7 +17,18 @@ const CDN = 'https://render.albiononline.com/v1/item';
 const OUT = 'static/items';
 
 // Mantener en sincronía con CATALOG_IMAGES de src/lib/items.ts.
-const ITEMS = ['T3_WHEAT', 'T4_BREAD', 'T8_MEAT', 'T8_PUMPKIN', 'T8_MEAL_STEW'];
+const ITEMS = [
+  'T3_FARM_WHEAT_SEED',
+  'T8_FARM_PUMPKIN_SEED',
+  'T8_FARM_COW_BABY',
+  'T8_FARM_COW_GROWN',
+  'T3_WHEAT',
+  'T3_FLOUR',
+  'T4_BREAD',
+  'T8_MEAT',
+  'T8_PUMPKIN',
+  'T8_MEAL_STEW',
+];
 
 const force = process.argv.includes('--force');
 

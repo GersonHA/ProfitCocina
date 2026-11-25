@@ -8,6 +8,7 @@
 
   const NAV = [
     { href: '/', label: 'Inicio' },
+    { href: '/cadena', label: 'Mi cadena' },
     { href: '/registrar', label: 'Registrar' },
     { href: '/mi-produccion', label: 'Mi producción' },
   ];

@@ -29,4 +29,15 @@ export function produceMeta(key: string | null | undefined): ItemMeta | null {
  * Ids cuyas imágenes tenemos descargadas en static/items/.
  * Mantener en sincronía con la lista ITEMS de scripts/download-items.mjs.
  */
-export const CATALOG_IMAGES: string[] = ['T3_WHEAT', 'T4_BREAD', 'T8_MEAT', 'T8_PUMPKIN', 'T8_MEAL_STEW'];
+export const CATALOG_IMAGES: string[] = [
+  'T3_FARM_WHEAT_SEED',
+  'T8_FARM_PUMPKIN_SEED',
+  'T8_FARM_COW_BABY',
+  'T8_FARM_COW_GROWN',
+  'T3_WHEAT',
+  'T3_FLOUR',
+  'T4_BREAD',
+  'T8_MEAT',
+  'T8_PUMPKIN',
+  'T8_MEAL_STEW',
+];
