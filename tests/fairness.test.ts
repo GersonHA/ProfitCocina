@@ -180,4 +180,22 @@ describe('Comparador de modelos', () => {
     // Debe existir una recomendación (algún modelo deja a todos ✅).
     expect(recommended).not.toBeNull();
   });
+
+  it('no crashea si una comida usa un ingrediente que no es recurso de nadie', () => {
+    // Regresión: un proceso de cocina con un intermedio (p. ej. harina) cuyo
+    // recurso no está en `resources` no debe romper el motor.
+    const data: PeriodData = {
+      members: [{ id: 'G', resource: 'T4_BREAD' }],
+      resources: [{ key: 'T4_BREAD', producerId: 'G', unitCost: 20, marketPrice: 40 }],
+      meals: [
+        {
+          memberId: 'G',
+          revenue: 1000,
+          otherCost: 0,
+          ingredients: [{ resource: 'T3_FLOUR', qty: 100 }], // no es recurso de ningún miembro
+        },
+      ],
+    };
+    expect(() => compareModels(data)).not.toThrow();
+  });
 });

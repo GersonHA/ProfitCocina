@@ -119,17 +119,23 @@ export async function buildFromDb(groupId: string): Promise<BuiltPeriod> {
     .eq('group_id', groupId)
     .eq('type', 'cocina');
 
+  // Una "comida del grupo" es un proceso de cocina que usa recursos de los
+  // miembros (pan/calabaza/ternera), no los pasos intermedios de tu cadena
+  // (p. ej. hornear pan usa harina, que no es recurso de ningún miembro).
+  const memberResourceItems = new Set(members.map((m) => m.resource));
   const mealItemsByUser = new Map<string, Set<string>>();
   const ingredientsByUser = new Map<string, Map<string, number>>();
   for (const p of cocina ?? []) {
     const outs = p.process_outputs ?? [];
     const principal = outs.find((o: { role: string }) => o.role === 'principal');
     if (!principal) continue;
+    const groupIng = (p.process_inputs ?? []).filter((i: { item_id: string }) => memberResourceItems.has(i.item_id));
+    if (groupIng.length === 0) continue; // no es un plato del grupo
     const set = mealItemsByUser.get(p.user_id) ?? new Set<string>();
     set.add(principal.item_id);
     mealItemsByUser.set(p.user_id, set);
     const ing = ingredientsByUser.get(p.user_id) ?? new Map<string, number>();
-    for (const i of p.process_inputs ?? []) ing.set(i.item_id, (ing.get(i.item_id) ?? 0) + Number(i.qty));
+    for (const i of groupIng) ing.set(i.item_id, (ing.get(i.item_id) ?? 0) + Number(i.qty));
     ingredientsByUser.set(p.user_id, ing);
   }
 

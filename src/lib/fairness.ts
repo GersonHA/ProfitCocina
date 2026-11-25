@@ -124,11 +124,28 @@ function computeTradeModel(data: PeriodData, model: ModelId, pct: number): Membe
   const { total: production, byMember: usageBy } = computeUsage(data);
   const mealByMember = new Map(data.meals.map((m) => [m.memberId, m]));
 
+  const zero = (id: string): MemberResult => ({
+    memberId: id,
+    dealProfit: 0,
+    soloProfit: 0,
+    fair: true,
+    diff: 0,
+    marginCeded: 0,
+    marginReceived: 0,
+    favorBalance: 0,
+    capital: 0,
+    roi: 0,
+  });
+
   return data.members.map((member) => {
     const own = member.resource;
-    const ownRes = res.get(own)!;
+    const ownRes = res.get(own);
+    if (!ownRes) return zero(member.id); // recurso sin definir
     const producedQty = production.get(own) ?? 0;
-    const price = (key: string) => unitPrice(res.get(key)!, model, pct);
+    const price = (key: string) => {
+      const r = res.get(key);
+      return r ? unitPrice(r, model, pct) : 0;
+    };
 
     const meal = mealByMember.get(member.id);
     const mealRevenue = meal?.revenue ?? 0;
@@ -146,8 +163,8 @@ function computeTradeModel(data: PeriodData, model: ModelId, pct: number): Membe
     let purchaseCost = 0;
     let marginReceived = 0;
     for (const ing of meal?.ingredients ?? []) {
-      const r = res.get(ing.resource)!;
-      if (r.producerId === member.id) continue; // mi propio recurso: no lo compro
+      const r = res.get(ing.resource);
+      if (!r || r.producerId === member.id) continue; // ingrediente ajeno al grupo o propio
       purchaseCost += ing.qty * price(ing.resource);
       marginReceived += ing.qty * (r.marketPrice - price(ing.resource));
     }
@@ -183,7 +200,11 @@ function computePozoComun(data: PeriodData): ModelResult {
   const contrib = new Map<string, { cost: number; market: number }>();
   let totalMarket = 0;
   for (const member of data.members) {
-    const r = res.get(member.resource)!;
+    const r = res.get(member.resource);
+    if (!r) {
+      contrib.set(member.id, { cost: 0, market: 0 });
+      continue;
+    }
     const qty = production.get(member.resource) ?? 0;
     const cost = qty * r.unitCost;
     const market = qty * r.marketPrice;
