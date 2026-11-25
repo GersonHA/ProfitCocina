@@ -28,7 +28,7 @@ import type {
   Movement,
   MovementType,
   ProcessEvent,
-} from './types';
+} from './types.ts';
 
 /** Clave única de un saldo. */
 export function balanceKey(userId: string, itemId: string): string {

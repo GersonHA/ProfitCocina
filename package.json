@@ -15,7 +15,8 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:seed": "node scripts/seed-local.mjs",
-    "items:download": "node scripts/download-items.mjs"
+    "items:download": "node scripts/download-items.mjs",
+    "fn:serve": "supabase functions serve"
   },
   "license": "UNLICENSED",
   "devDependencies": {
