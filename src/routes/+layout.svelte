@@ -11,7 +11,6 @@
     { href: '/tienda', label: 'Tienda' },
     { href: '/ordenes', label: 'Órdenes' },
     { href: '/mi-produccion', label: 'Mi producción' },
-    { href: '/justicia', label: 'Justicia' },
     { href: '/perfil', label: 'Perfil' },
   ];
 
