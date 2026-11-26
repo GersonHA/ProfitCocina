@@ -257,7 +257,7 @@
             {#if lotesDe(it).length > 0}
               <ul class="mt-2 space-y-0.5 pl-10 text-xs text-stone-500">
                 {#each lotesDe(it) as p}
-                  <li>· {plano(p.qty)}× {origenLabel(p)} @ {plano(p.unit_price)} c/u = {plano(Number(p.qty) * (Number(p.unit_price) || 0))}</li>
+                  <li>· {plano(p.qty)}× {origenLabel(p)} a {plano(p.unit_price)} c/u = {plano(Number(p.qty) * (Number(p.unit_price) || 0))}</li>
                 {/each}
               </ul>
             {/if}
@@ -269,7 +269,7 @@
                   disabled={busy === it.id}
                   class="rounded-lg bg-sky-500/90 px-3 py-1.5 text-xs font-medium text-stone-950 hover:bg-sky-400 disabled:opacity-50"
                 >
-                  {busy === it.id ? 'Registrando…' : `Comprar ${plano(restante)} restantes (${it.source === 'external' ? 'externo' : it.seller_id === data.meId ? 'propio' : (data.nicks[it.seller_id ?? ''] ?? 'plan')} @ ${plano(it.unit_price)})`}
+                  {busy === it.id ? 'Registrando…' : `Comprar ${plano(restante)} restantes (${it.source === 'external' ? 'externo' : it.seller_id === data.meId ? 'propio' : (data.nicks[it.seller_id ?? ''] ?? 'plan')} a ${plano(it.unit_price)})`}
                 </button>
                 <button onclick={() => toggleLote(it)} class="rounded-lg border border-stone-700 px-2.5 py-1.5 text-xs text-stone-300 hover:bg-stone-800">
                   {abierto[it.id] ? 'Cerrar' : '＋ Otro origen / precio'}
@@ -371,7 +371,7 @@
       <ul class="space-y-1 text-xs text-stone-400">
         {#each data.items as it}
           {#each lotesDe(it) as p}
-            <li>✓ {plano(p.qty)}× {nombre(it.item_id)} {origenLabel(p)} @ {plano(p.unit_price)} = {plano(Number(p.qty) * (Number(p.unit_price) || 0))}</li>
+            <li>✓ {plano(p.qty)}× {nombre(it.item_id)} {origenLabel(p)} a {plano(p.unit_price)} = {plano(Number(p.qty) * (Number(p.unit_price) || 0))}</li>
           {/each}
         {/each}
         <li>🍳 Cocina: {plano(order.cook_silver)} silver → {plano(order.cook_output)} platillos</li>
