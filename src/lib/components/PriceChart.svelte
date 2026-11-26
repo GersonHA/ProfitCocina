@@ -26,17 +26,17 @@
     const _tv = totalVolume;
     if (!canvas) return;
 
-    // Rango de precio: la línea ocupa la MITAD SUPERIOR.
+    // Las líneas ocupan ~60% superior (espacio para separarlas); las barras,
+    // el ~36% inferior.
     const precios = _c.flatMap((c) => c.price).filter((v): v is number => v != null);
     const pmax = precios.length ? Math.max(...precios) : 1;
     const pmin = precios.length ? Math.min(...precios) : 0;
     const rango = pmax - pmin || Math.max(1, pmax * 0.05);
-    const yMin = pmin - rango; // deja los datos en la mitad de arriba
-    const yMax = pmax + rango * 0.1;
+    const yMin = pmin - rango * 0.6;
+    const yMax = pmax + rango * 0.12;
 
-    // Volumen: las barras ocupan la MITAD INFERIOR (max = 2× el pico).
     const maxVol = Math.max(1, ..._tv);
-    const y1Max = maxVol * 2;
+    const y1Max = maxVol * 2.7;
 
     const datasets: Record<string, unknown>[] = [
       {
@@ -55,9 +55,10 @@
         yAxisID: 'y',
         borderColor: c.color,
         backgroundColor: c.color,
-        tension: 0.25,
-        pointRadius: 2.5,
-        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 2,
+        pointHoverRadius: 5,
+        borderWidth: 1.8,
         spanGaps: true,
         order: 1,
         _volume: c.volume,
@@ -71,6 +72,7 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: { padding: { top: 10, bottom: 6, left: 6, right: 10 } },
         interaction: { mode: 'index', intersect: false },
         scales: {
           y: {
@@ -85,7 +87,7 @@
           x: { ticks: { color: '#a8a29e' }, grid: { color: 'rgba(255,255,255,0.06)' } },
         },
         plugins: {
-          legend: { labels: { color: '#d6d3d1', usePointStyle: true, boxWidth: 8 } },
+          legend: { labels: { color: '#d6d3d1', usePointStyle: true, boxWidth: 8, padding: 14 } },
           tooltip: {
             callbacks: {
               label: (ctx) => {
@@ -105,6 +107,6 @@
   });
 </script>
 
-<div class="h-80 w-full">
+<div class="h-[32rem] w-full">
   <canvas bind:this={canvas}></canvas>
 </div>
