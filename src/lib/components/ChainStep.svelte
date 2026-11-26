@@ -9,15 +9,23 @@
     step,
     groupId,
     names,
+    balances = {},
     runStep,
     startOpen = false,
   }: {
     step: ChainStep;
     groupId: string;
     names: Record<string, string>;
+    balances?: Record<string, number>;
     runStep?: { id: string; runId: string; idx: number; total: number };
     startOpen?: boolean;
   } = $props();
+
+  // Cuánto tienes disponible de un item (para precargar / mostrar en gris).
+  function disp(id: string | undefined): number {
+    return id ? Math.floor(balances[id] ?? 0) : 0;
+  }
+  const fmtDisp = (n: number) => n.toLocaleString('es-ES', { useGrouping: 'always' });
 
   function hoy(): string {
     const d = new Date();
@@ -31,10 +39,17 @@
     return startOpen;
   }
   let open = $state(initOpen());
-  let inputQty = $state<number | null>(null);
+  // Precarga lo que se consume con lo que tienes disponible (p. ej. refinar TODO el trigo).
+  function initInput() {
+    return step.inputItem && disp(step.inputItem) > 0 ? disp(step.inputItem) : null;
+  }
+  function initFeed() {
+    return step.feedItem && disp(step.feedItem) > 0 ? disp(step.feedItem) : null;
+  }
+  let inputQty = $state<number | null>(initInput());
   let outputQty = $state<number | null>(null);
   let subQty = $state<number | null>(null);
-  let feedQty = $state<number | null>(null);
+  let feedQty = $state<number | null>(initFeed());
   let silver = $state<number | null>(null);
   let price = $state<number | null>(null);
   let fecha = $state(hoy());
@@ -170,8 +185,8 @@
       {:else if step.kind === 'cosechar'}
         <div class="grid grid-cols-3 gap-2">
           <label class="block">
-            <span class="mb-1 block text-xs text-stone-400">Semillas plantadas</span>
-            <input type="number" bind:value={inputQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+            <span class="mb-1 block text-xs text-stone-400">Semillas plantadas {#if disp(step.inputItem)}<span class="text-stone-600">({fmtDisp(disp(step.inputItem))} disp.)</span>{/if}</span>
+            <input type="number" bind:value={inputQty} min="0" placeholder={disp(step.inputItem) ? fmtDisp(disp(step.inputItem)) : ''} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
           <label class="block">
             <span class="mb-1 block text-xs text-stone-400">Cosechado</span>
@@ -185,8 +200,8 @@
       {:else if step.kind === 'criar'}
         <div class="grid grid-cols-2 gap-2">
           <label class="block">
-            <span class="mb-1 block text-xs text-stone-400">{nombre(step.inputItem)} usados</span>
-            <input type="number" bind:value={inputQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+            <span class="mb-1 block text-xs text-stone-400">{nombre(step.inputItem)} usados {#if disp(step.inputItem)}<span class="text-stone-600">({fmtDisp(disp(step.inputItem))} disp.)</span>{/if}</span>
+            <input type="number" bind:value={inputQty} min="0" placeholder={disp(step.inputItem) ? fmtDisp(disp(step.inputItem)) : ''} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
           <label class="block">
             <span class="mb-1 block text-xs text-stone-400">{nombre(step.outputItem)} obtenidas</span>
@@ -196,9 +211,9 @@
             <label class="block">
               <span class="mb-1 flex items-center gap-1.5 text-xs text-stone-400">
                 <ItemImg itemId={step.feedItem} nombre={nombre(step.feedItem)} size={16} />
-                {nombre(step.feedItem)} (comida)
+                {nombre(step.feedItem)} (comida) {#if disp(step.feedItem)}<span class="text-stone-600">({fmtDisp(disp(step.feedItem))} disp.)</span>{/if}
               </span>
-              <input type="number" bind:value={feedQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+              <input type="number" bind:value={feedQty} min="0" placeholder={disp(step.feedItem) ? fmtDisp(disp(step.feedItem)) : ''} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
             </label>
           {/if}
           <label class="block">
@@ -212,8 +227,8 @@
       {:else}
         <div class="grid grid-cols-3 gap-2">
           <label class="block">
-            <span class="mb-1 block text-xs text-stone-400">{nombre(step.inputItem)} usado</span>
-            <input type="number" bind:value={inputQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+            <span class="mb-1 block text-xs text-stone-400">{nombre(step.inputItem)} usado {#if disp(step.inputItem)}<span class="text-stone-600">({fmtDisp(disp(step.inputItem))} disp.)</span>{/if}</span>
+            <input type="number" bind:value={inputQty} min="0" placeholder={disp(step.inputItem) ? fmtDisp(disp(step.inputItem)) : ''} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
           <label class="block">
             <span class="mb-1 block text-xs text-stone-400">{nombre(step.outputItem)} obtenido</span>

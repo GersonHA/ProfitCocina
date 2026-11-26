@@ -72,6 +72,7 @@
               step={def}
               groupId={data.group?.id ?? ''}
               names={data.names}
+              balances={data.balances}
               runStep={{ id: rs.id, runId: run.id, idx: rs.idx, total }}
               startOpen={true}
             />
