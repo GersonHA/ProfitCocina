@@ -1,55 +1,73 @@
 <script lang="ts">
   import Chart from 'chart.js/auto';
 
+  interface CitySeries {
+    name: string;
+    color: string;
+    price: (number | null)[];
+    volume: (number | null)[];
+  }
+
   let {
     labels,
-    precio,
-    volumen,
-    labelPrecio = 'Precio de venta',
-  }: {
-    labels: string[];
-    precio: number[];
-    volumen: number[];
-    labelPrecio?: string;
-  } = $props();
+    cities,
+    totalVolume,
+  }: { labels: string[]; cities: CitySeries[]; totalVolume: number[] } = $props();
 
   let canvas: HTMLCanvasElement | undefined = $state();
   let chart: Chart | undefined;
 
-  // Reconstruye el gráfico cada vez que cambian los datos (son pocos puntos).
+  const fmt = (n: number) => Math.round(n).toLocaleString('es-ES');
+
   $effect(() => {
     // dependencias
     const _l = labels;
-    const _p = precio;
-    const _v = volumen;
+    const _c = cities;
+    const _tv = totalVolume;
     if (!canvas) return;
 
-    chart?.destroy();
-    chart = new Chart(canvas, {
-      data: {
-        labels: _l,
-        datasets: [
-          {
-            type: 'bar',
-            label: 'Volumen vendido',
-            data: _v,
-            yAxisID: 'y1',
-            backgroundColor: 'rgba(120, 113, 108, 0.45)',
-            order: 2,
-          },
-          {
-            type: 'line',
-            label: labelPrecio,
-            data: _p,
-            yAxisID: 'y',
-            borderColor: '#f59e0b',
-            backgroundColor: '#f59e0b',
-            tension: 0.25,
-            pointRadius: 3,
-            order: 1,
-          },
-        ],
+    // Rango de precio: la línea ocupa la MITAD SUPERIOR.
+    const precios = _c.flatMap((c) => c.price).filter((v): v is number => v != null);
+    const pmax = precios.length ? Math.max(...precios) : 1;
+    const pmin = precios.length ? Math.min(...precios) : 0;
+    const rango = pmax - pmin || Math.max(1, pmax * 0.05);
+    const yMin = pmin - rango; // deja los datos en la mitad de arriba
+    const yMax = pmax + rango * 0.1;
+
+    // Volumen: las barras ocupan la MITAD INFERIOR (max = 2× el pico).
+    const maxVol = Math.max(1, ..._tv);
+    const y1Max = maxVol * 2;
+
+    const datasets: Record<string, unknown>[] = [
+      {
+        type: 'bar',
+        label: 'Volumen total',
+        data: _tv,
+        yAxisID: 'y1',
+        backgroundColor: 'rgba(150, 150, 150, 0.32)',
+        borderWidth: 0,
+        order: 10,
       },
+      ..._c.map((c) => ({
+        type: 'line',
+        label: c.name,
+        data: c.price,
+        yAxisID: 'y',
+        borderColor: c.color,
+        backgroundColor: c.color,
+        tension: 0.25,
+        pointRadius: 2.5,
+        borderWidth: 2,
+        spanGaps: true,
+        order: 1,
+        _volume: c.volume,
+      })),
+    ];
+
+    chart?.destroy();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    chart = new Chart(canvas, {
+      data: { labels: _l, datasets: datasets as never },
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -57,19 +75,29 @@
         scales: {
           y: {
             position: 'left',
+            min: yMin,
+            max: yMax,
             title: { display: true, text: 'Precio', color: '#a8a29e' },
             ticks: { color: '#d6d3d1' },
             grid: { color: 'rgba(255,255,255,0.06)' },
           },
-          y1: {
-            position: 'right',
-            title: { display: true, text: 'Volumen', color: '#a8a29e' },
-            ticks: { color: '#a8a29e' },
-            grid: { drawOnChartArea: false },
-          },
+          y1: { position: 'right', min: 0, max: y1Max, display: false },
           x: { ticks: { color: '#a8a29e' }, grid: { color: 'rgba(255,255,255,0.06)' } },
         },
-        plugins: { legend: { labels: { color: '#d6d3d1' } } },
+        plugins: {
+          legend: { labels: { color: '#d6d3d1', usePointStyle: true, boxWidth: 8 } },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const ds = ctx.dataset as { type?: string; label?: string; _volume?: (number | null)[] };
+                const y = ctx.parsed.y ?? 0;
+                if (ds.type === 'bar') return `Volumen total: ${fmt(y)}`;
+                const vol = ds._volume?.[ctx.dataIndex];
+                return `${ds.label}: ${fmt(y)}  ·  vol ${vol != null ? fmt(vol) : '—'}`;
+              },
+            },
+          },
+        },
       },
     });
 
@@ -77,6 +105,6 @@
   });
 </script>
 
-<div class="h-72 w-full">
+<div class="h-80 w-full">
   <canvas bind:this={canvas}></canvas>
 </div>

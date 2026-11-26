@@ -66,25 +66,47 @@
     }
   }
 
-  // --- Gráfico ---
+  // --- Gráfico (todas las ciudades juntas) ---
+  const CITY_COLORS: Record<string, string> = {
+    Caerleon: '#eab308',
+    Martlock: '#3b82f6',
+    'Fort Sterling': '#e5e7eb',
+    Lymhurst: '#22c55e',
+    Bridgewatch: '#f97316',
+    Thetford: '#a855f7',
+    Brecilien: '#ec4899',
+  };
+
   function primerItem(): string {
     return data.items[0]?.item_id ?? '';
   }
   let gItem = $state(primerItem());
-  let gCiudad = $state('Caerleon');
 
   const serie = $derived.by(() => {
-    const byFecha = new Map<string, { precio: number; volumen: number }>();
+    const dates = new Set<string>();
+    const byCity = new Map<string, Map<string, { precio: number; volumen: number }>>();
     for (const s of data.snaps) {
-      if (s.item_id !== gItem || s.city !== gCiudad) continue;
-      byFecha.set(s.fecha, { precio: Number(s.sell_order_min) || 0, volumen: Number(s.volume) || 0 });
+      if (s.item_id !== gItem) continue;
+      dates.add(s.fecha);
+      let m = byCity.get(s.city);
+      if (!m) {
+        m = new Map();
+        byCity.set(s.city, m);
+      }
+      m.set(s.fecha, { precio: Number(s.sell_order_min) || 0, volumen: Number(s.volume) || 0 });
     }
-    const fechas = [...byFecha.keys()].sort();
-    return {
-      labels: fechas,
-      precio: fechas.map((f) => byFecha.get(f)!.precio),
-      volumen: fechas.map((f) => byFecha.get(f)!.volumen),
-    };
+    const labels = [...dates].sort();
+    const cities = CIUDADES.filter((c) => byCity.has(c)).map((c) => {
+      const m = byCity.get(c)!;
+      return {
+        name: c,
+        color: CITY_COLORS[c] ?? '#f59e0b',
+        price: labels.map((f) => m.get(f)?.precio ?? null),
+        volume: labels.map((f) => m.get(f)?.volumen ?? null),
+      };
+    });
+    const totalVolume = labels.map((_, i) => cities.reduce((sum, c) => sum + (c.volume[i] ?? 0), 0));
+    return { labels, cities, totalVolume };
   });
 </script>
 
@@ -141,25 +163,19 @@
   <!-- Gráfico -->
   <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
     <div class="mb-3 flex flex-wrap items-end gap-3">
-      <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Historial</h2>
+      <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Historial (todas las ciudades)</h2>
       <label class="ml-auto block">
         <span class="mb-1 block text-xs text-stone-400">Item</span>
         <select bind:value={gItem} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm">
           {#each data.items as it}<option value={it.item_id}>{it.name_es}</option>{/each}
         </select>
       </label>
-      <label class="block">
-        <span class="mb-1 block text-xs text-stone-400">Ciudad</span>
-        <select bind:value={gCiudad} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm">
-          {#each CIUDADES as c}<option value={c}>{c}</option>{/each}
-        </select>
-      </label>
     </div>
 
     {#if serie.labels.length === 0}
-      <p class="py-8 text-center text-sm text-stone-500">Todavía no hay precios registrados para ese item y ciudad.</p>
+      <p class="py-8 text-center text-sm text-stone-500">Todavía no hay precios registrados para ese item.</p>
     {:else}
-      <PriceChart labels={serie.labels} precio={serie.precio} volumen={serie.volumen} />
+      <PriceChart labels={serie.labels} cities={serie.cities} totalVolume={serie.totalVolume} />
     {/if}
   </div>
 </section>
