@@ -1,13 +1,21 @@
 /**
- * Inicio = Dashboard. Calcula los KPIs del usuario en su grupo:
- *  - Invertido  = silver que gastaste (compras de mercado + a miembros + gastos de estación/semillas)
- *  - Ventas     = ingresos por vender (mercado + a miembros)
- *  - Ganancia   = ventas − costo de lo vendido (COGS, del Kardex)
- *  - Inventario = valor actual del Kardex
- * Más la composición del inventario y los últimos movimientos.
+ * Inicio = Dashboard. Entrega datos POR DÍA (para filtrar por período) y el
+ * estado actual del inventario, más la meta y las pérdidas.
+ *   invested = compras (mercado + a miembros) + gastos (estación/semillas)
+ *   ventas   = ingresos por vender, netos de impuesto
+ *   cogs     = costo de lo vendido (Kardex)   → ganancia = ventas − cogs
+ *   perdida  = valor de los items dados de baja por ajuste de tipo "pérdida"
  */
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
+
+interface DayRow {
+  fecha: string;
+  invested: number;
+  ventas: number;
+  cogs: number;
+  perdida: number;
+}
 
 export async function load({ parent }) {
   const { session, group } = await parent();
@@ -20,9 +28,6 @@ export async function load({ parent }) {
     .eq('user_id', me)
     .single();
 
-  let invested = 0;
-  let ventas = 0;
-  let cogs = 0;
   let invValue = 0;
   let inventory: { item_id: string; value: number }[] = [];
   let movements: Array<{
@@ -37,12 +42,16 @@ export async function load({ parent }) {
   const names: Record<string, string> = {};
   let items: { item_id: string; name_es: string }[] = [];
   let snaps: Array<{ item_id: string; city: string; fecha: string; sell_order_min: number | null; volume: number | null }> = [];
-  const revByDay = new Map<string, number>();
+
+  const invByDay = new Map<string, number>();
+  const ventasByDay = new Map<string, number>();
   const cogsByDay = new Map<string, number>();
+  const perdidaByDay = new Map<string, number>();
+  const add = (map: Map<string, number>, k: string, v: number) => map.set(k, (map.get(k) || 0) + v);
 
   if (group) {
     const gid = group.id;
-    const [balRes, mktRes, trdRes, procRes, sellMovRes, movRes, itemsRes, priceRes] = await Promise.all([
+    const [balRes, mktRes, trdRes, procRes, movRes, itemsRes, priceRes, adjRes] = await Promise.all([
       supabase.from('inventory_balances').select('item_id, value').eq('group_id', gid).eq('user_id', me),
       supabase.from('market_txns').select('kind, qty, price_unit, taxes, fecha').eq('group_id', gid).eq('user_id', me),
       supabase
@@ -50,26 +59,21 @@ export async function load({ parent }) {
         .select('seller_id, buyer_id, qty, price_unit, fecha')
         .eq('group_id', gid)
         .or(`seller_id.eq.${me},buyer_id.eq.${me}`),
-      supabase.from('processes').select('process_expenses(silver)').eq('group_id', gid).eq('user_id', me),
+      supabase.from('processes').select('fecha, process_expenses(silver)').eq('group_id', gid).eq('user_id', me),
       supabase
         .from('inventory_movements')
-        .select('total_cost, fecha')
-        .eq('group_id', gid)
-        .eq('user_id', me)
-        .in('type', ['venta_mercado', 'venta_miembro']),
-      supabase
-        .from('inventory_movements')
-        .select('item_id, fecha, type, qty, unit_cost, bal_qty, bal_avg_cost')
+        .select('item_id, fecha, type, qty, unit_cost, total_cost, bal_qty, bal_avg_cost, source_id')
         .eq('group_id', gid)
         .eq('user_id', me)
         .order('seq', { ascending: false })
-        .limit(12),
+        .limit(5000),
       supabase.from('items').select('item_id, name_es'),
       supabase
         .from('price_snapshots')
         .select('item_id, city, fecha, sell_order_min, volume')
         .order('fecha', { ascending: true })
         .limit(3000),
+      supabase.from('stock_adjustments').select('id, kind').eq('group_id', gid).eq('user_id', me),
     ]);
 
     items = itemsRes.data ?? [];
@@ -84,44 +88,60 @@ export async function load({ parent }) {
 
     for (const m of mktRes.data ?? []) {
       const amt = (Number(m.qty) || 0) * (Number(m.price_unit) || 0);
-      if (m.kind === 'buy') {
-        invested += amt;
-      } else {
-        const net = amt - (Number(m.taxes) || 0); // neto de impuestos
-        ventas += net;
-        revByDay.set(m.fecha, (revByDay.get(m.fecha) || 0) + net);
-      }
+      if (m.kind === 'buy') add(invByDay, m.fecha, amt);
+      else add(ventasByDay, m.fecha, amt - (Number(m.taxes) || 0));
     }
 
     for (const t of trdRes.data ?? []) {
       const amt = (Number(t.qty) || 0) * (Number(t.price_unit) || 0);
-      if (t.buyer_id === me) invested += amt;
-      if (t.seller_id === me) {
-        ventas += amt;
-        revByDay.set(t.fecha, (revByDay.get(t.fecha) || 0) + amt);
-      }
+      if (t.buyer_id === me) add(invByDay, t.fecha, amt);
+      if (t.seller_id === me) add(ventasByDay, t.fecha, amt);
     }
 
     for (const p of procRes.data ?? []) {
-      for (const e of p.process_expenses ?? []) invested += Number(e.silver) || 0;
+      for (const e of p.process_expenses ?? []) add(invByDay, p.fecha, Number(e.silver) || 0);
     }
 
-    for (const mv of sellMovRes.data ?? []) {
-      const c = Math.abs(Number(mv.total_cost) || 0);
-      cogs += c;
-      cogsByDay.set(mv.fecha, (cogsByDay.get(mv.fecha) || 0) + c);
+    // Tipo de cada ajuste (para saber cuáles son "pérdida").
+    const adjKind = new Map<string, string>();
+    for (const a of adjRes.data ?? []) adjKind.set(a.id, a.kind);
+
+    const allMov = movRes.data ?? [];
+    for (const mv of allMov) {
+      if (mv.type === 'venta_mercado' || mv.type === 'venta_miembro') {
+        add(cogsByDay, mv.fecha, Math.abs(Number(mv.total_cost) || 0));
+      } else if (mv.type === 'ajuste' && Number(mv.qty) < 0 && adjKind.get(mv.source_id) === 'perdida') {
+        add(perdidaByDay, mv.fecha, Math.abs(Number(mv.total_cost) || 0));
+      }
     }
 
-    movements = movRes.data ?? [];
+    movements = allMov.slice(0, 12).map((m) => ({
+      item_id: m.item_id,
+      fecha: m.fecha,
+      type: m.type,
+      qty: Number(m.qty),
+      unit_cost: Number(m.unit_cost),
+      bal_qty: Number(m.bal_qty),
+      bal_avg_cost: Number(m.bal_avg_cost),
+    }));
   }
 
   inventory.sort((a, b) => b.value - a.value);
 
-  // Ganancia por día = ventas netas − costo de lo vendido (COGS), por fecha.
-  const dias = new Set<string>([...revByDay.keys(), ...cogsByDay.keys()]);
-  const profitByDay = [...dias]
-    .sort()
-    .map((fecha) => ({ fecha, profit: (revByDay.get(fecha) || 0) - (cogsByDay.get(fecha) || 0) }));
+  // Serie diaria combinada.
+  const dias = new Set<string>([
+    ...invByDay.keys(),
+    ...ventasByDay.keys(),
+    ...cogsByDay.keys(),
+    ...perdidaByDay.keys(),
+  ]);
+  const dailyData: DayRow[] = [...dias].sort().map((fecha) => ({
+    fecha,
+    invested: invByDay.get(fecha) || 0,
+    ventas: ventasByDay.get(fecha) || 0,
+    cogs: cogsByDay.get(fecha) || 0,
+    perdida: perdidaByDay.get(fecha) || 0,
+  }));
 
   return {
     group,
@@ -129,15 +149,12 @@ export async function load({ parent }) {
     nick: profile?.nick ?? null,
     metaAmount: profile?.meta_amount != null ? Number(profile.meta_amount) : null,
     metaPeriod: (profile?.meta_period as 'day' | 'week' | 'month') ?? 'month',
-    invested,
-    ventas,
-    ganancia: ventas - cogs,
     invValue,
     inventory,
     movements,
     names,
     items,
     snaps,
-    profitByDay,
+    dailyData,
   };
 }
