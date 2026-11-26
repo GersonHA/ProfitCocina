@@ -1,4 +1,4 @@
-/** Precios de mercado: catálogo + último precio conocido por item. */
+/** Precios de mercado: catálogo + historial de precios (por item, ciudad y día). */
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 
@@ -12,15 +12,11 @@ export async function load({ parent }) {
     .order('category')
     .order('tier');
 
-  const { data: prices } = await supabase
+  const { data: snaps } = await supabase
     .from('price_snapshots')
-    .select('item_id, sell_order_min, buy_order_max, captured_at')
-    .order('captured_at', { ascending: false });
+    .select('item_id, city, fecha, sell_order_min, buy_order_max, volume')
+    .order('fecha', { ascending: true })
+    .limit(3000);
 
-  const latest: Record<string, { sell: number | null; buy: number | null }> = {};
-  for (const p of prices ?? []) {
-    if (!(p.item_id in latest)) latest[p.item_id] = { sell: p.sell_order_min, buy: p.buy_order_max };
-  }
-
-  return { group, items: items ?? [], latest };
+  return { group, items: items ?? [], snaps: snaps ?? [] };
 }
