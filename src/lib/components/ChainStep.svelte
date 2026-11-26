@@ -9,7 +9,15 @@
     step,
     groupId,
     names,
-  }: { step: ChainStep; groupId: string; names: Record<string, string> } = $props();
+    runStep,
+    startOpen = false,
+  }: {
+    step: ChainStep;
+    groupId: string;
+    names: Record<string, string>;
+    runStep?: { id: string; runId: string; idx: number; total: number };
+    startOpen?: boolean;
+  } = $props();
 
   function hoy(): string {
     const d = new Date();
@@ -19,7 +27,10 @@
     return id ? (names[id] ?? id) : '';
   }
 
-  let open = $state(false);
+  function initOpen() {
+    return startOpen;
+  }
+  let open = $state(initOpen());
   let inputQty = $state<number | null>(null);
   let outputQty = $state<number | null>(null);
   let subQty = $state<number | null>(null);
@@ -45,16 +56,23 @@
     }
     saving = true;
     try {
+      let procId: string | null = null;
+      let tradeId: string | null = null;
       if (step.kind === 'comprar') {
-        const { error: e1 } = await supabase.from('market_txns').insert({
-          group_id: groupId,
-          item_id: step.outputItem,
-          qty: outputQty,
-          price_unit: price ?? 0,
-          kind: 'buy',
-          fecha,
-        });
+        const { data: t, error: e1 } = await supabase
+          .from('market_txns')
+          .insert({
+            group_id: groupId,
+            item_id: step.outputItem,
+            qty: outputQty,
+            price_unit: price ?? 0,
+            kind: 'buy',
+            fecha,
+          })
+          .select('id')
+          .single();
         if (e1) throw e1;
+        tradeId = t.id;
       } else {
         const { data: proc, error: e1 } = await supabase
           .from('processes')
@@ -63,6 +81,7 @@
           .single();
         if (e1) throw e1;
         const pid = proc.id;
+        procId = pid;
 
         const ins: Array<{ process_id: string; item_id: string; qty: number }> = [];
         if (step.inputItem && (inputQty ?? 0) > 0) {
@@ -92,6 +111,19 @@
             .insert({ process_id: pid, kind, silver });
           if (e4) throw e4;
         }
+      }
+
+      // Si es parte de un lote, marca el paso hecho y avanza el estado.
+      if (runStep) {
+        await supabase
+          .from('run_steps')
+          .update({ done: true, qty: outputQty, silver: silver ?? null, process_id: procId, trade_id: tradeId, done_at: new Date().toISOString() })
+          .eq('id', runStep.id);
+        const nextIdx = runStep.idx + 1;
+        await supabase
+          .from('production_runs')
+          .update({ state: nextIdx >= runStep.total ? 'completado' : 'en_curso', step_index: nextIdx, updated_at: new Date().toISOString() })
+          .eq('id', runStep.runId);
       }
 
       await recompute(groupId);
