@@ -26,8 +26,8 @@
 <section class="space-y-6">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold">Mi producción</h1>
-    <a href="/registrar" class="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-stone-950 hover:bg-amber-400">
-      + Registrar
+    <a href="/cadena" class="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-stone-950 hover:bg-amber-400">
+      + Registrar producción
     </a>
   </div>
 
