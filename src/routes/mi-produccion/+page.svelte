@@ -127,7 +127,7 @@
                 <td class="py-2 text-stone-400">{TIPO_MOV[m.type] ?? m.type}</td>
                 <td class="py-2 text-right tabular-nums {m.qty < 0 ? 'text-red-300' : 'text-green-300'}">{silver(m.qty)}</td>
                 <td class="py-2 text-right tabular-nums text-stone-400">{silver(m.unit_cost)}</td>
-                <td class="py-2 text-right tabular-nums">{silver(m.bal_qty)} @ {silver(m.bal_avg_cost)}</td>
+                <td class="py-2 text-right tabular-nums">{silver(m.bal_qty)} und a {silver(m.bal_avg_cost)} c/u</td>
               </tr>
             {/each}
           </tbody>

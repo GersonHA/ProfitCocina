@@ -40,9 +40,9 @@
         <div class="flex-1 rounded-xl border border-stone-800 bg-stone-900/50 p-3 text-center">
           <ItemImg itemId={node} nombre={nombre(node)} size={40} />
           <div class="mt-1 text-xs font-medium">{nombre(node)}</div>
-          <div class="text-xs text-stone-400 tabular-nums">{fmt(saldo(node).qty)}</div>
+          <div class="text-xs text-stone-400 tabular-nums">{fmt(saldo(node).qty)} und</div>
           {#if saldo(node).avg > 0}
-            <div class="text-[10px] text-amber-400 tabular-nums">@ {fmt(saldo(node).avg)}</div>
+            <div class="text-[10px] text-amber-400 tabular-nums">a {fmt(saldo(node).avg)} c/u</div>
           {/if}
         </div>
         {#if i < data.chain.nodes.length - 1}
