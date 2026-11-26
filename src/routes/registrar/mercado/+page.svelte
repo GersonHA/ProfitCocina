@@ -25,6 +25,16 @@
   let orderType = $state<'sell_order' | 'instant'>('sell_order');
   let fecha = $state(hoy());
 
+  // Impuestos (solo los paga quien vende): 4% con Premium / 8% sin Premium;
+  // la orden de venta paga además 2.5% de tarifa de publicación.
+  const TAX_RATE = $derived(data.premium ? 0.04 : 0.08);
+  const bruto = $derived((qty ?? 0) * (priceUnit ?? 0));
+  const impVenta = $derived(direction === 'sell' ? bruto * TAX_RATE : 0);
+  const feeOrden = $derived(direction === 'sell' && orderType === 'sell_order' ? bruto * 0.025 : 0);
+  const impuesto = $derived(impVenta + feeOrden);
+  const neto = $derived(bruto - impuesto);
+  const fmt = (n: number) => Math.round(n).toLocaleString('es-ES');
+
   let saving = $state(false);
   let error = $state('');
   let warn = $state('');
@@ -48,6 +58,7 @@
         city: city.trim() || null,
         kind: direction,
         order_type: direction === 'sell' ? orderType : null,
+        taxes: direction === 'sell' ? impuesto : 0,
         fecha,
       });
       if (e1) throw e1;
@@ -139,6 +150,20 @@
           {/if}
         </div>
       </div>
+
+      {#if direction === 'sell' && bruto > 0}
+        <div class="space-y-1 rounded-2xl border border-stone-800 bg-stone-900/50 p-4 text-sm">
+          <div class="flex justify-between text-stone-400"><span>Bruto</span><span class="tabular-nums text-stone-200">{fmt(bruto)}</span></div>
+          <div class="flex justify-between text-stone-400">
+            <span>Impuesto de venta ({(TAX_RATE * 100).toFixed(0)}% {data.premium ? 'Premium' : 'sin Premium'})</span>
+            <span class="tabular-nums text-red-300">−{fmt(impVenta)}</span>
+          </div>
+          {#if orderType === 'sell_order'}
+            <div class="flex justify-between text-stone-400"><span>Tarifa de orden (2.5%)</span><span class="tabular-nums text-red-300">−{fmt(feeOrden)}</span></div>
+          {/if}
+          <div class="flex justify-between border-t border-stone-800 pt-1 font-medium"><span>Neto que recibes</span><span class="tabular-nums text-green-300">{fmt(neto)}</span></div>
+        </div>
+      {/if}
 
       {#if error}
         <p class="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{error}</p>

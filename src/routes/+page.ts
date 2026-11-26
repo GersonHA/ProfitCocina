@@ -38,7 +38,7 @@ export async function load({ parent }) {
     const gid = group.id;
     const [balRes, mktRes, trdRes, procRes, sellMovRes, movRes, itemsRes, priceRes] = await Promise.all([
       supabase.from('inventory_balances').select('item_id, value').eq('group_id', gid).eq('user_id', me),
-      supabase.from('market_txns').select('kind, qty, price_unit').eq('group_id', gid).eq('user_id', me),
+      supabase.from('market_txns').select('kind, qty, price_unit, taxes').eq('group_id', gid).eq('user_id', me),
       supabase
         .from('member_trades')
         .select('seller_id, buyer_id, qty, price_unit')
@@ -79,7 +79,7 @@ export async function load({ parent }) {
     for (const m of mktRes.data ?? []) {
       const amt = (Number(m.qty) || 0) * (Number(m.price_unit) || 0);
       if (m.kind === 'buy') invested += amt;
-      else ventas += amt;
+      else ventas += amt - (Number(m.taxes) || 0); // neto de impuestos
     }
 
     for (const t of trdRes.data ?? []) {
