@@ -7,7 +7,7 @@
 
   const ACCIONES = [
     { href: '/cadena', emoji: '🔗', label: 'Mi cadena', primary: true },
-    { href: '/registrar/mercado', emoji: '🏪', label: 'Mercado' },
+    { href: '/registrar/mercado', emoji: '🏷️', label: 'Vender' },
     { href: '/registrar/compra-miembro', emoji: '🤝', label: 'Comprar a un miembro' },
     { href: '/registrar/ajuste', emoji: '⚖️', label: 'Ajuste / pérdida' },
     { href: '/precios', emoji: '💲', label: 'Precios de mercado' },
