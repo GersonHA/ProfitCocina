@@ -32,11 +32,11 @@
     const pmax = precios.length ? Math.max(...precios) : 1;
     const pmin = precios.length ? Math.min(...precios) : 0;
     const rango = pmax - pmin || Math.max(1, pmax * 0.05);
-    const yMin = pmin - rango * 0.6;
-    const yMax = pmax + rango * 0.12;
+    const yMin = pmin - rango; // líneas en la mitad superior
+    const yMax = pmax + rango * 0.1;
 
     const maxVol = Math.max(1, ..._tv);
-    const y1Max = maxVol * 2.7;
+    const y1Max = maxVol * 2;
 
     const datasets: Record<string, unknown>[] = [
       {
@@ -55,10 +55,10 @@
         yAxisID: 'y',
         borderColor: c.color,
         backgroundColor: c.color,
-        tension: 0.3,
-        pointRadius: 2,
+        tension: 0.25,
+        pointRadius: 2.5,
         pointHoverRadius: 5,
-        borderWidth: 1.8,
+        borderWidth: 2,
         spanGaps: true,
         order: 1,
         _volume: c.volume,
@@ -87,7 +87,7 @@
           x: { ticks: { color: '#a8a29e' }, grid: { color: 'rgba(255,255,255,0.06)' } },
         },
         plugins: {
-          legend: { labels: { color: '#d6d3d1', usePointStyle: true, boxWidth: 8, padding: 14 } },
+          legend: { labels: { color: '#d6d3d1', usePointStyle: true, boxWidth: 6, padding: 12, font: { size: 10 } } },
           tooltip: {
             callbacks: {
               label: (ctx) => {
@@ -107,6 +107,6 @@
   });
 </script>
 
-<div class="h-[32rem] w-full">
+<div class="h-80 w-full">
   <canvas bind:this={canvas}></canvas>
 </div>

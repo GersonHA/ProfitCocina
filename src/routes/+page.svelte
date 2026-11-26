@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { invalidateAll } from '$app/navigation';
-  import { supabase } from '$lib/supabase';
   import ItemImg from '$lib/components/ItemImg.svelte';
   import MiniChart from '$lib/components/MiniChart.svelte';
   import PriceChart from '$lib/components/PriceChart.svelte';
@@ -93,23 +91,15 @@
   });
 
   // --- Meta ---
-  function initMetaAmount() {
-    return data.metaAmount;
-  }
-  function initMetaPeriod() {
-    return data.metaPeriod;
-  }
-  let metaAmount = $state<number | null>(initMetaAmount());
-  let metaPeriod = $state<'day' | 'week' | 'month'>(initMetaPeriod());
-  let savingMeta = $state(false);
-
+  // Progreso de la meta (se configura en el Perfil; aquí solo se muestra).
   function fechaKey(d: Date): string {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
   const logrado = $derived.by(() => {
+    const period = data.metaPeriod;
     const today = fechaKey(new Date());
-    if (metaPeriod === 'day') return data.profitByDay.find((p) => p.fecha === today)?.profit ?? 0;
-    if (metaPeriod === 'week') {
+    if (period === 'day') return data.profitByDay.find((p) => p.fecha === today)?.profit ?? 0;
+    if (period === 'week') {
       const start = new Date();
       start.setDate(start.getDate() - 6);
       const startK = fechaKey(start);
@@ -118,19 +108,9 @@
     const mk = today.slice(0, 7);
     return data.profitByDay.filter((p) => p.fecha.slice(0, 7) === mk).reduce((s, p) => s + p.profit, 0);
   });
-  const metaPct = $derived(metaAmount && metaAmount > 0 ? logrado / metaAmount : 0);
-  const metaFalta = $derived(metaAmount ? Math.max(0, metaAmount - logrado) : 0);
+  const metaPct = $derived(data.metaAmount && data.metaAmount > 0 ? logrado / data.metaAmount : 0);
+  const roi = $derived(data.invested > 0 ? data.ganancia / data.invested : 0);
   const META_LABEL: Record<string, string> = { day: 'hoy', week: 'esta semana', month: 'este mes' };
-
-  async function guardarMeta() {
-    savingMeta = true;
-    try {
-      await supabase.from('profiles').update({ meta_amount: metaAmount, meta_period: metaPeriod }).eq('user_id', data.meId);
-      await invalidateAll();
-    } finally {
-      savingMeta = false;
-    }
-  }
 
   // --- Gráfico de precios (item + ciudad) ---
   function defItem(): string {
@@ -216,13 +196,13 @@
     <p class="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">No tienes un grupo activo.</p>
   {:else}
     <!-- KPIs -->
-    <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div class="grid grid-cols-2 gap-3 lg:grid-cols-3">
       <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
         <p class="text-xs text-stone-500">Invertido</p>
         <p class="mt-1 text-2xl font-semibold text-orange-300 tabular-nums">{sM(data.invested)}</p>
       </div>
       <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
-        <p class="text-xs text-stone-500">Ventas</p>
+        <p class="text-xs text-stone-500">Ventas (neto)</p>
         <p class="mt-1 text-2xl font-semibold text-blue-300 tabular-nums">{sM(data.ventas)}</p>
       </div>
       <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
@@ -230,59 +210,38 @@
         <p class="mt-1 text-2xl font-semibold tabular-nums {data.ganancia >= 0 ? 'text-green-300' : 'text-red-300'}">{sM(data.ganancia)}</p>
       </div>
       <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
+        <p class="text-xs text-stone-500">ROI realizado</p>
+        <p class="mt-1 text-2xl font-semibold tabular-nums {roi >= 0 ? 'text-green-300' : 'text-red-300'}">{(roi * 100).toFixed(0)}%</p>
+      </div>
+      <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
         <p class="text-xs text-stone-500">Valor inventario</p>
         <p class="mt-1 text-2xl font-semibold text-amber-300 tabular-nums">{sM(data.invValue)}</p>
       </div>
+      <a href="/perfil" class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4 transition hover:border-amber-500/40">
+        <p class="text-xs text-stone-500">Meta de ganancia</p>
+        {#if data.metaAmount && data.metaAmount > 0}
+          <p class="mt-1 text-2xl font-semibold tabular-nums {logrado >= data.metaAmount ? 'text-green-300' : 'text-amber-300'}">{(metaPct * 100).toFixed(0)}%</p>
+          <p class="text-[11px] text-stone-500">{sM(logrado)} de {sM(data.metaAmount)} · {META_LABEL[data.metaPeriod]}</p>
+        {:else}
+          <p class="mt-1 text-sm text-stone-400">Sin meta — <span class="text-amber-300">ponla en tu perfil →</span></p>
+        {/if}
+      </a>
     </div>
 
-    <!-- Ganancias + Meta -->
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
-      <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4 lg:col-span-2">
-        <div class="mb-3 flex items-center justify-between">
-          <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Ganancias</h2>
-          <div class="flex rounded-lg border border-stone-700 p-0.5 text-xs">
-            <button onclick={() => (granularidad = 'dia')} class="rounded px-2.5 py-1 {granularidad === 'dia' ? 'bg-amber-500 text-stone-950' : 'text-stone-400'}">Por día</button>
-            <button onclick={() => (granularidad = 'mes')} class="rounded px-2.5 py-1 {granularidad === 'mes' ? 'bg-amber-500 text-stone-950' : 'text-stone-400'}">Por mes</button>
-          </div>
+    <!-- Ganancias -->
+    <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
+      <div class="mb-3 flex items-center justify-between">
+        <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Ganancias</h2>
+        <div class="flex rounded-lg border border-stone-700 p-0.5 text-xs">
+          <button onclick={() => (granularidad = 'dia')} class="rounded px-2.5 py-1 {granularidad === 'dia' ? 'bg-amber-500 text-stone-950' : 'text-stone-400'}">Por día</button>
+          <button onclick={() => (granularidad = 'mes')} class="rounded px-2.5 py-1 {granularidad === 'mes' ? 'bg-amber-500 text-stone-950' : 'text-stone-400'}">Por mes</button>
         </div>
-        {#if gananciaData.labels.length === 0}
-          <p class="py-16 text-center text-sm text-stone-500">Aún no hay ventas registradas.</p>
-        {:else}
-          <MiniChart config={gananciaConfig} height="h-64" />
-        {/if}
       </div>
-
-      <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4 lg:col-span-1">
-        <h2 class="mb-3 text-sm font-medium tracking-wide text-stone-400 uppercase">Meta de ganancia</h2>
-        <div class="flex gap-2">
-          <input type="number" bind:value={metaAmount} min="0" placeholder="silver objetivo" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm" />
-          <select bind:value={metaPeriod} class="rounded-lg border border-stone-700 bg-stone-950 px-2 py-2 text-sm">
-            <option value="day">día</option>
-            <option value="week">semana</option>
-            <option value="month">mes</option>
-          </select>
-        </div>
-        <button onclick={guardarMeta} disabled={savingMeta} class="mt-2 w-full rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-stone-950 hover:bg-amber-400 disabled:opacity-60">
-          {savingMeta ? 'Guardando…' : 'Guardar meta'}
-        </button>
-
-        {#if metaAmount && metaAmount > 0}
-          <div class="mt-4 space-y-2">
-            <div class="h-3 w-full overflow-hidden rounded-full bg-stone-800">
-              <div class="h-full rounded-full {logrado >= metaAmount ? 'bg-green-500' : 'bg-amber-500'}" style="width: {Math.min(100, Math.max(0, metaPct * 100))}%"></div>
-            </div>
-            <p class="text-sm">
-              <span class="font-semibold {logrado >= 0 ? 'text-green-300' : 'text-red-300'}">{sM(logrado)}</span>
-              <span class="text-stone-500"> de {sM(metaAmount)} · {META_LABEL[metaPeriod]}</span>
-            </p>
-            <p class="text-xs text-stone-400">
-              {(metaPct * 100).toFixed(0)}% · {logrado >= metaAmount ? '¡Meta cumplida! 🎉' : `faltan ${sM(metaFalta)}`}
-            </p>
-          </div>
-        {:else}
-          <p class="mt-4 text-xs text-stone-500">Pon una meta para seguir tu progreso de ganancia.</p>
-        {/if}
-      </div>
+      {#if gananciaData.labels.length === 0}
+        <p class="py-16 text-center text-sm text-stone-500">Aún no hay ventas registradas.</p>
+      {:else}
+        <MiniChart config={gananciaConfig} height="h-64" />
+      {/if}
     </div>
 
     <!-- Gráfico de precios de mercado -->

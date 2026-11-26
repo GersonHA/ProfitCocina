@@ -10,6 +10,7 @@
     { href: '/', label: 'Inicio' },
     { href: '/mi-produccion', label: 'Mi producción' },
     { href: '/justicia', label: 'Justicia' },
+    { href: '/perfil', label: 'Perfil' },
   ];
 
   const path = $derived($page.url.pathname);
