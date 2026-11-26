@@ -10,8 +10,16 @@
   function nombre(id: string): string {
     return data.names[id] ?? id;
   }
-  function productorDe(itemId: string) {
-    return data.members.find((m) => m.produceItem === itemId) ?? null;
+  // Todos los miembros que producen un item (puede ser más de uno).
+  function productoresDe(itemId: string) {
+    return data.members.filter((m) => m.produceItem === itemId);
+  }
+  // Vendedor elegido por ingrediente (por defecto, el más barato).
+  let selProd = $state<Record<string, string>>({});
+  function productorSel(itemId: string) {
+    const prods = productoresDe(itemId);
+    if (prods.length === 0) return null;
+    return prods.find((p) => p.id === selProd[itemId]) ?? prods[0];
   }
 
   // --- Selección de platillo + calidad (encantamiento) ---
@@ -54,7 +62,7 @@
     let changed = false;
     const next = { ...extPrices };
     for (const ing of rec.ingredients) {
-      if (!productorDe(ing.itemId) && !(ing.itemId in next)) {
+      if (productoresDe(ing.itemId).length === 0 && !(ing.itemId in next)) {
         next[ing.itemId] = data.marketPrice[ing.itemId] ?? null;
         changed = true;
       }
@@ -62,8 +70,25 @@
     if (changed) extPrices = next;
   });
 
+  // Por defecto, elige al productor más barato de cada ingrediente.
+  $effect(() => {
+    const rec = recipe;
+    if (!rec) return;
+    let changed = false;
+    const next = { ...selProd };
+    for (const ing of rec.ingredients) {
+      const prods = productoresDe(ing.itemId);
+      if (prods.length && !(ing.itemId in next)) {
+        const barato = [...prods].sort((a, b) => (a.cost ?? Infinity) - (b.cost ?? Infinity))[0];
+        next[ing.itemId] = barato.id;
+        changed = true;
+      }
+    }
+    if (changed) selProd = next;
+  });
+
   function precioDe(itemId: string): number | null {
-    const prod = productorDe(itemId);
+    const prod = productorSel(itemId);
     if (prod) return prod.cost;
     return extPrices[itemId] ?? null;
   }
@@ -71,7 +96,8 @@
   const filas = $derived.by(() => {
     if (!recipe) return [];
     return recipe.ingredients.map((ing) => {
-      const prod = productorDe(ing.itemId);
+      const prods = productoresDe(ing.itemId);
+      const prod = productorSel(ing.itemId);
       const precio = precioDe(ing.itemId);
       const cant = ing.qty * tandas;
       return {
@@ -79,8 +105,9 @@
         nombre: nombre(ing.itemId),
         cant,
         productor: prod,
+        productores: prods,
         mio: prod?.id === data.meId,
-        externo: !prod,
+        externo: prods.length === 0,
         precio,
         linea: precio != null ? precio * cant : null,
       };
@@ -179,15 +206,22 @@
               <ItemImg itemId={f.itemId} nombre={f.nombre} size={30} />
               <div class="min-w-0 flex-1">
                 <p class="text-sm"><span class="tabular-nums text-stone-400">{plano(f.cant)}×</span> {f.nombre}</p>
-                <p class="text-xs text-stone-500">
-                  {#if f.externo}
-                    <span class="text-sky-300">compra externa</span> (nadie del grupo lo produce)
-                  {:else if f.mio}
-                    lo produces tú · {plano(f.precio)} c/u
-                  {:else}
-                    compras a {f.productor?.nick} · {plano(f.precio)} c/u
-                  {/if}
-                </p>
+                {#if f.externo}
+                  <p class="text-xs text-stone-500"><span class="text-sky-300">compra externa</span> (nadie del grupo lo produce)</p>
+                {:else if f.productores.length > 1}
+                  <div class="mt-0.5 flex items-center gap-1 text-xs text-stone-500">
+                    <span>compras a</span>
+                    <select bind:value={selProd[f.itemId]} class="rounded border border-stone-700 bg-stone-950 px-1.5 py-0.5 text-xs text-stone-200">
+                      {#each [...f.productores].sort((a, b) => (a.cost ?? Infinity) - (b.cost ?? Infinity)) as p, i}
+                        <option value={p.id}>{p.id === data.meId ? 'tú' : p.nick} · {plano(p.cost)} c/u{i === 0 ? ' (más barato)' : ''}</option>
+                      {/each}
+                    </select>
+                  </div>
+                {:else if f.mio}
+                  <p class="text-xs text-stone-500">lo produces tú · {plano(f.precio)} c/u</p>
+                {:else}
+                  <p class="text-xs text-stone-500">compras a {f.productor?.nick} · {plano(f.precio)} c/u</p>
+                {/if}
               </div>
               {#if f.externo}
                 <label class="flex items-center gap-1 text-xs text-stone-500">
