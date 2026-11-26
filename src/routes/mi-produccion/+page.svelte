@@ -1,13 +1,7 @@
 <script lang="ts">
-  import { invalidateAll } from '$app/navigation';
-  import { recompute } from '$lib/recompute';
   import ItemImg from '$lib/components/ItemImg.svelte';
 
   let { data } = $props();
-
-  let recalc = $state(false);
-  let msg = $state('');
-  let error = $state('');
 
   const TIPO_MOV: Record<string, string> = {
     entrada_produccion: 'Producción',
@@ -27,47 +21,15 @@
     if (n === null || n === undefined) return '—';
     return Math.round(Number(n)).toLocaleString('es-ES', { useGrouping: 'always' });
   }
-
-  async function recalcular() {
-    if (!data.group) return;
-    recalc = true;
-    msg = '';
-    error = '';
-    try {
-      const r = await recompute(data.group.id);
-      msg = `Kardex recalculado: ${r.items} items, ${r.movements} movimientos.`;
-      await invalidateAll();
-    } catch (e) {
-      error = e instanceof Error ? e.message : String(e);
-    } finally {
-      recalc = false;
-    }
-  }
 </script>
 
 <section class="space-y-6">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold">Mi producción</h1>
-    <div class="flex items-center gap-2">
-      <a href="/registrar" class="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-stone-950 hover:bg-amber-400">
-        + Registrar
-      </a>
-      <button
-        onclick={recalcular}
-        disabled={recalc}
-        class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm hover:bg-stone-800 disabled:opacity-60"
-      >
-        {recalc ? 'Recalculando…' : 'Recalcular'}
-      </button>
-    </div>
+    <a href="/registrar" class="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-stone-950 hover:bg-amber-400">
+      + Registrar
+    </a>
   </div>
-
-  {#if msg}
-    <p class="rounded-lg bg-green-500/10 px-3 py-2 text-sm text-green-300">{msg}</p>
-  {/if}
-  {#if error}
-    <p class="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{error}</p>
-  {/if}
 
   <!-- Inventario valorizado -->
   <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-5">
