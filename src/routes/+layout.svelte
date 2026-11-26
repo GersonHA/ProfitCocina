@@ -24,7 +24,7 @@
 <div class="min-h-screen bg-stone-950 text-stone-100">
   {#if data.session}
     <header class="sticky top-0 z-10 border-b border-stone-800 bg-stone-900/80 backdrop-blur">
-      <div class="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <a href="/" class="flex items-center gap-2 font-semibold">
           <span class="text-xl">🍲</span>
           <span class="hidden sm:inline">Profit Cocina</span>
@@ -50,7 +50,7 @@
       </div>
       {#if data.group}
         <div class="border-t border-stone-800/60 bg-stone-900/40">
-          <a href="/grupo" class="mx-auto block max-w-3xl px-4 py-1.5 text-xs text-stone-500 hover:text-stone-300">
+          <a href="/grupo" class="mx-auto block max-w-6xl px-4 py-1.5 text-xs text-stone-500 hover:text-stone-300">
             Grupo: <span class="text-stone-300">{data.group.name}</span>
             · {data.group.server} <span class="text-stone-600">· ver equipo →</span>
           </a>
@@ -59,7 +59,7 @@
     </header>
   {/if}
 
-  <main class="mx-auto w-full max-w-3xl px-4 py-6">
+  <main class="mx-auto w-full max-w-6xl px-4 py-6">
     {@render children()}
   </main>
 </div>

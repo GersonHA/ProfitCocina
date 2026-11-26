@@ -31,10 +31,12 @@ export async function load({ parent }) {
     bal_avg_cost: number;
   }> = [];
   const names: Record<string, string> = {};
+  let items: { item_id: string; name_es: string }[] = [];
+  let snaps: Array<{ item_id: string; city: string; fecha: string; sell_order_min: number | null; volume: number | null }> = [];
 
   if (group) {
     const gid = group.id;
-    const [balRes, mktRes, trdRes, procRes, sellMovRes, movRes, itemsRes] = await Promise.all([
+    const [balRes, mktRes, trdRes, procRes, sellMovRes, movRes, itemsRes, priceRes] = await Promise.all([
       supabase.from('inventory_balances').select('item_id, value').eq('group_id', gid).eq('user_id', me),
       supabase.from('market_txns').select('kind, qty, price_unit').eq('group_id', gid).eq('user_id', me),
       supabase
@@ -57,9 +59,16 @@ export async function load({ parent }) {
         .order('seq', { ascending: false })
         .limit(12),
       supabase.from('items').select('item_id, name_es'),
+      supabase
+        .from('price_snapshots')
+        .select('item_id, city, fecha, sell_order_min, volume')
+        .order('fecha', { ascending: true })
+        .limit(3000),
     ]);
 
-    for (const it of itemsRes.data ?? []) names[it.item_id] = it.name_es;
+    items = itemsRes.data ?? [];
+    snaps = (priceRes.data ?? []) as typeof snaps;
+    for (const it of items) names[it.item_id] = it.name_es;
 
     for (const b of balRes.data ?? []) {
       const v = Number(b.value) || 0;
@@ -100,5 +109,7 @@ export async function load({ parent }) {
     inventory,
     movements,
     names,
+    items,
+    snaps,
   };
 }
