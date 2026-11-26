@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { invalidateAll } from '$app/navigation';
+  import { supabase } from '$lib/supabase';
   import ItemImg from '$lib/components/ItemImg.svelte';
   import MiniChart from '$lib/components/MiniChart.svelte';
   import PriceChart from '$lib/components/PriceChart.svelte';
@@ -51,6 +53,84 @@
   }
 
   const hayDatos = $derived(data.invValue > 0 || data.movements.length > 0 || data.invested > 0);
+
+  // --- Ganancia por período (gráfico de barras) ---
+  let granularidad = $state<'dia' | 'mes'>('dia');
+  const gananciaData = $derived.by(() => {
+    if (granularidad === 'mes') {
+      const byMonth = new Map<string, number>();
+      for (const p of data.profitByDay) {
+        const k = p.fecha.slice(0, 7);
+        byMonth.set(k, (byMonth.get(k) ?? 0) + p.profit);
+      }
+      const labels = [...byMonth.keys()].sort();
+      return { labels, values: labels.map((l) => byMonth.get(l)!) };
+    }
+    return { labels: data.profitByDay.map((p) => p.fecha), values: data.profitByDay.map((p) => p.profit) };
+  });
+  const gananciaConfig = $derived({
+    type: 'bar',
+    data: {
+      labels: gananciaData.labels,
+      datasets: [
+        {
+          label: 'Ganancia',
+          data: gananciaData.values,
+          backgroundColor: gananciaData.values.map((v) => (v >= 0 ? '#22c55e' : '#ef4444')),
+          borderRadius: 4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx: { parsed: { y: number } }) => plano(ctx.parsed.y) } } },
+      scales: {
+        y: { ticks: { color: '#a8a29e' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+        x: { ticks: { color: '#d6d3d1' }, grid: { display: false } },
+      },
+    },
+  });
+
+  // --- Meta ---
+  function initMetaAmount() {
+    return data.metaAmount;
+  }
+  function initMetaPeriod() {
+    return data.metaPeriod;
+  }
+  let metaAmount = $state<number | null>(initMetaAmount());
+  let metaPeriod = $state<'day' | 'week' | 'month'>(initMetaPeriod());
+  let savingMeta = $state(false);
+
+  function fechaKey(d: Date): string {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+  const logrado = $derived.by(() => {
+    const today = fechaKey(new Date());
+    if (metaPeriod === 'day') return data.profitByDay.find((p) => p.fecha === today)?.profit ?? 0;
+    if (metaPeriod === 'week') {
+      const start = new Date();
+      start.setDate(start.getDate() - 6);
+      const startK = fechaKey(start);
+      return data.profitByDay.filter((p) => p.fecha >= startK && p.fecha <= today).reduce((s, p) => s + p.profit, 0);
+    }
+    const mk = today.slice(0, 7);
+    return data.profitByDay.filter((p) => p.fecha.slice(0, 7) === mk).reduce((s, p) => s + p.profit, 0);
+  });
+  const metaPct = $derived(metaAmount && metaAmount > 0 ? logrado / metaAmount : 0);
+  const metaFalta = $derived(metaAmount ? Math.max(0, metaAmount - logrado) : 0);
+  const META_LABEL: Record<string, string> = { day: 'hoy', week: 'esta semana', month: 'este mes' };
+
+  async function guardarMeta() {
+    savingMeta = true;
+    try {
+      await supabase.from('profiles').update({ meta_amount: metaAmount, meta_period: metaPeriod }).eq('user_id', data.meId);
+      await invalidateAll();
+    } finally {
+      savingMeta = false;
+    }
+  }
 
   // --- Gráfico de precios (item + ciudad) ---
   function defItem(): string {
@@ -152,6 +232,56 @@
       <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
         <p class="text-xs text-stone-500">Valor inventario</p>
         <p class="mt-1 text-2xl font-semibold text-amber-300 tabular-nums">{sM(data.invValue)}</p>
+      </div>
+    </div>
+
+    <!-- Ganancias + Meta -->
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4 lg:col-span-2">
+        <div class="mb-3 flex items-center justify-between">
+          <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Ganancias</h2>
+          <div class="flex rounded-lg border border-stone-700 p-0.5 text-xs">
+            <button onclick={() => (granularidad = 'dia')} class="rounded px-2.5 py-1 {granularidad === 'dia' ? 'bg-amber-500 text-stone-950' : 'text-stone-400'}">Por día</button>
+            <button onclick={() => (granularidad = 'mes')} class="rounded px-2.5 py-1 {granularidad === 'mes' ? 'bg-amber-500 text-stone-950' : 'text-stone-400'}">Por mes</button>
+          </div>
+        </div>
+        {#if gananciaData.labels.length === 0}
+          <p class="py-16 text-center text-sm text-stone-500">Aún no hay ventas registradas.</p>
+        {:else}
+          <MiniChart config={gananciaConfig} height="h-64" />
+        {/if}
+      </div>
+
+      <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4 lg:col-span-1">
+        <h2 class="mb-3 text-sm font-medium tracking-wide text-stone-400 uppercase">Meta de ganancia</h2>
+        <div class="flex gap-2">
+          <input type="number" bind:value={metaAmount} min="0" placeholder="silver objetivo" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm" />
+          <select bind:value={metaPeriod} class="rounded-lg border border-stone-700 bg-stone-950 px-2 py-2 text-sm">
+            <option value="day">día</option>
+            <option value="week">semana</option>
+            <option value="month">mes</option>
+          </select>
+        </div>
+        <button onclick={guardarMeta} disabled={savingMeta} class="mt-2 w-full rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-stone-950 hover:bg-amber-400 disabled:opacity-60">
+          {savingMeta ? 'Guardando…' : 'Guardar meta'}
+        </button>
+
+        {#if metaAmount && metaAmount > 0}
+          <div class="mt-4 space-y-2">
+            <div class="h-3 w-full overflow-hidden rounded-full bg-stone-800">
+              <div class="h-full rounded-full {logrado >= metaAmount ? 'bg-green-500' : 'bg-amber-500'}" style="width: {Math.min(100, Math.max(0, metaPct * 100))}%"></div>
+            </div>
+            <p class="text-sm">
+              <span class="font-semibold {logrado >= 0 ? 'text-green-300' : 'text-red-300'}">{sM(logrado)}</span>
+              <span class="text-stone-500"> de {sM(metaAmount)} · {META_LABEL[metaPeriod]}</span>
+            </p>
+            <p class="text-xs text-stone-400">
+              {(metaPct * 100).toFixed(0)}% · {logrado >= metaAmount ? '¡Meta cumplida! 🎉' : `faltan ${sM(metaFalta)}`}
+            </p>
+          </div>
+        {:else}
+          <p class="mt-4 text-xs text-stone-500">Pon una meta para seguir tu progreso de ganancia.</p>
+        {/if}
       </div>
     </div>
 
