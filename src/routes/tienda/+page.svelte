@@ -14,13 +14,36 @@
     return data.members.find((m) => m.produceItem === itemId) ?? null;
   }
 
-  // --- Selección de receta ---
-  function defRecipe(): string {
-    return data.recipes.find((r) => r.outputItem === 'T8_MEAL_STEW')?.outputItem ?? data.recipes[0]?.outputItem ?? '';
+  // --- Selección de platillo + calidad (encantamiento) ---
+  function defBase(): string {
+    return data.recipes.find((r) => r.baseId === 'T8_MEAL_STEW')?.baseId ?? data.recipes[0]?.baseId ?? '';
   }
-  let recipeId = $state(defRecipe());
+  let baseId = $state(defBase());
+  let enchant = $state(0);
   let tandas = $state(1);
-  const recipe = $derived(data.recipes.find((r) => r.outputItem === recipeId) ?? null);
+
+  const baseMeals = $derived.by(() => {
+    const seen = new Set<string>();
+    const out: { baseId: string; nombre: string; tier: number }[] = [];
+    for (const r of data.recipes) {
+      if (!seen.has(r.baseId)) {
+        seen.add(r.baseId);
+        out.push({ baseId: r.baseId, nombre: nombre(r.baseId), tier: r.tier });
+      }
+    }
+    return out.sort((a, b) => a.tier - b.tier || a.nombre.localeCompare(b.nombre));
+  });
+  const niveles = $derived(
+    data.recipes.filter((r) => r.baseId === baseId).map((r) => r.enchant).sort((a, b) => a - b),
+  );
+  $effect(() => {
+    if (!niveles.includes(enchant)) enchant = 0;
+  });
+  const recipe = $derived(
+    data.recipes.find((r) => r.baseId === baseId && r.enchant === enchant) ??
+      data.recipes.find((r) => r.baseId === baseId) ??
+      null,
+  );
 
   // Precio de los ingredientes externos (los que nadie del grupo produce).
   // Se precargan con el último precio de mercado y el usuario puede ajustarlos.
@@ -111,16 +134,31 @@
     {#if recipe}
       <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-5">
         <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
-          <div class="flex items-center gap-2">
-            <ItemImg itemId={recipe.outputItem} nombre={nombre(recipe.outputItem)} size={30} />
-            <label class="block">
-              <span class="mb-1 block text-xs text-stone-400">Platillo</span>
-              <select bind:value={recipeId} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm">
-                {#each data.recipes as r}
-                  <option value={r.outputItem}>{nombre(r.outputItem)}</option>
-                {/each}
-              </select>
-            </label>
+          <div class="flex items-center gap-3">
+            <ItemImg itemId={recipe.outputItem} nombre={nombre(recipe.baseId)} size={38} />
+            <div class="flex flex-wrap items-end gap-3">
+              <label class="block">
+                <span class="mb-1 block text-xs text-stone-400">Platillo</span>
+                <select bind:value={baseId} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm">
+                  {#each baseMeals as b}
+                    <option value={b.baseId}>T{b.tier} · {b.nombre}</option>
+                  {/each}
+                </select>
+              </label>
+              <label class="block">
+                <span class="mb-1 block text-xs text-stone-400">Calidad</span>
+                <div class="flex rounded-lg border border-stone-700 p-0.5 text-sm">
+                  {#each niveles as n}
+                    <button
+                      onclick={() => (enchant = n)}
+                      class="rounded px-2.5 py-1 {enchant === n ? 'bg-amber-500 text-stone-950' : 'text-stone-400 hover:text-stone-100'}"
+                    >
+                      {n === 0 ? 'Normal' : `${recipe.tier}.${n}`}
+                    </button>
+                  {/each}
+                </div>
+              </label>
+            </div>
           </div>
           <div class="flex items-end gap-3">
             <p class="text-xs text-stone-500">

@@ -2,7 +2,10 @@
   "meals": [
     {
       "id": "T1_MEAL_SOUP",
+      "baseId": "T1_MEAL_SOUP",
+      "enchant": 0,
       "name_es": "Sopa de zanahoria",
+      "tier": 1,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -13,8 +16,68 @@
       ]
     },
     {
+      "id": "T1_MEAL_SOUP@1",
+      "baseId": "T1_MEAL_SOUP",
+      "enchant": 1,
+      "name_es": "Sopa de zanahoria",
+      "tier": 1,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T1_CARROT",
+          "qty": 16
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T1_MEAL_SOUP@2",
+      "baseId": "T1_MEAL_SOUP",
+      "enchant": 2,
+      "name_es": "Sopa de zanahoria",
+      "tier": 1,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T1_CARROT",
+          "qty": 16
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T1_MEAL_SOUP@3",
+      "baseId": "T1_MEAL_SOUP",
+      "enchant": 3,
+      "name_es": "Sopa de zanahoria",
+      "tier": 1,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T1_CARROT",
+          "qty": 16
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 10
+        }
+      ]
+    },
+    {
       "id": "T2_MEAL_SALAD",
+      "baseId": "T2_MEAL_SALAD",
+      "enchant": 0,
       "name_es": "Ensalada de frijoles",
+      "tier": 2,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -29,8 +92,80 @@
       ]
     },
     {
+      "id": "T2_MEAL_SALAD@1",
+      "baseId": "T2_MEAL_SALAD",
+      "enchant": 1,
+      "name_es": "Ensalada de frijoles",
+      "tier": 2,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T2_BEAN",
+          "qty": 8
+        },
+        {
+          "id": "T1_CARROT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T2_MEAL_SALAD@2",
+      "baseId": "T2_MEAL_SALAD",
+      "enchant": 2,
+      "name_es": "Ensalada de frijoles",
+      "tier": 2,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T2_BEAN",
+          "qty": 8
+        },
+        {
+          "id": "T1_CARROT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T2_MEAL_SALAD@3",
+      "baseId": "T2_MEAL_SALAD",
+      "enchant": 3,
+      "name_es": "Ensalada de frijoles",
+      "tier": 2,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T2_BEAN",
+          "qty": 8
+        },
+        {
+          "id": "T1_CARROT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 10
+        }
+      ]
+    },
+    {
       "id": "T3_MEAL_OMELETTE",
+      "baseId": "T3_MEAL_OMELETTE",
+      "enchant": 0,
       "name_es": "Tortilla de pollo",
+      "tier": 3,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -49,8 +184,92 @@
       ]
     },
     {
+      "id": "T3_MEAL_OMELETTE@1",
+      "baseId": "T3_MEAL_OMELETTE",
+      "enchant": 1,
+      "name_es": "Tortilla de pollo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 4
+        },
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T3_EGG",
+          "qty": 2
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_OMELETTE@2",
+      "baseId": "T3_MEAL_OMELETTE",
+      "enchant": 2,
+      "name_es": "Tortilla de pollo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 4
+        },
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T3_EGG",
+          "qty": 2
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_OMELETTE@3",
+      "baseId": "T3_MEAL_OMELETTE",
+      "enchant": 3,
+      "name_es": "Tortilla de pollo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 4
+        },
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T3_EGG",
+          "qty": 2
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 10
+        }
+      ]
+    },
+    {
       "id": "T3_MEAL_PIE",
+      "baseId": "T3_MEAL_PIE",
+      "enchant": 0,
       "name_es": "Pastel de pollo",
+      "tier": 3,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -69,8 +288,92 @@
       ]
     },
     {
+      "id": "T3_MEAL_PIE@1",
+      "baseId": "T3_MEAL_PIE",
+      "enchant": 1,
+      "name_es": "Pastel de pollo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 2
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 4
+        },
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_PIE@2",
+      "baseId": "T3_MEAL_PIE",
+      "enchant": 2,
+      "name_es": "Pastel de pollo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 2
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 4
+        },
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_PIE@3",
+      "baseId": "T3_MEAL_PIE",
+      "enchant": 3,
+      "name_es": "Pastel de pollo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 2
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 4
+        },
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 10
+        }
+      ]
+    },
+    {
       "id": "T3_MEAL_ROAST",
+      "baseId": "T3_MEAL_ROAST",
+      "enchant": 0,
       "name_es": "Pollo asado",
+      "tier": 3,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -89,8 +392,92 @@
       ]
     },
     {
+      "id": "T3_MEAL_ROAST@1",
+      "baseId": "T3_MEAL_ROAST",
+      "enchant": 1,
+      "name_es": "Pollo asado",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T2_BEAN",
+          "qty": 4
+        },
+        {
+          "id": "T4_MILK",
+          "qty": 4
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_ROAST@2",
+      "baseId": "T3_MEAL_ROAST",
+      "enchant": 2,
+      "name_es": "Pollo asado",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T2_BEAN",
+          "qty": 4
+        },
+        {
+          "id": "T4_MILK",
+          "qty": 4
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_ROAST@3",
+      "baseId": "T3_MEAL_ROAST",
+      "enchant": 3,
+      "name_es": "Pollo asado",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T2_BEAN",
+          "qty": 4
+        },
+        {
+          "id": "T4_MILK",
+          "qty": 4
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 10
+        }
+      ]
+    },
+    {
       "id": "T3_MEAL_SOUP",
+      "baseId": "T3_MEAL_SOUP",
+      "enchant": 0,
       "name_es": "Sopa de trigo",
+      "tier": 3,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -101,8 +488,68 @@
       ]
     },
     {
+      "id": "T3_MEAL_SOUP@1",
+      "baseId": "T3_MEAL_SOUP",
+      "enchant": 1,
+      "name_es": "Sopa de trigo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 48
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_SOUP@2",
+      "baseId": "T3_MEAL_SOUP",
+      "enchant": 2,
+      "name_es": "Sopa de trigo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 48
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_SOUP@3",
+      "baseId": "T3_MEAL_SOUP",
+      "enchant": 3,
+      "name_es": "Sopa de trigo",
+      "tier": 3,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 48
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 30
+        }
+      ]
+    },
+    {
       "id": "T4_MEAL_SALAD",
+      "baseId": "T4_MEAL_SALAD",
+      "enchant": 0,
       "name_es": "Ensalada de rábano",
+      "tier": 4,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -117,8 +564,80 @@
       ]
     },
     {
+      "id": "T4_MEAL_SALAD@1",
+      "baseId": "T4_MEAL_SALAD",
+      "enchant": 1,
+      "name_es": "Ensalada de rábano",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_TURNIP",
+          "qty": 24
+        },
+        {
+          "id": "T3_WHEAT",
+          "qty": 24
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_SALAD@2",
+      "baseId": "T4_MEAL_SALAD",
+      "enchant": 2,
+      "name_es": "Ensalada de rábano",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_TURNIP",
+          "qty": 24
+        },
+        {
+          "id": "T3_WHEAT",
+          "qty": 24
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_SALAD@3",
+      "baseId": "T4_MEAL_SALAD",
+      "enchant": 3,
+      "name_es": "Ensalada de rábano",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_TURNIP",
+          "qty": 24
+        },
+        {
+          "id": "T3_WHEAT",
+          "qty": 24
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 30
+        }
+      ]
+    },
+    {
       "id": "T4_MEAL_SANDWICH",
+      "baseId": "T4_MEAL_SANDWICH",
+      "enchant": 0,
       "name_es": "Bocadillo de cabra",
+      "tier": 4,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -137,8 +656,92 @@
       ]
     },
     {
+      "id": "T4_MEAL_SANDWICH@1",
+      "baseId": "T4_MEAL_SANDWICH",
+      "enchant": 1,
+      "name_es": "Bocadillo de cabra",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 4
+        },
+        {
+          "id": "T4_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T4_BUTTER",
+          "qty": 2
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_SANDWICH@2",
+      "baseId": "T4_MEAL_SANDWICH",
+      "enchant": 2,
+      "name_es": "Bocadillo de cabra",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 4
+        },
+        {
+          "id": "T4_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T4_BUTTER",
+          "qty": 2
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_SANDWICH@3",
+      "baseId": "T4_MEAL_SANDWICH",
+      "enchant": 3,
+      "name_es": "Bocadillo de cabra",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 4
+        },
+        {
+          "id": "T4_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T4_BUTTER",
+          "qty": 2
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 10
+        }
+      ]
+    },
+    {
       "id": "T4_MEAL_STEW",
+      "baseId": "T4_MEAL_STEW",
+      "enchant": 0,
       "name_es": "Guiso de cabra",
+      "tier": 4,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -157,8 +760,92 @@
       ]
     },
     {
+      "id": "T4_MEAL_STEW@1",
+      "baseId": "T4_MEAL_STEW",
+      "enchant": 1,
+      "name_es": "Guiso de cabra",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_TURNIP",
+          "qty": 4
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 4
+        },
+        {
+          "id": "T4_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_STEW@2",
+      "baseId": "T4_MEAL_STEW",
+      "enchant": 2,
+      "name_es": "Guiso de cabra",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_TURNIP",
+          "qty": 4
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 4
+        },
+        {
+          "id": "T4_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_STEW@3",
+      "baseId": "T4_MEAL_STEW",
+      "enchant": 3,
+      "name_es": "Guiso de cabra",
+      "tier": 4,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_TURNIP",
+          "qty": 4
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 4
+        },
+        {
+          "id": "T4_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 10
+        }
+      ]
+    },
+    {
       "id": "T5_MEAL_OMELETTE",
+      "baseId": "T5_MEAL_OMELETTE",
+      "enchant": 0,
       "name_es": "Tortilla de ganso",
+      "tier": 5,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -177,8 +864,92 @@
       ]
     },
     {
+      "id": "T5_MEAL_OMELETTE@1",
+      "baseId": "T5_MEAL_OMELETTE",
+      "enchant": 1,
+      "name_es": "Tortilla de ganso",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 12
+        },
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T5_EGG",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_OMELETTE@2",
+      "baseId": "T5_MEAL_OMELETTE",
+      "enchant": 2,
+      "name_es": "Tortilla de ganso",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 12
+        },
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T5_EGG",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_OMELETTE@3",
+      "baseId": "T5_MEAL_OMELETTE",
+      "enchant": 3,
+      "name_es": "Tortilla de ganso",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 12
+        },
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T5_EGG",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 30
+        }
+      ]
+    },
+    {
       "id": "T5_MEAL_PIE",
+      "baseId": "T5_MEAL_PIE",
+      "enchant": 0,
       "name_es": "Pastel de ganso",
+      "tier": 5,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -201,8 +972,104 @@
       ]
     },
     {
+      "id": "T5_MEAL_PIE@1",
+      "baseId": "T5_MEAL_PIE",
+      "enchant": 1,
+      "name_es": "Pastel de ganso",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 6
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 12
+        },
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T4_MILK",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_PIE@2",
+      "baseId": "T5_MEAL_PIE",
+      "enchant": 2,
+      "name_es": "Pastel de ganso",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 6
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 12
+        },
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T4_MILK",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_PIE@3",
+      "baseId": "T5_MEAL_PIE",
+      "enchant": 3,
+      "name_es": "Pastel de ganso",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 6
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 12
+        },
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T4_MILK",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 30
+        }
+      ]
+    },
+    {
       "id": "T5_MEAL_ROAST",
+      "baseId": "T5_MEAL_ROAST",
+      "enchant": 0,
       "name_es": "Ganso asado",
+      "tier": 5,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -221,8 +1088,92 @@
       ]
     },
     {
+      "id": "T5_MEAL_ROAST@1",
+      "baseId": "T5_MEAL_ROAST",
+      "enchant": 1,
+      "name_es": "Ganso asado",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T5_CABBAGE",
+          "qty": 12
+        },
+        {
+          "id": "T6_MILK",
+          "qty": 12
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_ROAST@2",
+      "baseId": "T5_MEAL_ROAST",
+      "enchant": 2,
+      "name_es": "Ganso asado",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T5_CABBAGE",
+          "qty": 12
+        },
+        {
+          "id": "T6_MILK",
+          "qty": 12
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_ROAST@3",
+      "baseId": "T5_MEAL_ROAST",
+      "enchant": 3,
+      "name_es": "Ganso asado",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T5_CABBAGE",
+          "qty": 12
+        },
+        {
+          "id": "T6_MILK",
+          "qty": 12
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 30
+        }
+      ]
+    },
+    {
       "id": "T5_MEAL_SOUP",
+      "baseId": "T5_MEAL_SOUP",
+      "enchant": 0,
       "name_es": "Sopa de col",
+      "tier": 5,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -233,8 +1184,68 @@
       ]
     },
     {
+      "id": "T5_MEAL_SOUP@1",
+      "baseId": "T5_MEAL_SOUP",
+      "enchant": 1,
+      "name_es": "Sopa de col",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 144
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_SOUP@2",
+      "baseId": "T5_MEAL_SOUP",
+      "enchant": 2,
+      "name_es": "Sopa de col",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 144
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_SOUP@3",
+      "baseId": "T5_MEAL_SOUP",
+      "enchant": 3,
+      "name_es": "Sopa de col",
+      "tier": 5,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 144
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 90
+        }
+      ]
+    },
+    {
       "id": "T6_MEAL_SALAD",
+      "baseId": "T6_MEAL_SALAD",
+      "enchant": 0,
       "name_es": "Ensalada de patata",
+      "tier": 6,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -249,8 +1260,80 @@
       ]
     },
     {
+      "id": "T6_MEAL_SALAD@1",
+      "baseId": "T6_MEAL_SALAD",
+      "enchant": 1,
+      "name_es": "Ensalada de patata",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T6_POTATO",
+          "qty": 72
+        },
+        {
+          "id": "T5_CABBAGE",
+          "qty": 72
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_SALAD@2",
+      "baseId": "T6_MEAL_SALAD",
+      "enchant": 2,
+      "name_es": "Ensalada de patata",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T6_POTATO",
+          "qty": 72
+        },
+        {
+          "id": "T5_CABBAGE",
+          "qty": 72
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_SALAD@3",
+      "baseId": "T6_MEAL_SALAD",
+      "enchant": 3,
+      "name_es": "Ensalada de patata",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T6_POTATO",
+          "qty": 72
+        },
+        {
+          "id": "T5_CABBAGE",
+          "qty": 72
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 90
+        }
+      ]
+    },
+    {
       "id": "T6_MEAL_SANDWICH",
+      "baseId": "T6_MEAL_SANDWICH",
+      "enchant": 0,
       "name_es": "Bocadillo de carnero",
+      "tier": 6,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -269,8 +1352,92 @@
       ]
     },
     {
+      "id": "T6_MEAL_SANDWICH@1",
+      "baseId": "T6_MEAL_SANDWICH",
+      "enchant": 1,
+      "name_es": "Bocadillo de carnero",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 12
+        },
+        {
+          "id": "T6_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T6_BUTTER",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_SANDWICH@2",
+      "baseId": "T6_MEAL_SANDWICH",
+      "enchant": 2,
+      "name_es": "Bocadillo de carnero",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 12
+        },
+        {
+          "id": "T6_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T6_BUTTER",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_SANDWICH@3",
+      "baseId": "T6_MEAL_SANDWICH",
+      "enchant": 3,
+      "name_es": "Bocadillo de carnero",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 12
+        },
+        {
+          "id": "T6_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T6_BUTTER",
+          "qty": 6
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 30
+        }
+      ]
+    },
+    {
       "id": "T6_MEAL_STEW",
+      "baseId": "T6_MEAL_STEW",
+      "enchant": 0,
       "name_es": "Guiso de carnero",
+      "tier": 6,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -289,8 +1456,92 @@
       ]
     },
     {
+      "id": "T6_MEAL_STEW@1",
+      "baseId": "T6_MEAL_STEW",
+      "enchant": 1,
+      "name_es": "Guiso de carnero",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T6_POTATO",
+          "qty": 12
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 12
+        },
+        {
+          "id": "T6_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_STEW@2",
+      "baseId": "T6_MEAL_STEW",
+      "enchant": 2,
+      "name_es": "Guiso de carnero",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T6_POTATO",
+          "qty": 12
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 12
+        },
+        {
+          "id": "T6_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 30
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_STEW@3",
+      "baseId": "T6_MEAL_STEW",
+      "enchant": 3,
+      "name_es": "Guiso de carnero",
+      "tier": 6,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T6_POTATO",
+          "qty": 12
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 12
+        },
+        {
+          "id": "T6_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 30
+        }
+      ]
+    },
+    {
       "id": "T7_MEAL_OMELETTE",
+      "baseId": "T7_MEAL_OMELETTE",
+      "enchant": 0,
       "name_es": "Tortilla de cerdo",
+      "tier": 7,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -309,8 +1560,92 @@
       ]
     },
     {
+      "id": "T7_MEAL_OMELETTE@1",
+      "baseId": "T7_MEAL_OMELETTE",
+      "enchant": 1,
+      "name_es": "Tortilla de cerdo",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_CORN",
+          "qty": 36
+        },
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T5_EGG",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_OMELETTE@2",
+      "baseId": "T7_MEAL_OMELETTE",
+      "enchant": 2,
+      "name_es": "Tortilla de cerdo",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_CORN",
+          "qty": 36
+        },
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T5_EGG",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_OMELETTE@3",
+      "baseId": "T7_MEAL_OMELETTE",
+      "enchant": 3,
+      "name_es": "Tortilla de cerdo",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_CORN",
+          "qty": 36
+        },
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T5_EGG",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 90
+        }
+      ]
+    },
+    {
       "id": "T7_MEAL_PIE",
+      "baseId": "T7_MEAL_PIE",
+      "enchant": 0,
       "name_es": "Pastel de cerdo",
+      "tier": 7,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -333,8 +1668,104 @@
       ]
     },
     {
+      "id": "T7_MEAL_PIE@1",
+      "baseId": "T7_MEAL_PIE",
+      "enchant": 1,
+      "name_es": "Pastel de cerdo",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_CORN",
+          "qty": 18
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 36
+        },
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T6_MILK",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_PIE@2",
+      "baseId": "T7_MEAL_PIE",
+      "enchant": 2,
+      "name_es": "Pastel de cerdo",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_CORN",
+          "qty": 18
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 36
+        },
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T6_MILK",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_PIE@3",
+      "baseId": "T7_MEAL_PIE",
+      "enchant": 3,
+      "name_es": "Pastel de cerdo",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_CORN",
+          "qty": 18
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 36
+        },
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T6_MILK",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 90
+        }
+      ]
+    },
+    {
       "id": "T7_MEAL_ROAST",
+      "baseId": "T7_MEAL_ROAST",
+      "enchant": 0,
       "name_es": "Cerdo asado",
+      "tier": 7,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -353,8 +1784,92 @@
       ]
     },
     {
+      "id": "T7_MEAL_ROAST@1",
+      "baseId": "T7_MEAL_ROAST",
+      "enchant": 1,
+      "name_es": "Cerdo asado",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T7_CORN",
+          "qty": 36
+        },
+        {
+          "id": "T8_MILK",
+          "qty": 36
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_ROAST@2",
+      "baseId": "T7_MEAL_ROAST",
+      "enchant": 2,
+      "name_es": "Cerdo asado",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T7_CORN",
+          "qty": 36
+        },
+        {
+          "id": "T8_MILK",
+          "qty": 36
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_ROAST@3",
+      "baseId": "T7_MEAL_ROAST",
+      "enchant": 3,
+      "name_es": "Cerdo asado",
+      "tier": 7,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T7_CORN",
+          "qty": 36
+        },
+        {
+          "id": "T8_MILK",
+          "qty": 36
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 90
+        }
+      ]
+    },
+    {
       "id": "T8_MEAL_SANDWICH",
+      "baseId": "T8_MEAL_SANDWICH",
+      "enchant": 0,
       "name_es": "Bocadillo de ternera",
+      "tier": 8,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -373,8 +1888,92 @@
       ]
     },
     {
+      "id": "T8_MEAL_SANDWICH@1",
+      "baseId": "T8_MEAL_SANDWICH",
+      "enchant": 1,
+      "name_es": "Bocadillo de ternera",
+      "tier": 8,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 36
+        },
+        {
+          "id": "T8_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T8_BUTTER",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T8_MEAL_SANDWICH@2",
+      "baseId": "T8_MEAL_SANDWICH",
+      "enchant": 2,
+      "name_es": "Bocadillo de ternera",
+      "tier": 8,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 36
+        },
+        {
+          "id": "T8_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T8_BUTTER",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T8_MEAL_SANDWICH@3",
+      "baseId": "T8_MEAL_SANDWICH",
+      "enchant": 3,
+      "name_es": "Bocadillo de ternera",
+      "tier": 8,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 36
+        },
+        {
+          "id": "T8_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T8_BUTTER",
+          "qty": 18
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 90
+        }
+      ]
+    },
+    {
       "id": "T8_MEAL_STEW",
+      "baseId": "T8_MEAL_STEW",
+      "enchant": 0,
       "name_es": "Guiso de ternera",
+      "tier": 8,
       "outputQty": 10,
       "station": "Cook",
       "ingredients": [
@@ -391,6 +1990,87 @@
           "qty": 72
         }
       ]
+    },
+    {
+      "id": "T8_MEAL_STEW@1",
+      "baseId": "T8_MEAL_STEW",
+      "enchant": 1,
+      "name_es": "Guiso de ternera",
+      "tier": 8,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T8_PUMPKIN",
+          "qty": 36
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 36
+        },
+        {
+          "id": "T8_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL1",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T8_MEAL_STEW@2",
+      "baseId": "T8_MEAL_STEW",
+      "enchant": 2,
+      "name_es": "Guiso de ternera",
+      "tier": 8,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T8_PUMPKIN",
+          "qty": 36
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 36
+        },
+        {
+          "id": "T8_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL2",
+          "qty": 90
+        }
+      ]
+    },
+    {
+      "id": "T8_MEAL_STEW@3",
+      "baseId": "T8_MEAL_STEW",
+      "enchant": 3,
+      "name_es": "Guiso de ternera",
+      "tier": 8,
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T8_PUMPKIN",
+          "qty": 36
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 36
+        },
+        {
+          "id": "T8_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T1_FISHSAUCE_LEVEL3",
+          "qty": 90
+        }
+      ]
     }
   ],
   "items": [
@@ -398,270 +2078,777 @@
       "id": "T1_CARROT",
       "name_es": "Zanahorias",
       "tier": 1,
+      "enchant": 0,
       "category": "crop"
+    },
+    {
+      "id": "T1_FISHSAUCE_LEVEL1",
+      "name_es": "Salsa de pescado básica",
+      "tier": 1,
+      "enchant": 0,
+      "category": "condimento"
+    },
+    {
+      "id": "T1_FISHSAUCE_LEVEL2",
+      "name_es": "Salsa de pescado extravagante",
+      "tier": 1,
+      "enchant": 0,
+      "category": "condimento"
+    },
+    {
+      "id": "T1_FISHSAUCE_LEVEL3",
+      "name_es": "Salsa de pescado especial",
+      "tier": 1,
+      "enchant": 0,
+      "category": "condimento"
     },
     {
       "id": "T1_MEAL_SOUP",
       "name_es": "Sopa de zanahoria",
       "tier": 1,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T1_MEAL_SOUP@1",
+      "name_es": "Sopa de zanahoria",
+      "tier": 1,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T1_MEAL_SOUP@2",
+      "name_es": "Sopa de zanahoria",
+      "tier": 1,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T1_MEAL_SOUP@3",
+      "name_es": "Sopa de zanahoria",
+      "tier": 1,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T2_BEAN",
       "name_es": "Frijoles",
       "tier": 2,
+      "enchant": 0,
       "category": "crop"
     },
     {
       "id": "T2_MEAL_SALAD",
       "name_es": "Ensalada de frijoles",
       "tier": 2,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T2_MEAL_SALAD@1",
+      "name_es": "Ensalada de frijoles",
+      "tier": 2,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T2_MEAL_SALAD@2",
+      "name_es": "Ensalada de frijoles",
+      "tier": 2,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T2_MEAL_SALAD@3",
+      "name_es": "Ensalada de frijoles",
+      "tier": 2,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T3_EGG",
       "name_es": "Huevos de gallina",
       "tier": 3,
+      "enchant": 0,
       "category": "animal"
     },
     {
       "id": "T3_FLOUR",
       "name_es": "Harina",
       "tier": 3,
+      "enchant": 0,
       "category": "refined"
     },
     {
       "id": "T3_MEAL_OMELETTE",
       "name_es": "Tortilla de pollo",
       "tier": 3,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_OMELETTE@1",
+      "name_es": "Tortilla de pollo",
+      "tier": 3,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_OMELETTE@2",
+      "name_es": "Tortilla de pollo",
+      "tier": 3,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_OMELETTE@3",
+      "name_es": "Tortilla de pollo",
+      "tier": 3,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T3_MEAL_PIE",
       "name_es": "Pastel de pollo",
       "tier": 3,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_PIE@1",
+      "name_es": "Pastel de pollo",
+      "tier": 3,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_PIE@2",
+      "name_es": "Pastel de pollo",
+      "tier": 3,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_PIE@3",
+      "name_es": "Pastel de pollo",
+      "tier": 3,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T3_MEAL_ROAST",
       "name_es": "Pollo asado",
       "tier": 3,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_ROAST@1",
+      "name_es": "Pollo asado",
+      "tier": 3,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_ROAST@2",
+      "name_es": "Pollo asado",
+      "tier": 3,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_ROAST@3",
+      "name_es": "Pollo asado",
+      "tier": 3,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T3_MEAL_SOUP",
       "name_es": "Sopa de trigo",
       "tier": 3,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_SOUP@1",
+      "name_es": "Sopa de trigo",
+      "tier": 3,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_SOUP@2",
+      "name_es": "Sopa de trigo",
+      "tier": 3,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_SOUP@3",
+      "name_es": "Sopa de trigo",
+      "tier": 3,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T3_MEAT",
       "name_es": "Carne de pollo",
       "tier": 3,
+      "enchant": 0,
       "category": "meat"
     },
     {
       "id": "T3_WHEAT",
       "name_es": "Manojo de trigo",
       "tier": 3,
+      "enchant": 0,
       "category": "crop"
     },
     {
       "id": "T4_BREAD",
       "name_es": "Pan",
       "tier": 4,
+      "enchant": 0,
       "category": "refined"
     },
     {
       "id": "T4_BUTTER",
       "name_es": "Manteca de cabra",
       "tier": 4,
+      "enchant": 0,
       "category": "refined"
     },
     {
       "id": "T4_MEAL_SALAD",
       "name_es": "Ensalada de rábano",
       "tier": 4,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_SALAD@1",
+      "name_es": "Ensalada de rábano",
+      "tier": 4,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_SALAD@2",
+      "name_es": "Ensalada de rábano",
+      "tier": 4,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_SALAD@3",
+      "name_es": "Ensalada de rábano",
+      "tier": 4,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T4_MEAL_SANDWICH",
       "name_es": "Bocadillo de cabra",
       "tier": 4,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_SANDWICH@1",
+      "name_es": "Bocadillo de cabra",
+      "tier": 4,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_SANDWICH@2",
+      "name_es": "Bocadillo de cabra",
+      "tier": 4,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_SANDWICH@3",
+      "name_es": "Bocadillo de cabra",
+      "tier": 4,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T4_MEAL_STEW",
       "name_es": "Guiso de cabra",
       "tier": 4,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_STEW@1",
+      "name_es": "Guiso de cabra",
+      "tier": 4,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_STEW@2",
+      "name_es": "Guiso de cabra",
+      "tier": 4,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_STEW@3",
+      "name_es": "Guiso de cabra",
+      "tier": 4,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T4_MEAT",
       "name_es": "Carne de cabra",
       "tier": 4,
+      "enchant": 0,
       "category": "meat"
     },
     {
       "id": "T4_MILK",
       "name_es": "Leche de cabra",
       "tier": 4,
+      "enchant": 0,
       "category": "animal"
     },
     {
       "id": "T4_TURNIP",
       "name_es": "Rábanos",
       "tier": 4,
+      "enchant": 0,
       "category": "crop"
     },
     {
       "id": "T5_CABBAGE",
       "name_es": "Coles",
       "tier": 5,
+      "enchant": 0,
       "category": "crop"
     },
     {
       "id": "T5_EGG",
       "name_es": "Huevos de ganso",
       "tier": 5,
+      "enchant": 0,
       "category": "animal"
     },
     {
       "id": "T5_MEAL_OMELETTE",
       "name_es": "Tortilla de ganso",
       "tier": 5,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_OMELETTE@1",
+      "name_es": "Tortilla de ganso",
+      "tier": 5,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_OMELETTE@2",
+      "name_es": "Tortilla de ganso",
+      "tier": 5,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_OMELETTE@3",
+      "name_es": "Tortilla de ganso",
+      "tier": 5,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T5_MEAL_PIE",
       "name_es": "Pastel de ganso",
       "tier": 5,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_PIE@1",
+      "name_es": "Pastel de ganso",
+      "tier": 5,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_PIE@2",
+      "name_es": "Pastel de ganso",
+      "tier": 5,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_PIE@3",
+      "name_es": "Pastel de ganso",
+      "tier": 5,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T5_MEAL_ROAST",
       "name_es": "Ganso asado",
       "tier": 5,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_ROAST@1",
+      "name_es": "Ganso asado",
+      "tier": 5,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_ROAST@2",
+      "name_es": "Ganso asado",
+      "tier": 5,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_ROAST@3",
+      "name_es": "Ganso asado",
+      "tier": 5,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T5_MEAL_SOUP",
       "name_es": "Sopa de col",
       "tier": 5,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_SOUP@1",
+      "name_es": "Sopa de col",
+      "tier": 5,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_SOUP@2",
+      "name_es": "Sopa de col",
+      "tier": 5,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_SOUP@3",
+      "name_es": "Sopa de col",
+      "tier": 5,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T5_MEAT",
       "name_es": "Carne de ganso",
       "tier": 5,
+      "enchant": 0,
       "category": "meat"
     },
     {
       "id": "T6_BUTTER",
       "name_es": "Manteca de oveja",
       "tier": 6,
+      "enchant": 0,
       "category": "refined"
     },
     {
       "id": "T6_MEAL_SALAD",
       "name_es": "Ensalada de patata",
       "tier": 6,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_SALAD@1",
+      "name_es": "Ensalada de patata",
+      "tier": 6,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_SALAD@2",
+      "name_es": "Ensalada de patata",
+      "tier": 6,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_SALAD@3",
+      "name_es": "Ensalada de patata",
+      "tier": 6,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T6_MEAL_SANDWICH",
       "name_es": "Bocadillo de carnero",
       "tier": 6,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_SANDWICH@1",
+      "name_es": "Bocadillo de carnero",
+      "tier": 6,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_SANDWICH@2",
+      "name_es": "Bocadillo de carnero",
+      "tier": 6,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_SANDWICH@3",
+      "name_es": "Bocadillo de carnero",
+      "tier": 6,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T6_MEAL_STEW",
       "name_es": "Guiso de carnero",
       "tier": 6,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_STEW@1",
+      "name_es": "Guiso de carnero",
+      "tier": 6,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_STEW@2",
+      "name_es": "Guiso de carnero",
+      "tier": 6,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_STEW@3",
+      "name_es": "Guiso de carnero",
+      "tier": 6,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T6_MEAT",
       "name_es": "Carne de carnero",
       "tier": 6,
+      "enchant": 0,
       "category": "meat"
     },
     {
       "id": "T6_MILK",
       "name_es": "Leche de oveja",
       "tier": 6,
+      "enchant": 0,
       "category": "animal"
     },
     {
       "id": "T6_POTATO",
       "name_es": "Patatas",
       "tier": 6,
+      "enchant": 0,
       "category": "crop"
     },
     {
       "id": "T7_CORN",
       "name_es": "Fardo de maíz",
       "tier": 7,
+      "enchant": 0,
       "category": "crop"
     },
     {
       "id": "T7_MEAL_OMELETTE",
       "name_es": "Tortilla de cerdo",
       "tier": 7,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_OMELETTE@1",
+      "name_es": "Tortilla de cerdo",
+      "tier": 7,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_OMELETTE@2",
+      "name_es": "Tortilla de cerdo",
+      "tier": 7,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_OMELETTE@3",
+      "name_es": "Tortilla de cerdo",
+      "tier": 7,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T7_MEAL_PIE",
       "name_es": "Pastel de cerdo",
       "tier": 7,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_PIE@1",
+      "name_es": "Pastel de cerdo",
+      "tier": 7,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_PIE@2",
+      "name_es": "Pastel de cerdo",
+      "tier": 7,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_PIE@3",
+      "name_es": "Pastel de cerdo",
+      "tier": 7,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T7_MEAL_ROAST",
       "name_es": "Cerdo asado",
       "tier": 7,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_ROAST@1",
+      "name_es": "Cerdo asado",
+      "tier": 7,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_ROAST@2",
+      "name_es": "Cerdo asado",
+      "tier": 7,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_ROAST@3",
+      "name_es": "Cerdo asado",
+      "tier": 7,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T7_MEAT",
       "name_es": "Carne de cerdo",
       "tier": 7,
+      "enchant": 0,
       "category": "meat"
     },
     {
       "id": "T8_BUTTER",
       "name_es": "Manteca de vaca",
       "tier": 8,
+      "enchant": 0,
       "category": "refined"
     },
     {
       "id": "T8_MEAL_SANDWICH",
       "name_es": "Bocadillo de ternera",
       "tier": 8,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T8_MEAL_SANDWICH@1",
+      "name_es": "Bocadillo de ternera",
+      "tier": 8,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T8_MEAL_SANDWICH@2",
+      "name_es": "Bocadillo de ternera",
+      "tier": 8,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T8_MEAL_SANDWICH@3",
+      "name_es": "Bocadillo de ternera",
+      "tier": 8,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T8_MEAL_STEW",
       "name_es": "Guiso de ternera",
       "tier": 8,
+      "enchant": 0,
+      "category": "meal"
+    },
+    {
+      "id": "T8_MEAL_STEW@1",
+      "name_es": "Guiso de ternera",
+      "tier": 8,
+      "enchant": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T8_MEAL_STEW@2",
+      "name_es": "Guiso de ternera",
+      "tier": 8,
+      "enchant": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T8_MEAL_STEW@3",
+      "name_es": "Guiso de ternera",
+      "tier": 8,
+      "enchant": 3,
       "category": "meal"
     },
     {
       "id": "T8_MEAT",
       "name_es": "Carne de ternera",
       "tier": 8,
+      "enchant": 0,
       "category": "meat"
     },
     {
       "id": "T8_MILK",
       "name_es": "Leche de vaca",
       "tier": 8,
+      "enchant": 0,
       "category": "animal"
     },
     {
       "id": "T8_PUMPKIN",
       "name_es": "Calabaza",
       "tier": 8,
+      "enchant": 0,
       "category": "crop"
     }
   ]

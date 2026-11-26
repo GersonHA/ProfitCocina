@@ -9,6 +9,9 @@ import { PRODUCE } from '$lib/items';
 
 interface Recipe {
   outputItem: string;
+  baseId: string;
+  enchant: number;
+  tier: number;
   outputQty: number;
   station: string;
   ingredients: { itemId: string; qty: number }[];
@@ -78,19 +81,27 @@ export async function load({ parent }) {
   const marketPrice: Record<string, number> = {};
   for (const [item, a] of acc) if (a.n > 0) marketPrice[item] = a.sum / a.n;
 
-  // Solo recetas de comida (platillos cocinados).
+  // Solo recetas de comida (platillos cocinados), con tier y encantamiento.
   const recipes: Recipe[] = (recipesRes.data ?? [])
     .filter((r) => (r.output_item as string).includes('_MEAL_'))
-    .map((r) => ({
-      outputItem: r.output_item as string,
-      outputQty: Number(r.output_qty),
-      station: (r.station as string) ?? 'Cook',
-      ingredients: (r.recipe_ingredients ?? []).map((x: { item_id: string; qty: number }) => ({
-        itemId: x.item_id,
-        qty: Number(x.qty),
-      })),
-    }))
-    .sort((a, b) => (names[a.outputItem] ?? a.outputItem).localeCompare(names[b.outputItem] ?? b.outputItem));
+    .map((r) => {
+      const outputItem = r.output_item as string;
+      const [baseId, enc] = outputItem.split('@');
+      const tierM = baseId.match(/^T(\d)_/);
+      return {
+        outputItem,
+        baseId,
+        enchant: enc ? Number(enc) : 0,
+        tier: tierM ? Number(tierM[1]) : 8,
+        outputQty: Number(r.output_qty),
+        station: (r.station as string) ?? 'Cook',
+        ingredients: (r.recipe_ingredients ?? []).map((x: { item_id: string; qty: number }) => ({
+          itemId: x.item_id,
+          qty: Number(x.qty),
+        })),
+      };
+    })
+    .sort((a, b) => (names[a.baseId] ?? a.baseId).localeCompare(names[b.baseId] ?? b.baseId) || a.enchant - b.enchant);
 
   return { meId: me, members, recipes, names, marketPrice };
 }

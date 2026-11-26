@@ -14,7 +14,7 @@ let sql = `-- ==================================================================
 -- =====================================================================
 
 insert into public.items (item_id, name_es, tier, enchant, category, nutrition) values
-${items.map((i) => `  (${q(i.id)}, ${q(i.name_es)}, ${i.tier}, 0, ${q(i.category)}, null)`).join(',\n')}
+${items.map((i) => `  (${q(i.id)}, ${q(i.name_es)}, ${i.tier}, ${i.enchant ?? 0}, ${q(i.category)}, null)`).join(',\n')}
 on conflict (item_id) do update set name_es = excluded.name_es;
 
 insert into public.recipes (output_item, output_qty, station, focus_cost) values
