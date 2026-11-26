@@ -40,14 +40,14 @@
   }
   function plano(n: number | null | undefined): string {
     if (n === null || n === undefined) return '—';
-    return Math.round(Number(n)).toLocaleString('es-ES');
+    return Math.round(Number(n)).toLocaleString('es-ES', { useGrouping: 'always' });
   }
   function sM(n: number): string {
     const v = Math.round(n);
     const a = Math.abs(v);
     if (a >= 1e6) return (v / 1e6).toFixed(2).replace('.', ',') + ' M';
     if (a >= 1e3) return (v / 1e3).toFixed(1).replace('.', ',') + ' k';
-    return v.toLocaleString('es-ES');
+    return v.toLocaleString('es-ES', { useGrouping: 'always' });
   }
   function fechaKey(d: Date): string {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;

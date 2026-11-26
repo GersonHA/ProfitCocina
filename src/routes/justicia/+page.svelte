@@ -22,7 +22,7 @@
     return built.names[id] ?? id;
   }
   function fmt(n: number): string {
-    return Math.round(n).toLocaleString('es-ES');
+    return Math.round(n).toLocaleString('es-ES', { useGrouping: 'always' });
   }
   function signo(n: number): string {
     return (n >= 0 ? '+' : '') + fmt(n);

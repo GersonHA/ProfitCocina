@@ -143,7 +143,7 @@
       <div class="flex items-center justify-between rounded-lg bg-stone-800/40 px-3 py-2 text-sm">
         <span class="text-stone-400">
           Precio a costo del vendedor (ya precargado):
-          <span class="text-stone-200">{suggested === null ? '— (sin stock registrado)' : Math.round(suggested).toLocaleString('es-ES')}</span>
+          <span class="text-stone-200">{suggested === null ? '— (sin stock registrado)' : Math.round(suggested).toLocaleString('es-ES', { useGrouping: 'always' })}</span>
         </span>
         {#if suggested !== null}
           <button type="button" onclick={usarSugerido} class="rounded-lg border border-stone-700 px-2 py-1 text-xs hover:bg-stone-800">Usar</button>

@@ -17,7 +17,7 @@
   let canvas: HTMLCanvasElement | undefined = $state();
   let chart: Chart | undefined;
 
-  const fmt = (n: number) => Math.round(n).toLocaleString('es-ES');
+  const fmt = (n: number) => Math.round(n).toLocaleString('es-ES', { useGrouping: 'always' });
 
   $effect(() => {
     // dependencias

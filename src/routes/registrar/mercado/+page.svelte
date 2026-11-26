@@ -33,7 +33,7 @@
   const feeOrden = $derived(direction === 'sell' && orderType === 'sell_order' ? bruto * 0.025 : 0);
   const impuesto = $derived(impVenta + feeOrden);
   const neto = $derived(bruto - impuesto);
-  const fmt = (n: number) => Math.round(n).toLocaleString('es-ES');
+  const fmt = (n: number) => Math.round(n).toLocaleString('es-ES', { useGrouping: 'always' });
 
   let saving = $state(false);
   let error = $state('');

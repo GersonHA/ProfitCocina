@@ -127,7 +127,7 @@
         <div class="grid grid-cols-2 gap-3">
           <div class="rounded-lg bg-stone-800/40 px-3 py-2 text-sm">
             <span class="block text-xs text-stone-500">En el sistema</span>
-            <span class="tabular-nums">{Math.round(actual).toLocaleString('es-ES')}</span>
+            <span class="tabular-nums">{Math.round(actual).toLocaleString('es-ES', { useGrouping: 'always' })}</span>
           </div>
           <label class="block">
             <span class="mb-1 block text-xs text-stone-400">Cantidad real en el juego</span>

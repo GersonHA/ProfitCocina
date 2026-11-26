@@ -11,7 +11,7 @@
     return data.balances[id] ?? { qty: 0, avg: 0 };
   }
   function fmt(n: number): string {
-    return Math.round(n).toLocaleString('es-ES');
+    return Math.round(n).toLocaleString('es-ES', { useGrouping: 'always' });
   }
 </script>
 

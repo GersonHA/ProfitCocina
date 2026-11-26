@@ -25,7 +25,7 @@
 
   function silver(n: number | null | undefined): string {
     if (n === null || n === undefined) return '—';
-    return Math.round(Number(n)).toLocaleString('es-ES');
+    return Math.round(Number(n)).toLocaleString('es-ES', { useGrouping: 'always' });
   }
 
   async function recalcular() {
