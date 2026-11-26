@@ -30,8 +30,7 @@
     <p class="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">No tienes un grupo activo.</p>
   {:else if !data.chain}
     <p class="rounded-lg bg-stone-800/50 px-3 py-2 text-sm text-stone-400">
-      No tienes una cadena configurada para “{data.produce ?? '—'}”.
-      Usa <a href="/registrar/lote" class="underline">el formulario avanzado</a>.
+      No tienes una cadena configurada para “{data.produce ?? '—'}”. Pídele al admin del grupo que ajuste tu recurso.
     </p>
   {:else}
     <!-- Cadena dibujada -->
@@ -59,8 +58,5 @@
       {/each}
     </div>
 
-    <p class="text-center text-xs text-stone-600">
-      ¿Un caso raro? Usa el <a href="/registrar/lote" class="underline">formulario avanzado</a>.
-    </p>
   {/if}
 </section>

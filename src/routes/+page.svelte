@@ -11,7 +11,6 @@
     { href: '/registrar/compra-miembro', emoji: '🤝', label: 'Comprar a un miembro' },
     { href: '/registrar/ajuste', emoji: '⚖️', label: 'Ajuste de stock' },
     { href: '/precios', emoji: '💲', label: 'Precios de mercado' },
-    { href: '/registrar/lote', emoji: '🌾', label: 'Lote (avanzado)' },
   ];
 
   const CIUDADES = ['Caerleon', 'Martlock', 'Fort Sterling', 'Thetford', 'Lymhurst', 'Bridgewatch', 'Brecilien'];
