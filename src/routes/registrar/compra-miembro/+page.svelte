@@ -48,6 +48,8 @@
       .maybeSingle()
       .then(({ data: b }) => {
         suggested = b ? Number(b.avg_cost) : null;
+        // Se compran a costo: precarga el precio con el costo del vendedor.
+        if (suggested !== null) priceUnit = Math.round(suggested * 100) / 100;
       });
   });
 
@@ -140,7 +142,7 @@
 
       <div class="flex items-center justify-between rounded-lg bg-stone-800/40 px-3 py-2 text-sm">
         <span class="text-stone-400">
-          Costo sugerido del vendedor:
+          Precio a costo del vendedor (ya precargado):
           <span class="text-stone-200">{suggested === null ? '— (sin stock registrado)' : Math.round(suggested).toLocaleString('es-ES')}</span>
         </span>
         {#if suggested !== null}

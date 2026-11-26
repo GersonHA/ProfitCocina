@@ -11,8 +11,12 @@
   const built = $derived(source === 'real' && data.real ? data.real : data.example);
   const comparison = $derived(compareModels(built.data));
 
+  // "Pozo común" no aplica: cada quien cocina y vende su propio guiso (nada se junta).
+  const models = $derived(comparison.models.filter((m) => m.model !== 'pozo_comun'));
+  const recommended = $derived(models.find((m) => m.allFair)?.model ?? null);
+
   let selectedModel = $state<ModelId>('costo');
-  const current = $derived(comparison.models.find((m) => m.model === selectedModel) ?? comparison.models[0]);
+  const current = $derived(models.find((m) => m.model === selectedModel) ?? models[0]);
 
   function nombre(id: string): string {
     return built.names[id] ?? id;
@@ -55,12 +59,16 @@
     </div>
   {/if}
 
+  <p class="rounded-lg bg-stone-800/50 px-3 py-2 text-xs text-stone-400">
+    Cada quien produce su recurso, compra lo que le falta y vende su propio guiso donde quiera. Aquí solo medimos si el <span class="text-stone-200">intercambio de ingredientes</span> es justo — las ventas del guiso son de cada uno.
+  </p>
+
   <!-- Recomendación -->
   <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
-    {#if comparison.recommended}
+    {#if recommended}
       <p class="text-sm">
         Modelo recomendado:
-        <span class="font-semibold text-amber-300">{MODEL_LABELS[comparison.recommended]}</span>
+        <span class="font-semibold text-amber-300">{MODEL_LABELS[recommended]}</span>
         <span class="text-stone-400">— el más simple que deja a todos con ✅.</span>
       </p>
     {:else}
@@ -70,7 +78,7 @@
 
   <!-- Selector de modelos -->
   <div class="flex flex-wrap gap-2">
-    {#each comparison.models as m}
+    {#each models as m}
       <button
         onclick={() => (selectedModel = m.model)}
         class="rounded-lg border px-3 py-1.5 text-sm transition {selectedModel === m.model
