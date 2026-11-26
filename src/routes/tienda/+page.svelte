@@ -1,7 +1,39 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { supabase } from '$lib/supabase';
   import ItemImg from '$lib/components/ItemImg.svelte';
 
   let { data } = $props();
+
+  let creando = $state(false);
+  let errorOrden = $state('');
+  async function crearOrden() {
+    if (!recipe || !data.groupId) return;
+    creando = true;
+    errorOrden = '';
+    try {
+      const { data: ord, error } = await supabase
+        .from('production_orders')
+        .insert({ group_id: data.groupId, output_item: recipe.outputItem, tandas, state: 'compras' })
+        .select('id')
+        .single();
+      if (error) throw error;
+      const items = filas.map((f) => ({
+        order_id: ord.id,
+        item_id: f.itemId,
+        qty: f.cant,
+        source: f.externo ? 'external' : 'member',
+        seller_id: f.externo ? null : (f.productor?.id ?? null),
+        unit_price: f.precio,
+      }));
+      const { error: e2 } = await supabase.from('order_items').insert(items);
+      if (e2) throw e2;
+      await goto(`/ordenes/${ord.id}`);
+    } catch (err) {
+      errorOrden = err instanceof Error ? err.message : String(err);
+      creando = false;
+    }
+  }
 
   function plano(n: number | null | undefined): string {
     if (n === null || n === undefined) return '—';
@@ -282,6 +314,20 @@
             Registra el precio de este platillo en <a href="/precios" class="text-amber-300 underline">Precios de mercado</a> para ver la ganancia.
           </p>
         {/if}
+
+        <div class="mt-4 flex flex-col items-end gap-1.5 border-t border-stone-800 pt-4">
+          {#if errorOrden}<p class="text-xs text-red-300">{errorOrden}</p>{/if}
+          <button
+            onclick={crearOrden}
+            disabled={creando || !completo}
+            class="rounded-xl bg-amber-500 px-4 py-2.5 font-semibold text-stone-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {creando ? 'Creando…' : '📋 Crear orden de producción'}
+          </button>
+          <p class="text-xs text-stone-500">
+            {completo ? 'Convierte este plan en una orden con seguimiento (compras → cocina).' : 'Completa los precios para crear la orden.'}
+          </p>
+        </div>
       </div>
     {/if}
   {/if}

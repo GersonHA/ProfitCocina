@@ -20,7 +20,15 @@ interface Recipe {
 export async function load({ parent }) {
   const { session, group } = await parent();
   const me = session?.user.id ?? null;
-  if (!group) return { meId: me, members: [], recipes: [] as Recipe[], names: {}, marketPrice: {} };
+  if (!group)
+    return {
+      meId: me,
+      groupId: null,
+      members: [],
+      recipes: [] as Recipe[],
+      names: {} as Record<string, string>,
+      marketPrice: {} as Record<string, number>,
+    };
   const gid = group.id;
 
   const [gmRes, recipesRes, itemsRes, priceRes, balRes] = await Promise.all([
@@ -103,5 +111,5 @@ export async function load({ parent }) {
     })
     .sort((a, b) => (names[a.baseId] ?? a.baseId).localeCompare(names[b.baseId] ?? b.baseId) || a.enchant - b.enchant);
 
-  return { meId: me, members, recipes, names, marketPrice };
+  return { meId: me, groupId: gid, members, recipes, names, marketPrice };
 }
