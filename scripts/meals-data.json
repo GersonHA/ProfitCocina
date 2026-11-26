@@ -1,0 +1,668 @@
+{
+  "meals": [
+    {
+      "id": "T1_MEAL_SOUP",
+      "name_es": "Sopa de zanahoria",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T1_CARROT",
+          "qty": 16
+        }
+      ]
+    },
+    {
+      "id": "T2_MEAL_SALAD",
+      "name_es": "Ensalada de frijoles",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T2_BEAN",
+          "qty": 8
+        },
+        {
+          "id": "T1_CARROT",
+          "qty": 8
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_OMELETTE",
+      "name_es": "Tortilla de pollo",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 4
+        },
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T3_EGG",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_PIE",
+      "name_es": "Pastel de pollo",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 2
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 4
+        },
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_ROAST",
+      "name_es": "Pollo asado",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T2_BEAN",
+          "qty": 4
+        },
+        {
+          "id": "T4_MILK",
+          "qty": 4
+        }
+      ]
+    },
+    {
+      "id": "T3_MEAL_SOUP",
+      "name_es": "Sopa de trigo",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T3_WHEAT",
+          "qty": 48
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_SALAD",
+      "name_es": "Ensalada de rábano",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_TURNIP",
+          "qty": 24
+        },
+        {
+          "id": "T3_WHEAT",
+          "qty": 24
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_SANDWICH",
+      "name_es": "Bocadillo de cabra",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 4
+        },
+        {
+          "id": "T4_MEAT",
+          "qty": 8
+        },
+        {
+          "id": "T4_BUTTER",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": "T4_MEAL_STEW",
+      "name_es": "Guiso de cabra",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_TURNIP",
+          "qty": 4
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 4
+        },
+        {
+          "id": "T4_MEAT",
+          "qty": 8
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_OMELETTE",
+      "name_es": "Tortilla de ganso",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 12
+        },
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T5_EGG",
+          "qty": 6
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_PIE",
+      "name_es": "Pastel de ganso",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 6
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 12
+        },
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T4_MILK",
+          "qty": 6
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_ROAST",
+      "name_es": "Ganso asado",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T5_CABBAGE",
+          "qty": 12
+        },
+        {
+          "id": "T6_MILK",
+          "qty": 12
+        }
+      ]
+    },
+    {
+      "id": "T5_MEAL_SOUP",
+      "name_es": "Sopa de col",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T5_CABBAGE",
+          "qty": 144
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_SALAD",
+      "name_es": "Ensalada de patata",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T6_POTATO",
+          "qty": 72
+        },
+        {
+          "id": "T5_CABBAGE",
+          "qty": 72
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_SANDWICH",
+      "name_es": "Bocadillo de carnero",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 12
+        },
+        {
+          "id": "T6_MEAT",
+          "qty": 24
+        },
+        {
+          "id": "T6_BUTTER",
+          "qty": 6
+        }
+      ]
+    },
+    {
+      "id": "T6_MEAL_STEW",
+      "name_es": "Guiso de carnero",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T6_POTATO",
+          "qty": 12
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 12
+        },
+        {
+          "id": "T6_MEAT",
+          "qty": 24
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_OMELETTE",
+      "name_es": "Tortilla de cerdo",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_CORN",
+          "qty": 36
+        },
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T5_EGG",
+          "qty": 18
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_PIE",
+      "name_es": "Pastel de cerdo",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_CORN",
+          "qty": 18
+        },
+        {
+          "id": "T3_FLOUR",
+          "qty": 36
+        },
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T6_MILK",
+          "qty": 18
+        }
+      ]
+    },
+    {
+      "id": "T7_MEAL_ROAST",
+      "name_es": "Cerdo asado",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T7_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T7_CORN",
+          "qty": 36
+        },
+        {
+          "id": "T8_MILK",
+          "qty": 36
+        }
+      ]
+    },
+    {
+      "id": "T8_MEAL_SANDWICH",
+      "name_es": "Bocadillo de ternera",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T4_BREAD",
+          "qty": 36
+        },
+        {
+          "id": "T8_MEAT",
+          "qty": 72
+        },
+        {
+          "id": "T8_BUTTER",
+          "qty": 18
+        }
+      ]
+    },
+    {
+      "id": "T8_MEAL_STEW",
+      "name_es": "Guiso de ternera",
+      "outputQty": 10,
+      "station": "Cook",
+      "ingredients": [
+        {
+          "id": "T8_PUMPKIN",
+          "qty": 36
+        },
+        {
+          "id": "T4_BREAD",
+          "qty": 36
+        },
+        {
+          "id": "T8_MEAT",
+          "qty": 72
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "T1_CARROT",
+      "name_es": "Zanahorias",
+      "tier": 1,
+      "category": "crop"
+    },
+    {
+      "id": "T1_MEAL_SOUP",
+      "name_es": "Sopa de zanahoria",
+      "tier": 1,
+      "category": "meal"
+    },
+    {
+      "id": "T2_BEAN",
+      "name_es": "Frijoles",
+      "tier": 2,
+      "category": "crop"
+    },
+    {
+      "id": "T2_MEAL_SALAD",
+      "name_es": "Ensalada de frijoles",
+      "tier": 2,
+      "category": "meal"
+    },
+    {
+      "id": "T3_EGG",
+      "name_es": "Huevos de gallina",
+      "tier": 3,
+      "category": "animal"
+    },
+    {
+      "id": "T3_FLOUR",
+      "name_es": "Harina",
+      "tier": 3,
+      "category": "refined"
+    },
+    {
+      "id": "T3_MEAL_OMELETTE",
+      "name_es": "Tortilla de pollo",
+      "tier": 3,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_PIE",
+      "name_es": "Pastel de pollo",
+      "tier": 3,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_ROAST",
+      "name_es": "Pollo asado",
+      "tier": 3,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAL_SOUP",
+      "name_es": "Sopa de trigo",
+      "tier": 3,
+      "category": "meal"
+    },
+    {
+      "id": "T3_MEAT",
+      "name_es": "Carne de pollo",
+      "tier": 3,
+      "category": "meat"
+    },
+    {
+      "id": "T3_WHEAT",
+      "name_es": "Manojo de trigo",
+      "tier": 3,
+      "category": "crop"
+    },
+    {
+      "id": "T4_BREAD",
+      "name_es": "Pan",
+      "tier": 4,
+      "category": "refined"
+    },
+    {
+      "id": "T4_BUTTER",
+      "name_es": "Manteca de cabra",
+      "tier": 4,
+      "category": "refined"
+    },
+    {
+      "id": "T4_MEAL_SALAD",
+      "name_es": "Ensalada de rábano",
+      "tier": 4,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_SANDWICH",
+      "name_es": "Bocadillo de cabra",
+      "tier": 4,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAL_STEW",
+      "name_es": "Guiso de cabra",
+      "tier": 4,
+      "category": "meal"
+    },
+    {
+      "id": "T4_MEAT",
+      "name_es": "Carne de cabra",
+      "tier": 4,
+      "category": "meat"
+    },
+    {
+      "id": "T4_MILK",
+      "name_es": "Leche de cabra",
+      "tier": 4,
+      "category": "animal"
+    },
+    {
+      "id": "T4_TURNIP",
+      "name_es": "Rábanos",
+      "tier": 4,
+      "category": "crop"
+    },
+    {
+      "id": "T5_CABBAGE",
+      "name_es": "Coles",
+      "tier": 5,
+      "category": "crop"
+    },
+    {
+      "id": "T5_EGG",
+      "name_es": "Huevos de ganso",
+      "tier": 5,
+      "category": "animal"
+    },
+    {
+      "id": "T5_MEAL_OMELETTE",
+      "name_es": "Tortilla de ganso",
+      "tier": 5,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_PIE",
+      "name_es": "Pastel de ganso",
+      "tier": 5,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_ROAST",
+      "name_es": "Ganso asado",
+      "tier": 5,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAL_SOUP",
+      "name_es": "Sopa de col",
+      "tier": 5,
+      "category": "meal"
+    },
+    {
+      "id": "T5_MEAT",
+      "name_es": "Carne de ganso",
+      "tier": 5,
+      "category": "meat"
+    },
+    {
+      "id": "T6_BUTTER",
+      "name_es": "Manteca de oveja",
+      "tier": 6,
+      "category": "refined"
+    },
+    {
+      "id": "T6_MEAL_SALAD",
+      "name_es": "Ensalada de patata",
+      "tier": 6,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_SANDWICH",
+      "name_es": "Bocadillo de carnero",
+      "tier": 6,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAL_STEW",
+      "name_es": "Guiso de carnero",
+      "tier": 6,
+      "category": "meal"
+    },
+    {
+      "id": "T6_MEAT",
+      "name_es": "Carne de carnero",
+      "tier": 6,
+      "category": "meat"
+    },
+    {
+      "id": "T6_MILK",
+      "name_es": "Leche de oveja",
+      "tier": 6,
+      "category": "animal"
+    },
+    {
+      "id": "T6_POTATO",
+      "name_es": "Patatas",
+      "tier": 6,
+      "category": "crop"
+    },
+    {
+      "id": "T7_CORN",
+      "name_es": "Fardo de maíz",
+      "tier": 7,
+      "category": "crop"
+    },
+    {
+      "id": "T7_MEAL_OMELETTE",
+      "name_es": "Tortilla de cerdo",
+      "tier": 7,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_PIE",
+      "name_es": "Pastel de cerdo",
+      "tier": 7,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAL_ROAST",
+      "name_es": "Cerdo asado",
+      "tier": 7,
+      "category": "meal"
+    },
+    {
+      "id": "T7_MEAT",
+      "name_es": "Carne de cerdo",
+      "tier": 7,
+      "category": "meat"
+    },
+    {
+      "id": "T8_BUTTER",
+      "name_es": "Manteca de vaca",
+      "tier": 8,
+      "category": "refined"
+    },
+    {
+      "id": "T8_MEAL_SANDWICH",
+      "name_es": "Bocadillo de ternera",
+      "tier": 8,
+      "category": "meal"
+    },
+    {
+      "id": "T8_MEAL_STEW",
+      "name_es": "Guiso de ternera",
+      "tier": 8,
+      "category": "meal"
+    },
+    {
+      "id": "T8_MEAT",
+      "name_es": "Carne de ternera",
+      "tier": 8,
+      "category": "meat"
+    },
+    {
+      "id": "T8_MILK",
+      "name_es": "Leche de vaca",
+      "tier": 8,
+      "category": "animal"
+    },
+    {
+      "id": "T8_PUMPKIN",
+      "name_es": "Calabaza",
+      "tier": 8,
+      "category": "crop"
+    }
+  ]
+}

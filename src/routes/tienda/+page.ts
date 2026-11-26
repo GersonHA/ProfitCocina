@@ -1,33 +1,34 @@
 /**
- * Mercado interno del grupo. Los miembros se venden a PRECIO DE COSTO: el silver
- * que a cada uno le cuesta producir su recurso (costo real del Kardex), sin
- * ganancia. La ganancia está en el guiso final que cada quien vende por su cuenta.
- * La calculadora usa esos costos para decirle a cada usuario cuánto le sale
- * cocinar su propio guiso.
+ * Mercado interno del grupo. Los miembros se venden a PRECIO DE COSTO (su costo
+ * real de producción, del Kardex). La ganancia está en el platillo final.
+ * La calculadora admite CUALQUIER receta de comida; los ingredientes que el
+ * grupo no produce se completan con precio de mercado (compra externa).
  */
 import { supabase } from '$lib/supabase';
 import { PRODUCE } from '$lib/items';
 
+interface Recipe {
+  outputItem: string;
+  outputQty: number;
+  station: string;
+  ingredients: { itemId: string; qty: number }[];
+}
+
 export async function load({ parent }) {
   const { session, group } = await parent();
   const me = session?.user.id ?? null;
-  if (!group) return { meId: me, members: [], recipe: null, names: {}, guisoPrice: null };
+  if (!group) return { meId: me, members: [], recipes: [] as Recipe[], names: {}, marketPrice: {} };
   const gid = group.id;
 
-  const [gmRes, recipeRes, itemsRes, guisoRes, balRes] = await Promise.all([
+  const [gmRes, recipesRes, itemsRes, priceRes, balRes] = await Promise.all([
     supabase.from('group_members').select('user_id').eq('group_id', gid),
-    supabase
-      .from('recipes')
-      .select('output_item, output_qty, station, recipe_ingredients(item_id, qty)')
-      .eq('output_item', 'T8_MEAL_STEW')
-      .single(),
+    supabase.from('recipes').select('output_item, output_qty, station, recipe_ingredients(item_id, qty)'),
     supabase.from('items').select('item_id, name_es'),
     supabase
       .from('price_snapshots')
-      .select('sell_order_min, fecha, city')
-      .eq('item_id', 'T8_MEAL_STEW')
+      .select('item_id, fecha, sell_order_min')
       .order('fecha', { ascending: false })
-      .limit(20),
+      .limit(4000),
     supabase.from('inventory_balances').select('user_id, item_id, avg_cost').eq('group_id', gid),
   ]);
 
@@ -51,7 +52,6 @@ export async function load({ parent }) {
       produce,
       produceItem,
       produceName: meta?.nombre ?? produce,
-      // Precio = costo de producción real (Kardex). Sin ganancia.
       cost: produceItem ? (costByUserItem.get(`${p.user_id}:${produceItem}`) ?? null) : null,
     };
   });
@@ -59,26 +59,38 @@ export async function load({ parent }) {
   const names: Record<string, string> = {};
   for (const it of itemsRes.data ?? []) names[it.item_id] = it.name_es;
 
-  // Precio de mercado del guiso: promedio de las ciudades del día más reciente.
-  let guisoPrice: number | null = null;
-  const snaps = guisoRes.data ?? [];
-  if (snaps.length) {
-    const latest = snaps[0].fecha;
-    const sameDay = snaps.filter((s) => s.fecha === latest && s.sell_order_min != null);
-    if (sameDay.length) guisoPrice = sameDay.reduce((s, x) => s + Number(x.sell_order_min), 0) / sameDay.length;
+  // Precio de mercado: promedio del día más reciente por item (comidas e ingredientes).
+  const latestFecha = new Map<string, string>();
+  const acc = new Map<string, { sum: number; n: number }>();
+  for (const s of priceRes.data ?? []) {
+    if (s.sell_order_min == null) continue;
+    const lf = latestFecha.get(s.item_id);
+    if (lf == null || s.fecha > lf) {
+      latestFecha.set(s.item_id, s.fecha);
+      acc.set(s.item_id, { sum: 0, n: 0 });
+    }
+    if (s.fecha === latestFecha.get(s.item_id)) {
+      const a = acc.get(s.item_id)!;
+      a.sum += Number(s.sell_order_min);
+      a.n += 1;
+    }
   }
+  const marketPrice: Record<string, number> = {};
+  for (const [item, a] of acc) if (a.n > 0) marketPrice[item] = a.sum / a.n;
 
-  const recipe = recipeRes.data
-    ? {
-        outputItem: recipeRes.data.output_item as string,
-        outputQty: Number(recipeRes.data.output_qty),
-        station: recipeRes.data.station as string,
-        ingredients: (recipeRes.data.recipe_ingredients ?? []).map((r: { item_id: string; qty: number }) => ({
-          itemId: r.item_id,
-          qty: Number(r.qty),
-        })),
-      }
-    : null;
+  // Solo recetas de comida (platillos cocinados).
+  const recipes: Recipe[] = (recipesRes.data ?? [])
+    .filter((r) => (r.output_item as string).includes('_MEAL_'))
+    .map((r) => ({
+      outputItem: r.output_item as string,
+      outputQty: Number(r.output_qty),
+      station: (r.station as string) ?? 'Cook',
+      ingredients: (r.recipe_ingredients ?? []).map((x: { item_id: string; qty: number }) => ({
+        itemId: x.item_id,
+        qty: Number(x.qty),
+      })),
+    }))
+    .sort((a, b) => (names[a.outputItem] ?? a.outputItem).localeCompare(names[b.outputItem] ?? b.outputItem));
 
-  return { meId: me, members, recipe, names, guisoPrice };
+  return { meId: me, members, recipes, names, marketPrice };
 }

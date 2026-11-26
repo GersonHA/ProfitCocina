@@ -10,14 +10,14 @@
  *   node scripts/download-items.mjs
  *   node scripts/download-items.mjs --force
  */
-import { access, mkdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, writeFile, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const CDN = 'https://render.albiononline.com/v1/item';
 const OUT = 'static/items';
 
-// Mantener en sincronía con CATALOG_IMAGES de src/lib/items.ts.
-const ITEMS = [
+// Items de las cadenas de producción (semillas, animales, refinados).
+const CHAIN = [
   'T3_FARM_WHEAT_SEED',
   'T8_FARM_PUMPKIN_SEED',
   'T8_FARM_COW_BABY',
@@ -29,6 +29,15 @@ const ITEMS = [
   'T8_PUMPKIN',
   'T8_MEAL_STEW',
 ];
+
+// Catálogo de comidas + ingredientes (scripts/meal-image-ids.json).
+let catalog = [];
+try {
+  catalog = JSON.parse(await readFile('scripts/meal-image-ids.json', 'utf8'));
+} catch {
+  /* sin catálogo: solo cadenas */
+}
+const ITEMS = [...new Set([...CHAIN, ...catalog])];
 
 const force = process.argv.includes('--force');
 

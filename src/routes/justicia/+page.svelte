@@ -60,7 +60,7 @@
   {/if}
 
   <p class="rounded-lg bg-stone-800/50 px-3 py-2 text-xs text-stone-400">
-    Cada quien produce su recurso, compra lo que le falta y vende su propio guiso donde quiera. Aquí solo medimos si el <span class="text-stone-200">intercambio de ingredientes</span> es justo — las ventas del guiso son de cada uno.
+    Cada miembro produce su recurso, compra lo que le falta y vende su platillo por su cuenta. Este análisis mide solo si el <span class="text-stone-200">intercambio de ingredientes</span> es justo; las ventas del platillo son de cada quien.
   </p>
 
   <!-- Recomendación -->
