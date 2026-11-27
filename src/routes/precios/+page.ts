@@ -13,6 +13,7 @@ export interface CostPoint {
   user_id: string;
   fecha: string;
   cost: number;
+  qty: number;
 }
 
 export async function load({ parent }) {
@@ -30,7 +31,7 @@ export async function load({ parent }) {
   const [movRes, itemsRes, gmRes] = await Promise.all([
     supabase
       .from('inventory_movements')
-      .select('item_id, user_id, fecha, bal_avg_cost, seq')
+      .select('item_id, user_id, fecha, bal_avg_cost, bal_qty, seq')
       .eq('group_id', group.id)
       .order('seq', { ascending: true })
       .limit(10000),
@@ -59,6 +60,7 @@ export async function load({ parent }) {
       user_id: m.user_id as string,
       fecha: m.fecha as string,
       cost,
+      qty: Number(m.bal_qty) || 0,
     });
   }
   const points = [...last.values()];

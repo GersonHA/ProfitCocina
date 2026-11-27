@@ -19,10 +19,10 @@ const db = createClient(URL, SERVICE);
 // Set de producción por miembro (item_id, nombre, costo base). Hay solapes a
 // propósito (Pan, Carne de ternera, Harina) para que el gráfico compare varios.
 const MENUS = [
-  { nick: 'Gerson', items: [['T4_BREAD', 35], ['T3_FLOUR', 28], ['T3_WHEAT', 12]] },
-  { nick: 'Amigo A', items: [['T4_BREAD', 39], ['T8_MEAT', 300], ['T3_MEAT', 90]] },
-  { nick: 'Amigo B', items: [['T8_PUMPKIN', 120], ['T8_MEAT', 315], ['T6_POTATO', 60]] },
-  { nick: 'Amigo C', items: [['T1_CARROT', 15], ['T7_MEAT', 180], ['T3_FLOUR', 31]] },
+  { nick: 'Gerson', items: [['T4_BREAD', 30], ['T3_FLOUR', 24], ['T3_WHEAT', 10]] },
+  { nick: 'Amigo A', items: [['T4_BREAD', 48], ['T8_MEAT', 280], ['T3_MEAT', 85]] },
+  { nick: 'Amigo B', items: [['T8_PUMPKIN', 130], ['T8_MEAT', 335], ['T6_POTATO', 55]] },
+  { nick: 'Amigo C', items: [['T1_CARROT', 18], ['T7_MEAT', 200], ['T3_FLOUR', 33]] },
 ];
 
 function ymd(d) {
@@ -60,10 +60,11 @@ async function main() {
   members.forEach((m, idx) => {
     const menu = MENUS[idx % MENUS.length];
     for (const [itemId, base] of menu.items) {
-      let cost = base;
+      // Cada serie arranca y se mueve distinto (nunca idénticas).
+      let cost = base * (0.9 + Math.random() * 0.2);
+      const trend = (Math.random() - 0.5) * 0.02; // tendencia propia ±2%/día
       for (const fecha of dates) {
-        // Caminata aleatoria ±8%, siempre positiva.
-        cost = Math.max(base * 0.6, cost * (1 + (Math.random() - 0.5) * 0.16));
+        cost = Math.max(base * 0.5, cost * (1 + trend + (Math.random() - 0.5) * 0.2));
         const unit = Math.round(cost);
         const qty = Math.round(300 + Math.random() * 1400);
         const row = {
