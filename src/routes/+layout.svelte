@@ -3,7 +3,7 @@
   import '../app.css';
   import { supabase } from '$lib/supabase';
   import { goto, invalidateAll } from '$app/navigation';
-  import { page } from '$app/stores';
+  import { page, navigating } from '$app/stores';
 
   let { data, children } = $props();
 
@@ -24,6 +24,13 @@
     await goto(`${base}/login`);
   }
 </script>
+
+<!-- Barra de carga global: aparece al navegar / cargar datos (útil con la latencia de la nube). -->
+{#if $navigating}
+  <div class="fixed inset-x-0 top-0 z-50 h-0.5 overflow-hidden bg-amber-500/15">
+    <div class="pc-bar h-full w-1/3 rounded-full bg-amber-400"></div>
+  </div>
+{/if}
 
 <div class="min-h-screen bg-stone-950 text-stone-100">
   {#if data.session}
@@ -67,3 +74,17 @@
     {@render children()}
   </main>
 </div>
+
+<style>
+  @keyframes pc-progress {
+    0% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(420%);
+    }
+  }
+  .pc-bar {
+    animation: pc-progress 1.1s ease-in-out infinite;
+  }
+</style>
