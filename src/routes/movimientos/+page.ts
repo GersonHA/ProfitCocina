@@ -19,6 +19,9 @@ export interface EventRow {
   desc: string;
   qty: number;
   valor: number;
+  /** Solo compras/ventas: permiten editar precio y cantidad. */
+  editable: boolean;
+  priceUnit: number;
 }
 
 export async function load({ parent }) {
@@ -71,6 +74,8 @@ export async function load({ parent }) {
       desc: nm(m.item_id),
       qty: Number(m.qty),
       valor: Number(m.qty) * Number(m.price_unit),
+      editable: true,
+      priceUnit: Number(m.price_unit),
     });
   }
 
@@ -88,6 +93,8 @@ export async function load({ parent }) {
       desc: main ? nm(main.item_id) : '—',
       qty: main ? Number(main.qty) : 0,
       valor: exp,
+      editable: false,
+      priceUnit: 0,
     });
   }
 
@@ -102,6 +109,8 @@ export async function load({ parent }) {
       desc: nm(a.item_id),
       qty: Number(a.qty_delta),
       valor: 0,
+      editable: false,
+      priceUnit: 0,
     });
   }
 
