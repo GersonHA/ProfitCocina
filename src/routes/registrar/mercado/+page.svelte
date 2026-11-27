@@ -150,6 +150,8 @@
 
   const pendientes = $derived(data.sells.filter((s) => s.status === 'en_venta'));
   const historial = $derived(data.sells.filter((s) => s.status !== 'en_venta'));
+  const impuestosVendidos = $derived(historial.filter((s) => s.status === 'vendido').reduce((a, s) => a + s.taxes, 0));
+  const impuestosPerdidos = $derived(historial.filter((s) => s.status === 'cancelado').reduce((a, s) => a + s.taxes, 0));
 </script>
 
 <section class="space-y-5">
@@ -258,16 +260,24 @@
     <!-- Historial (vendidas / canceladas) -->
     {#if historial.length > 0}
       <div>
-        <h2 class="mb-2 text-sm font-medium tracking-wide text-stone-400 uppercase">Historial</h2>
+        <div class="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Historial</h2>
+          <p class="text-xs text-stone-500">
+            Impuestos pagados: <span class="tabular-nums text-stone-300">{fmt(impuestosVendidos)}</span>
+            {#if impuestosPerdidos > 0}· perdidos en canceladas: <span class="tabular-nums text-red-300">{fmt(impuestosPerdidos)}</span>{/if}
+          </p>
+        </div>
         <div class="space-y-1.5">
           {#each historial as s}
             <div class="flex flex-wrap items-center gap-3 rounded-xl border border-stone-800 bg-stone-900/40 px-4 py-2.5 text-sm">
               <ItemImg itemId={s.item_id} nombre={s.name_es} size={24} />
               <span class="min-w-0 flex-1 truncate">{fmt(s.qty)} × {s.name_es} <span class="text-xs text-stone-500">· {s.fecha}</span></span>
               {#if s.status === 'vendido'}
-                <span class="text-xs tabular-nums text-green-300">neto {fmt(s.qty * s.price_unit - s.taxes)}</span>
+                <span class="text-xs tabular-nums text-stone-500">
+                  {fmt(s.qty * s.price_unit)} <span class="text-red-300">− {fmt(s.taxes)} imp.</span> = <span class="font-medium text-green-300">{fmt(s.qty * s.price_unit - s.taxes)}</span>
+                </span>
               {:else}
-                <span class="text-xs tabular-nums text-red-300">pérdida {fmt(s.taxes)}</span>
+                <span class="text-xs tabular-nums text-red-300">pérdida {fmt(s.taxes)} (impuesto)</span>
                 <button onclick={() => relistar(s)} class="rounded-lg border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800">volver a listar</button>
               {/if}
               <span class="rounded-full px-2 py-0.5 text-xs {ESTADO[s.status].clase}">{ESTADO[s.status].label}</span>
