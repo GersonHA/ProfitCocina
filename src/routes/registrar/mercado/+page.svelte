@@ -27,6 +27,12 @@
     return data.inventory.find((i) => i.item_id === id)?.name_es ?? id;
   }
   const fmt = (n: number) => Math.round(n).toLocaleString('es-ES', { useGrouping: 'always' });
+  // Extrae un mensaje legible de un Error o de un error de Supabase (objeto con .message).
+  function emsg(e: unknown): string {
+    if (e instanceof Error) return e.message;
+    if (e && typeof e === 'object' && 'message' in e) return String((e as { message: unknown }).message);
+    return String(e);
+  }
 
   let itemId = $state(firstItem());
   let qty = $state<number | null>(null);
@@ -95,7 +101,7 @@
       try {
         await recompute(data.group.id);
       } catch (re) {
-        warn = re instanceof Error ? re.message : String(re);
+        warn = emsg(re);
         saving = false;
         return;
       }
@@ -103,7 +109,7 @@
       priceUnit = null;
       await invalidateAll();
     } catch (err) {
-      error = err instanceof Error ? err.message : String(err);
+      error = emsg(err);
     } finally {
       saving = false;
     }
@@ -126,7 +132,7 @@
       msg = status === 'vendido' ? 'Marcada como vendida.' : 'Orden cancelada (impuesto a pérdidas).';
       await invalidateAll();
     } catch (err) {
-      error = err instanceof Error ? err.message : String(err);
+      error = emsg(err);
     } finally {
       busyId = null;
     }
