@@ -1,8 +1,11 @@
 <script lang="ts">
   import { base } from '$app/paths';
   import ItemImg from '$lib/components/ItemImg.svelte';
+  import MiniChart from '$lib/components/MiniChart.svelte';
 
   let { data } = $props();
+
+  const PALETTE = ['#f59e0b', '#3b82f6', '#22c55e', '#ec4899', '#a855f7', '#f97316', '#14b8a6', '#ef4444'];
 
   const fmt = (n: number) => Math.round(n).toLocaleString('es-ES', { useGrouping: 'always' });
 
@@ -52,6 +55,35 @@
   function costo(uid: string, fecha: string): number | null {
     return pts.find((p) => p.user_id === uid && p.fecha === fecha)?.cost ?? null;
   }
+
+  // Gráfico dinámico: una línea de costo por miembro, sobre el tiempo.
+  const fechasAsc = $derived([...fechas].reverse());
+  const chartConfig = $derived.by(() => ({
+    type: 'line',
+    data: {
+      labels: fechasAsc,
+      datasets: miembros.map((uid, i) => ({
+        label: data.nicks[uid] ?? '—',
+        data: fechasAsc.map((f) => costo(uid, f)),
+        borderColor: PALETTE[i % PALETTE.length],
+        backgroundColor: PALETTE[i % PALETTE.length] + '33',
+        spanGaps: true,
+        tension: 0.3,
+        pointRadius: 2,
+        borderWidth: 2,
+      })),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { color: '#a8a29e', boxWidth: 10, padding: 12 } } },
+      scales: {
+        x: { ticks: { color: '#78716c', maxRotation: 0, autoSkip: true }, grid: { color: '#292524' } },
+        y: { ticks: { color: '#78716c' }, grid: { color: '#292524' } },
+      },
+    },
+  }));
 </script>
 
 <section class="space-y-6">
@@ -108,6 +140,15 @@
           </select>
         </div>
       </div>
+
+      {#if fechasAsc.length > 1}
+        <div class="mb-3 rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
+          {#key itemId}
+            <MiniChart config={chartConfig} height="h-72" />
+          {/key}
+        </div>
+      {/if}
+
       <div class="overflow-x-auto rounded-2xl border border-stone-800">
         <table class="w-full text-sm">
           <thead>
