@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   const OPCIONES = [
     { href: '/cadena', emoji: '🔗', titulo: 'Mi cadena', desc: 'Registra tu producción paso a paso (siembra, cría, refinado, cocina).' },
     { href: '/tienda', emoji: '📋', titulo: 'Crear orden', desc: 'Planifica un platillo y haz una orden con seguimiento (compras → cocina).' },
@@ -18,7 +19,7 @@
   <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
     {#each OPCIONES as o}
       <a
-        href={o.href}
+        href="{base}{o.href}"
         class="flex items-start gap-3 rounded-2xl border border-stone-800 bg-stone-900/50 p-4 transition hover:border-amber-500/40 hover:bg-stone-900"
       >
         <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-stone-950 text-xl">{o.emoji}</span>

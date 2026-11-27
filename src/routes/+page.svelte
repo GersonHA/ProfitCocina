@@ -260,7 +260,7 @@
   <div class="flex flex-wrap gap-2">
     {#each ACCIONES as a}
       <a
-        href={a.href}
+        href="{base}{a.href}"
         class="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition {a.primary
           ? 'border-amber-500/50 bg-amber-500/10 text-amber-200 hover:bg-amber-500/20'
           : 'border-stone-700 text-stone-300 hover:bg-stone-800'}"

@@ -35,8 +35,8 @@
         <nav class="flex items-center gap-1 text-sm">
           {#each NAV as item}
             <a
-              href={item.href}
-              class="rounded-lg px-2.5 py-1.5 transition {path === item.href
+              href="{base}{item.href}"
+              class="rounded-lg px-2.5 py-1.5 transition {path === base + item.href
                 ? 'bg-amber-500/15 text-amber-300'
                 : 'text-stone-400 hover:bg-stone-800 hover:text-stone-100'}"
             >
