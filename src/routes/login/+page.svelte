@@ -3,7 +3,7 @@
   import { supabase } from '$lib/supabase';
   import { goto, invalidateAll } from '$app/navigation';
 
-  let email = $state('gerson@cocina.test');
+  let email = $state('');
   let password = $state('');
   let error = $state('');
   let loading = $state(false);
@@ -11,7 +11,7 @@
   function translate(msg: string): string {
     if (/invalid login credentials/i.test(msg)) return 'Email o contraseña incorrectos.';
     if (/email not confirmed/i.test(msg)) return 'El email todavía no está confirmado.';
-    if (/fetch|network|failed/i.test(msg)) return 'No hay conexión con Supabase. ¿Está levantado el stack local?';
+    if (/fetch|network|failed/i.test(msg)) return 'No hay conexión con el servidor. Revisa tu internet e intenta de nuevo.';
     return msg;
   }
 
@@ -46,6 +46,7 @@
       <input
         type="email"
         bind:value={email}
+        placeholder="tucorreo@ejemplo.com"
         autocomplete="username"
         required
         class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 outline-none focus:border-amber-500"
