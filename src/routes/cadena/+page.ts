@@ -2,7 +2,6 @@
 import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
-import { getChain, defaultChainKey } from '$lib/chains';
 import { normalizeProduces } from '$lib/resources';
 
 export async function load({ parent }) {
@@ -15,9 +14,8 @@ export async function load({ parent }) {
     .select('nick, especializaciones')
     .eq('user_id', me)
     .single();
-  // Recurso por defecto: la 1.ª cadena guiada entre lo que el miembro produce.
-  const produce = defaultChainKey(normalizeProduces(profile?.especializaciones)) ?? 'pan';
-  const chain = getChain(produce);
+  // Lo que el miembro produce (ids de item); el selector y la cadena salen de aquí.
+  const produces = normalizeProduces(profile?.especializaciones);
 
   const balances: Record<string, { qty: number; avg: number }> = {};
   const names: Record<string, string> = {};
@@ -53,5 +51,5 @@ export async function load({ parent }) {
     }));
   }
 
-  return { group, produce, chain, balances, names, runs, nick: profile?.nick ?? null, meId: me };
+  return { group, produces, balances, names, runs, nick: profile?.nick ?? null, meId: me };
 }

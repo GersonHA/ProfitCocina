@@ -2,16 +2,11 @@
   import { base } from '$app/paths';
   import { goto } from '$app/navigation';
   import { supabase } from '$lib/supabase';
-  import { getChain } from '$lib/chains';
+  import { getChain, CHAIN_KEY_BY_ITEM } from '$lib/chains';
+  import { resourceNombre } from '$lib/resources';
   import ItemImg from '$lib/components/ItemImg.svelte';
 
   let { data } = $props();
-
-  const RESOURCES = [
-    { key: 'pan', label: 'Pan' },
-    { key: 'calabaza', label: 'Calabaza' },
-    { key: 'ternera', label: 'Ternera' },
-  ];
   const ESTADO: Record<string, { label: string; clase: string }> = {
     en_curso: { label: 'En curso', clase: 'bg-amber-500/15 text-amber-300' },
     completado: { label: 'Completado', clase: 'bg-green-500/15 text-green-300' },
@@ -35,7 +30,7 @@
   }
 
   function initRecurso() {
-    return data.produce ?? 'pan';
+    return data.produces[0] ?? '';
   }
   let nuevoRecurso = $state(initRecurso());
   let creando = $state(false);
@@ -43,9 +38,10 @@
 
   async function crearLote() {
     if (!data.group) return;
-    const chain = getChain(nuevoRecurso);
-    if (!chain) {
-      error = 'No hay una cadena para ese recurso.';
+    const key = CHAIN_KEY_BY_ITEM[nuevoRecurso];
+    const chain = key ? getChain(key) : null;
+    if (!key || !chain) {
+      error = 'Aún no hay una cadena guiada para este recurso (pronto).';
       return;
     }
     creando = true;
@@ -53,7 +49,7 @@
     try {
       const { data: run, error: e1 } = await supabase
         .from('production_runs')
-        .insert({ group_id: data.group.id, resource: nuevoRecurso, state: 'en_curso', step_index: 0 })
+        .insert({ group_id: data.group.id, resource: key, state: 'en_curso', step_index: 0 })
         .select('id')
         .single();
       if (e1) throw e1;
@@ -69,6 +65,11 @@
 
   const enCurso = $derived(data.runs.filter((r) => r.state === 'en_curso'));
   const terminados = $derived(data.runs.filter((r) => r.state !== 'en_curso'));
+
+  // La cadena mostrada sigue al selector (dinámica, no fija).
+  const chainKey = $derived(CHAIN_KEY_BY_ITEM[nuevoRecurso] ?? null);
+  const chainSel = $derived(chainKey ? getChain(chainKey) : null);
+  const recursoLabel = $derived(nuevoRecurso ? resourceNombre(nuevoRecurso) : '');
 </script>
 
 <section class="space-y-6">
@@ -87,13 +88,20 @@
     <div class="flex flex-wrap items-end gap-3 rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
       <label class="block">
         <span class="mb-1 block text-xs text-stone-400">Nuevo lote de</span>
-        <select bind:value={nuevoRecurso} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm">
-          {#each RESOURCES as r}<option value={r.key}>{r.label}</option>{/each}
+        <select bind:value={nuevoRecurso} disabled={data.produces.length === 0} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm disabled:opacity-50">
+          {#if data.produces.length === 0}
+            <option value="">—</option>
+          {:else}
+            {#each data.produces as id}<option value={id}>{resourceNombre(id)}</option>{/each}
+          {/if}
         </select>
       </label>
-      <button onclick={crearLote} disabled={creando} class="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-stone-950 hover:bg-amber-400 disabled:opacity-60">
+      <button onclick={crearLote} disabled={creando || !chainSel} class="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-stone-950 hover:bg-amber-400 disabled:opacity-60">
         {creando ? 'Creando…' : '+ Empezar lote'}
       </button>
+      {#if data.produces.length === 0}
+        <p class="w-full text-sm text-stone-400">Primero elige qué produces en tu <a href="{base}/perfil" class="text-amber-300 underline">Perfil</a>.</p>
+      {/if}
       {#if error}<p class="w-full text-sm text-red-300">{error}</p>{/if}
     </div>
 
@@ -118,21 +126,25 @@
       <p class="rounded-lg bg-stone-800/50 px-3 py-2 text-sm text-stone-400">No tienes lotes en curso. Empieza uno arriba (ej. comprar semillas) y retómalo cuando coseches, aunque apagues la PC.</p>
     {/if}
 
-    <!-- Diagrama de la cadena -->
-    {#if data.chain}
+    <!-- Diagrama de la cadena (sigue al selector) -->
+    {#if chainSel}
       <div>
-        <h2 class="mb-2 text-sm font-medium tracking-wide text-stone-400 uppercase">Tu cadena ({data.produce})</h2>
+        <h2 class="mb-2 text-sm font-medium tracking-wide text-stone-400 uppercase">Cadena de {recursoLabel}</h2>
         <div class="flex flex-wrap items-stretch gap-2">
-          {#each data.chain.nodes as node, i}
+          {#each chainSel.nodes as node, i}
             <div class="flex-1 rounded-xl border border-stone-800 bg-stone-900/50 p-3 text-center">
               <ItemImg itemId={node} nombre={nombre(node)} size={40} />
               <div class="mt-1 text-xs font-medium">{nombre(node)}</div>
               <div class="text-xs text-stone-400 tabular-nums">{fmt(saldo(node).qty)} und</div>
               {#if saldo(node).avg > 0}<div class="text-[10px] text-amber-400 tabular-nums">a {fmt(saldo(node).avg)} c/u</div>{/if}
             </div>
-            {#if i < data.chain.nodes.length - 1}<div class="flex items-center text-stone-600">▶</div>{/if}
+            {#if i < chainSel.nodes.length - 1}<div class="flex items-center text-stone-600">▶</div>{/if}
           {/each}
         </div>
+      </div>
+    {:else if nuevoRecurso}
+      <div class="rounded-lg bg-stone-800/40 px-3 py-2 text-sm text-stone-400">
+        La cadena guiada de <span class="text-stone-200">{recursoLabel}</span> está en construcción. Pronto tendrá sus pasos (semilla/cría → … → producto).
       </div>
     {/if}
 
