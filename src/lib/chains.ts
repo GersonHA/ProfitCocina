@@ -89,6 +89,18 @@ function butterChain(key: string, baby: string, grown: string, milk: string, but
   };
 }
 
+function sauceChain(key: string, sauce: string): Chain {
+  return {
+    resource: key,
+    nodes: ['T1_FISHCHOPS', 'T1_SEAWEED', sauce],
+    steps: [
+      { id: 'picadillo', label: 'Conseguir picadillo (pescar/picar)', kind: 'comprar', processType: 'refinado', outputItem: 'T1_FISHCHOPS' },
+      { id: 'algas', label: 'Conseguir algas (pescar)', kind: 'comprar', processType: 'refinado', outputItem: 'T1_SEAWEED' },
+      { id: 'cocinar-salsa', label: 'Cocinar salsa (Cocina)', kind: 'cocinar', processType: 'cocina', station: 'Cocina', inputItem: 'T1_FISHCHOPS', feedItem: 'T1_SEAWEED', outputItem: sauce },
+    ],
+  };
+}
+
 // --- Tablas de recursos (IDs reales del juego) ---
 
 // [clave, semilla, cultivo]
@@ -133,6 +145,9 @@ const BUTTERS: [string, string, string, string, string][] = [
   ['T8_BUTTER', 'T8_FARM_COW_BABY', 'T8_FARM_COW_GROWN', 'T8_MILK', 'T8_BUTTER'],
 ];
 
+// Salsas de pescado (para encantar platillos .1/.2/.3). Mismo intermedio.
+const SAUCES: string[] = ['T1_FISHSAUCE_LEVEL1', 'T1_FISHSAUCE_LEVEL2', 'T1_FISHSAUCE_LEVEL3'];
+
 const CHAINS: Record<string, Chain> = {
   // Pan: cadena especial (trigo -> harina -> pan).
   pan: {
@@ -163,6 +178,7 @@ for (const [key, baby, grown, meat] of MEATS) CHAINS[key] = meatChain(key, baby,
 for (const [key, baby, grown, milk] of MILKS) CHAINS[key] = productChain(key, baby, grown, milk, 'Ordeñar');
 for (const [key, baby, grown, egg] of EGGS) CHAINS[key] = productChain(key, baby, grown, egg, 'Recolectar huevos');
 for (const [key, baby, grown, milk, butter] of BUTTERS) CHAINS[key] = butterChain(key, baby, grown, milk, butter);
+for (const sauce of SAUCES) CHAINS[sauce] = sauceChain(sauce, sauce);
 
 export function getChain(key: string | null | undefined): Chain | null {
   if (!key) return null;
@@ -185,3 +201,4 @@ for (const [key, , , meat] of MEATS) if (!(meat in CHAIN_KEY_BY_ITEM)) CHAIN_KEY
 for (const [key, , , milk] of MILKS) CHAIN_KEY_BY_ITEM[milk] = key;
 for (const [key, , , egg] of EGGS) CHAIN_KEY_BY_ITEM[egg] = key;
 for (const [key, , , , butter] of BUTTERS) CHAIN_KEY_BY_ITEM[butter] = key;
+for (const sauce of SAUCES) CHAIN_KEY_BY_ITEM[sauce] = sauce;

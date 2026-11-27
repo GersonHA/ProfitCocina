@@ -230,6 +230,12 @@
             <span class="mb-1 block text-xs text-stone-400">{nombre(step.inputItem)} usado {#if disp(step.inputItem)}<span class="text-stone-600">({fmtDisp(disp(step.inputItem))} disp.)</span>{/if}</span>
             <input type="number" bind:value={inputQty} min="0" placeholder={disp(step.inputItem) ? fmtDisp(disp(step.inputItem)) : ''} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
+          {#if step.feedItem}
+            <label class="block">
+              <span class="mb-1 flex items-center gap-1.5 text-xs text-stone-400"><ItemImg itemId={step.feedItem} nombre={nombre(step.feedItem)} size={16} />{nombre(step.feedItem)} usado {#if disp(step.feedItem)}<span class="text-stone-600">({fmtDisp(disp(step.feedItem))} disp.)</span>{/if}</span>
+              <input type="number" bind:value={feedQty} min="0" placeholder={disp(step.feedItem) ? fmtDisp(disp(step.feedItem)) : ''} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+            </label>
+          {/if}
           <label class="block">
             <span class="mb-1 block text-xs text-stone-400">{nombre(step.outputItem)} obtenido</span>
             <input type="number" bind:value={outputQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />

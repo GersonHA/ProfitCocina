@@ -62,6 +62,14 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
       { id: 'T8_BUTTER', nombre: 'Manteca de vaca' },
     ],
   },
+  {
+    grupo: 'Salsas (para encantar platillos)',
+    items: [
+      { id: 'T1_FISHSAUCE_LEVEL1', nombre: 'Salsa básica (.1)' },
+      { id: 'T1_FISHSAUCE_LEVEL2', nombre: 'Salsa extravagante (.2)' },
+      { id: 'T1_FISHSAUCE_LEVEL3', nombre: 'Salsa especial (.3)' },
+    ],
+  },
 ];
 
 /** Nombre legible de un recurso por su id (cae al id si no está en la lista). */
