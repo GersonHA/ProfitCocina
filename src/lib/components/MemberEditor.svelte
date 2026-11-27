@@ -1,12 +1,13 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
-  import ItemIcon from '$lib/components/ItemIcon.svelte';
+  import ItemImg from '$lib/components/ItemImg.svelte';
+  import { resourceNombre } from '$lib/resources';
   import { removeMember, updateMember } from '$lib/admin';
 
   interface Member {
     userId: string;
     nick: string;
-    produce: string;
+    produces: string[];
     role: string;
   }
 
@@ -16,15 +17,12 @@
     isSelf,
   }: { member: Member; groupId: string; isSelf: boolean } = $props();
 
-  const PRODUCE_OPTS = ['pan', 'ternera', 'calabaza'];
-
   function m0() {
     return member;
   }
 
   let open = $state(false);
   let nick = $state(m0().nick);
-  let produce = $state(PRODUCE_OPTS.includes(m0().produce) ? m0().produce : 'pan');
   let role = $state<'member' | 'admin'>(m0().role === 'admin' ? 'admin' : 'member');
   let password = $state('');
   let saving = $state(false);
@@ -38,7 +36,6 @@
         groupId,
         targetId: member.userId,
         nick: nick.trim() || member.nick,
-        produce,
         role,
         password: password.length >= 6 ? password : undefined,
       });
@@ -69,7 +66,12 @@
 <li class="py-2.5">
   <div class="flex items-center justify-between">
     <span class="flex items-center gap-2.5">
-      <ItemIcon produce={member.produce} size={32} />
+      <span class="flex items-center gap-0.5">
+        {#each member.produces.slice(0, 5) as pid}
+          <ItemImg itemId={pid} nombre={resourceNombre(pid)} size={24} />
+        {/each}
+        {#if member.produces.length === 0}<span class="text-lg">📦</span>{/if}
+      </span>
       <span class="font-medium">{member.nick}</span>
       {#if member.role === 'admin'}
         <span class="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">admin</span>
@@ -77,7 +79,7 @@
       {#if isSelf}<span class="text-[10px] text-stone-500">(tú)</span>{/if}
     </span>
     <span class="flex items-center gap-2">
-      <span class="text-sm text-stone-400">{member.produce}</span>
+      <span class="hidden text-sm text-stone-400 sm:inline">{member.produces.map(resourceNombre).join(', ') || '—'}</span>
       <button onclick={() => (open = !open)} class="rounded-lg border border-stone-700 px-2 py-1 text-xs hover:bg-stone-800">
         {open ? 'Cerrar' : 'Editar'}
       </button>
@@ -90,12 +92,6 @@
         <label class="block">
           <span class="mb-1 block text-xs text-stone-400">Nick</span>
           <input type="text" bind:value={nick} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm" />
-        </label>
-        <label class="block">
-          <span class="mb-1 block text-xs text-stone-400">Produce</span>
-          <select bind:value={produce} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm">
-            {#each PRODUCE_OPTS as p}<option value={p}>{p}</option>{/each}
-          </select>
         </label>
         <label class="block">
           <span class="mb-1 block text-xs text-stone-400">Rol</span>

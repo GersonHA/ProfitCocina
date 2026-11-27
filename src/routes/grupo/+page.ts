@@ -7,11 +7,12 @@
 import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
+import { normalizeProduces } from '$lib/resources';
 
 interface RosterRow {
   userId: string;
   nick: string;
-  produce: string;
+  produces: string[];
   role: string;
 }
 
@@ -77,17 +78,14 @@ export async function load() {
 
     roster = (members ?? []).map((m) => {
       const p = byId.get(m.user_id);
-      const esp = (p?.especializaciones ?? {}) as { produce?: string };
       return {
         userId: m.user_id,
         nick: p?.nick ?? '—',
-        produce: esp.produce ?? '—',
+        produces: normalizeProduces(p?.especializaciones),
         role: m.role,
       };
     });
   }
-
-  const esp = (profile?.especializaciones ?? {}) as { produce?: string };
 
   return {
     email: session.user.email ?? '',
@@ -95,7 +93,7 @@ export async function load() {
     groupId: first?.groupId ?? null,
     nick: profile?.nick ?? null,
     premium: profile?.premium ?? true,
-    produce: esp.produce ?? null,
+    produces: normalizeProduces(profile?.especializaciones),
     memberships,
     groupName,
     roster,

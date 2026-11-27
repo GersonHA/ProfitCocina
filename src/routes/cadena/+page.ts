@@ -2,7 +2,8 @@
 import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
-import { getChain } from '$lib/chains';
+import { getChain, defaultChainKey } from '$lib/chains';
+import { normalizeProduces } from '$lib/resources';
 
 export async function load({ parent }) {
   const { session, group } = await parent();
@@ -14,7 +15,8 @@ export async function load({ parent }) {
     .select('nick, especializaciones')
     .eq('user_id', me)
     .single();
-  const produce = (profile?.especializaciones as { produce?: string } | null)?.produce ?? null;
+  // Recurso por defecto: la 1.ª cadena guiada entre lo que el miembro produce.
+  const produce = defaultChainKey(normalizeProduces(profile?.especializaciones)) ?? 'pan';
   const chain = getChain(produce);
 
   const balances: Record<string, { qty: number; avg: number }> = {};

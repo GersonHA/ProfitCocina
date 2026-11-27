@@ -2,11 +2,10 @@
   import { base } from '$app/paths';
   import { invalidateAll } from '$app/navigation';
   import { supabase } from '$lib/supabase';
-  import ItemIcon from '$lib/components/ItemIcon.svelte';
+  import ItemImg from '$lib/components/ItemImg.svelte';
+  import { RESOURCE_GROUPS, resourceNombre } from '$lib/resources';
 
   let { data } = $props();
-
-  const PRODUCE_OPTS = ['pan', 'ternera', 'calabaza'];
 
   // Valores iniciales desde data (envueltos en funciones para no capturar el prop en el init).
   const init = () => data;
@@ -14,9 +13,15 @@
   let juego = $state(init().juego);
   let gremio = $state(init().gremio);
   let discord = $state(init().discord);
-  let produce = $state(init().produce || 'pan');
+  let produces = $state<string[]>(init().produces);
   let premium = $state(init().premium);
   let notas = $state(init().notas);
+  let islas = $state<number | null>(init().islas);
+  let islasNotas = $state(init().islasNotas);
+
+  function toggleProduce(id: string) {
+    produces = produces.includes(id) ? produces.filter((x) => x !== id) : [...produces, id];
+  }
   let metaAmount = $state<number | null>(init().metaAmount);
   let metaPeriod = $state<'day' | 'week' | 'month'>(init().metaPeriod);
 
@@ -35,11 +40,13 @@
           nick: nick.trim() || null,
           premium,
           especializaciones: {
-            produce,
+            produces,
             juego: juego.trim() || undefined,
             gremio: gremio.trim() || undefined,
             discord: discord.trim() || undefined,
             notas: notas.trim() || undefined,
+            islas: islas ?? undefined,
+            islasNotas: islasNotas.trim() || undefined,
           },
           meta_amount: metaAmount,
           meta_period: metaPeriod,
@@ -84,20 +91,54 @@
         <input type="text" bind:value={discord} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
       </label>
       <label class="block">
-        <span class="mb-1 flex items-center gap-1.5 text-xs text-stone-400">Produces <ItemIcon {produce} size={16} /></span>
-        <select bind:value={produce} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2">
-          {#each PRODUCE_OPTS as p}<option value={p}>{p}</option>{/each}
-        </select>
+        <span class="mb-1 block text-xs text-stone-400">Islas (cuántas tienes)</span>
+        <input type="number" bind:value={islas} min="0" placeholder="ej. 2" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
       </label>
       <label class="flex items-center gap-2 pt-6 text-sm">
         <input type="checkbox" bind:checked={premium} class="size-4" />
         Tengo Premium (afecta el impuesto de venta)
       </label>
     </div>
-    <label class="block">
-      <span class="mb-1 block text-xs text-stone-400">Notas (opcional)</span>
-      <input type="text" bind:value={notas} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
-    </label>
+
+    <!-- Qué produce (uno o varios) -->
+    <div>
+      <span class="mb-1 block text-xs text-stone-400">¿Qué produces? (elige uno o varios)</span>
+      <div class="space-y-2">
+        {#each RESOURCE_GROUPS as g}
+          <div>
+            <p class="mb-1 text-[11px] tracking-wide text-stone-500 uppercase">{g.grupo}</p>
+            <div class="flex flex-wrap gap-1.5">
+              {#each g.items as it}
+                <button
+                  type="button"
+                  onclick={() => toggleProduce(it.id)}
+                  class="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition {produces.includes(it.id)
+                    ? 'border-amber-500/60 bg-amber-500/15 text-amber-200'
+                    : 'border-stone-700 text-stone-400 hover:bg-stone-800'}"
+                >
+                  <ItemImg itemId={it.id} nombre={it.nombre} size={16} />
+                  {it.nombre}
+                </button>
+              {/each}
+            </div>
+          </div>
+        {/each}
+      </div>
+      {#if produces.length}
+        <p class="mt-2 text-xs text-stone-500">Produces: <span class="text-stone-300">{produces.map(resourceNombre).join(', ')}</span></p>
+      {/if}
+    </div>
+
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-xs text-stone-400">Notas (opcional)</span>
+        <input type="text" bind:value={notas} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-xs text-stone-400">Notas de islas (opcional)</span>
+        <input type="text" bind:value={islasNotas} placeholder="ej. Isla 1: 6 parcelas calabaza" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+      </label>
+    </div>
   </div>
 
   <!-- Meta -->

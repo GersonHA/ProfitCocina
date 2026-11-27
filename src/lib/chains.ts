@@ -72,3 +72,18 @@ export function getChain(produce: string | null | undefined): Chain | null {
   if (!produce) return null;
   return CHAINS[produce] ?? null;
 }
+
+/** Item final de cada cadena -> clave de la cadena (para recursos con guía). */
+export const CHAIN_KEY_BY_ITEM: Record<string, string> = {
+  T4_BREAD: 'pan',
+  T8_PUMPKIN: 'calabaza',
+  T8_MEAT: 'ternera',
+};
+
+/** De una lista de ids producidos, la 1.ª clave de cadena guiada disponible. */
+export function defaultChainKey(produces: string[]): string | null {
+  for (const id of produces) {
+    if (CHAIN_KEY_BY_ITEM[id]) return CHAIN_KEY_BY_ITEM[id];
+  }
+  return null;
+}

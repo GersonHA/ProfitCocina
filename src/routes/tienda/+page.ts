@@ -5,7 +5,7 @@
  * grupo no produce se completan con precio de mercado (compra externa).
  */
 import { supabase } from '$lib/supabase';
-import { PRODUCE } from '$lib/items';
+import { normalizeProduces, resourceNombre } from '$lib/resources';
 
 interface Recipe {
   outputItem: string;
@@ -53,17 +53,15 @@ export async function load({ parent }) {
   for (const b of balRes.data ?? []) costByUserItem.set(`${b.user_id}:${b.item_id}`, Number(b.avg_cost));
 
   const members = (profs ?? []).map((p) => {
-    const esp = (p.especializaciones ?? {}) as Record<string, string>;
-    const produce = esp.produce ?? '';
-    const meta = PRODUCE[produce];
-    const produceItem = meta?.id ?? '';
+    const ids = normalizeProduces(p.especializaciones);
     return {
       id: p.user_id,
       nick: p.nick ?? '—',
-      produce,
-      produceItem,
-      produceName: meta?.nombre ?? produce,
-      cost: produceItem ? (costByUserItem.get(`${p.user_id}:${produceItem}`) ?? null) : null,
+      produces: ids.map((itemId) => ({
+        itemId,
+        name: resourceNombre(itemId),
+        cost: costByUserItem.get(`${p.user_id}:${itemId}`) ?? null,
+      })),
     };
   });
 

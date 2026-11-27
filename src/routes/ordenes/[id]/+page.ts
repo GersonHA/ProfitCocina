@@ -1,7 +1,7 @@
 /** Detalle de una orden de producción (compras por lotes → cocina → completado). */
 import { error } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
-import { PRODUCE } from '$lib/items';
+import { normalizeProduces } from '$lib/resources';
 
 export async function load({ params, parent }) {
   const { session, group } = await parent();
@@ -39,13 +39,14 @@ export async function load({ params, parent }) {
   for (const b of balRes.data ?? []) costByUserItem.set(`${b.user_id}:${b.item_id}`, Number(b.avg_cost));
 
   const members = (profs ?? []).map((p) => {
-    const esp = (p.especializaciones ?? {}) as Record<string, string>;
-    const produceItem = PRODUCE[esp.produce ?? '']?.id ?? '';
+    const ids = normalizeProduces(p.especializaciones);
     return {
       id: p.user_id,
       nick: p.nick ?? '—',
-      produceItem,
-      cost: produceItem ? (costByUserItem.get(`${p.user_id}:${produceItem}`) ?? null) : null,
+      produces: ids.map((itemId) => ({
+        itemId,
+        cost: costByUserItem.get(`${p.user_id}:${itemId}`) ?? null,
+      })),
     };
   });
   const nicks: Record<string, string> = {};

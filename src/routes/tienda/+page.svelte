@@ -45,7 +45,12 @@
   }
   // Todos los miembros que producen un item (puede ser más de uno).
   function productoresDe(itemId: string) {
-    return data.members.filter((m) => m.produceItem === itemId);
+    const out: { id: string; nick: string; cost: number | null }[] = [];
+    for (const m of data.members) {
+      const pr = m.produces.find((x) => x.itemId === itemId);
+      if (pr) out.push({ id: m.id, nick: m.nick, cost: pr.cost });
+    }
+    return out;
   }
   // Vendedor elegido por ingrediente (por defecto, el más barato).
   let selProd = $state<Record<string, string>>({});
@@ -172,19 +177,20 @@
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {#each data.members as m}
           <div class="rounded-2xl border {m.id === data.meId ? 'border-amber-500/40' : 'border-stone-800'} bg-stone-900/50 p-4">
-            <div class="flex items-center gap-3">
-              <div class="grid size-12 place-items-center rounded-xl bg-stone-950">
-                <ItemImg itemId={m.produceItem} nombre={m.produceName} size={34} />
+            <p class="mb-2 truncate font-medium">{m.nick}{#if m.id === data.meId}<span class="ml-1 text-xs text-amber-300">(tú)</span>{/if}</p>
+            {#if m.produces.length === 0}
+              <p class="text-xs text-stone-500">aún no eligió qué produce</p>
+            {:else}
+              <div class="space-y-1.5">
+                {#each m.produces as pr}
+                  <div class="flex items-center gap-2">
+                    <ItemImg itemId={pr.itemId} nombre={pr.name} size={26} />
+                    <span class="min-w-0 flex-1 truncate text-sm text-stone-300">{pr.name}</span>
+                    <span class="text-sm font-semibold text-amber-300 tabular-nums">{plano(pr.cost)}</span>
+                  </div>
+                {/each}
               </div>
-              <div class="min-w-0">
-                <p class="truncate font-medium">{m.nick}{#if m.id === data.meId}<span class="ml-1 text-xs text-amber-300">(tú)</span>{/if}</p>
-                <p class="truncate text-xs text-stone-500">produce {m.produceName || '—'}</p>
-              </div>
-              <div class="ml-auto text-right">
-                <p class="text-xs text-stone-500">Costo/u</p>
-                <p class="text-lg font-semibold text-amber-300 tabular-nums">{plano(m.cost)}</p>
-              </div>
-            </div>
+            {/if}
           </div>
         {/each}
       </div>

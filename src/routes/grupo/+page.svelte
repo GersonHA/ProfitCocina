@@ -1,19 +1,18 @@
 <script lang="ts">
   import { base } from '$app/paths';
   import { invalidateAll } from '$app/navigation';
-  import ItemIcon from '$lib/components/ItemIcon.svelte';
+  import ItemImg from '$lib/components/ItemImg.svelte';
   import MemberEditor from '$lib/components/MemberEditor.svelte';
   import { createMember } from '$lib/admin';
+  import { RESOURCE_GROUPS, resourceNombre } from '$lib/resources';
 
   let { data } = $props();
 
   const isAdmin = $derived(data.group?.role === 'admin');
 
-  const PRODUCE_OPTS = ['pan', 'ternera', 'calabaza'];
-
   let email = $state('');
   let nick = $state('');
-  let produce = $state('pan');
+  let produce = $state('T8_MEAT');
   let password = $state('');
   let creating = $state(false);
   let createError = $state('');
@@ -61,13 +60,18 @@
     <h1 class="text-2xl font-semibold">Grupo</h1>
     <a href="{base}/" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">← Inicio</a>
   </div>
-  <div>
-    <p class="flex items-center gap-1.5 text-sm text-stone-400">
-      Tú (<span class="text-stone-200">{data.nick ?? data.email}</span>) produces
-      <ItemIcon produce={data.produce} size={22} />
-      <span class="text-stone-200">{data.produce ?? '—'}</span>
-      · Premium: <span class="text-stone-200">{data.premium ? 'sí' : 'no'}</span>
-    </p>
+  <div class="flex flex-wrap items-center gap-1.5 text-sm text-stone-400">
+    Tú (<span class="text-stone-200">{data.nick ?? data.email}</span>) produces:
+    {#if data.produces.length}
+      {#each data.produces as pid}
+        <span class="inline-flex items-center gap-1 rounded-full bg-stone-800/60 px-2 py-0.5 text-stone-200">
+          <ItemImg itemId={pid} nombre={resourceNombre(pid)} size={16} />{resourceNombre(pid)}
+        </span>
+      {/each}
+    {:else}
+      <a href="{base}/perfil" class="text-amber-300 underline">elígelo en tu perfil</a>
+    {/if}
+    <span>· Premium: <span class="text-stone-200">{data.premium ? 'sí' : 'no'}</span></span>
   </div>
 
   {#if data.roster.length > 0}
@@ -82,13 +86,18 @@
           {:else}
             <li class="flex items-center justify-between py-2.5">
               <span class="flex items-center gap-2.5">
-                <ItemIcon produce={r.produce} size={32} />
+                <span class="flex items-center gap-0.5">
+                  {#each r.produces.slice(0, 5) as pid}
+                    <ItemImg itemId={pid} nombre={resourceNombre(pid)} size={28} />
+                  {/each}
+                  {#if r.produces.length === 0}<span class="text-lg">📦</span>{/if}
+                </span>
                 <span class="font-medium">{r.nick}</span>
                 {#if r.role === 'admin'}
                   <span class="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">admin</span>
                 {/if}
               </span>
-              <span class="text-sm text-stone-400">{r.produce}</span>
+              <span class="hidden text-sm text-stone-400 sm:inline">{r.produces.map(resourceNombre).join(', ') || '—'}</span>
             </li>
           {/if}
         {/each}
@@ -112,10 +121,12 @@
             <input type="text" bind:value={nick} placeholder="Amigo C" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
           <label class="block">
-            <span class="mb-1 block text-xs text-stone-400">Produce</span>
+            <span class="mb-1 block text-xs text-stone-400">Recurso principal</span>
             <select bind:value={produce} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2">
-              {#each PRODUCE_OPTS as p}
-                <option value={p}>{p}</option>
+              {#each RESOURCE_GROUPS as g}
+                <optgroup label={g.grupo}>
+                  {#each g.items as it}<option value={it.id}>{it.nombre}</option>{/each}
+                </optgroup>
               {/each}
             </select>
           </label>

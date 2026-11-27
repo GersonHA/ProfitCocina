@@ -34,7 +34,12 @@
     return lotesDe(item).reduce((s, p) => s + Number(p.qty), 0);
   }
   function productoresDe(itemId: string) {
-    return data.members.filter((m) => m.produceItem === itemId);
+    const out: { id: string; nick: string; cost: number | null }[] = [];
+    for (const m of data.members) {
+      const pr = m.produces.find((x) => x.itemId === itemId);
+      if (pr) out.push({ id: m.id, nick: m.nick, cost: pr.cost });
+    }
+    return out;
   }
   function origenLabel(p: { source: string; seller_id: string | null }) {
     if (p.source === 'external') return 'externo';
@@ -62,7 +67,7 @@
 
   function precioPorOrigen(origen: string, itemId: string): number | null {
     if (origen === 'external') return data.marketPrice[itemId] ?? null;
-    return data.members.find((m) => m.id === origen)?.cost ?? null;
+    return data.members.find((m) => m.id === origen)?.produces.find((x) => x.itemId === itemId)?.cost ?? null;
   }
   function toggleLote(item: Item) {
     const abrir = !abierto[item.id];
