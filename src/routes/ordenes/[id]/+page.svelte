@@ -55,7 +55,6 @@
   // Completado
   const costoTotal = $derived(costoIngredientes + (Number(order.cook_silver) || 0));
   const porPlatillo = $derived(Number(order.cook_output) > 0 ? costoTotal / Number(order.cook_output) : 0);
-  const ganancia = $derived(data.mealPrice != null ? data.mealPrice - porPlatillo : null);
 
   // --- Estado del formulario de lote por ingrediente ---
   let abierto = $state<Record<string, boolean>>({});
@@ -66,7 +65,7 @@
   let errorMsg = $state('');
 
   function precioPorOrigen(origen: string, itemId: string): number | null {
-    if (origen === 'external') return data.marketPrice[itemId] ?? null;
+    if (origen === 'external') return null;
     return data.members.find((m) => m.id === origen)?.produces.find((x) => x.itemId === itemId)?.cost ?? null;
   }
   function toggleLote(item: Item) {
@@ -369,10 +368,7 @@
       <div class="flex justify-between border-t border-stone-800 pt-1.5"><span class="text-stone-400">Inversión total</span><span class="font-semibold tabular-nums">{plano(costoTotal)}</span></div>
       <div class="flex justify-between"><span class="text-stone-400">Platillos obtenidos</span><span class="font-semibold tabular-nums">{plano(order.cook_output)}</span></div>
       <div class="flex justify-between"><span class="text-stone-400">Costo real por platillo</span><span class="font-semibold tabular-nums text-amber-300">{plano(porPlatillo)}</span></div>
-      <div class="flex justify-between border-t border-stone-800 pt-1.5"><span class="text-stone-400">Precio de mercado</span><span class="tabular-nums text-stone-300">{data.mealPrice != null ? plano(data.mealPrice) : 'sin dato'}</span></div>
-      {#if ganancia != null}
-        <div class="flex justify-between"><span class="text-stone-400">Ganancia por platillo</span><span class="font-semibold tabular-nums {ganancia >= 0 ? 'text-green-300' : 'text-red-300'}">{ganancia >= 0 ? '+' : ''}{plano(ganancia)}</span></div>
-      {/if}
+      <p class="pt-1 text-xs text-stone-500">La ganancia la ves al vender el platillo (módulo Vender).</p>
     </div>
 
     <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">

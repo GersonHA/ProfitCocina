@@ -2,7 +2,6 @@
   import { base } from '$app/paths';
   import ItemImg from '$lib/components/ItemImg.svelte';
   import MiniChart from '$lib/components/MiniChart.svelte';
-  import PriceChart from '$lib/components/PriceChart.svelte';
 
   let { data } = $props();
 
@@ -11,19 +10,9 @@
     { href: '/registrar/mercado', emoji: '🏷️', label: 'Vender' },
     { href: '/registrar/compra-miembro', emoji: '🤝', label: 'Comprar a un miembro' },
     { href: '/registrar/ajuste', emoji: '⚖️', label: 'Ajuste / pérdida' },
-    { href: '/precios', emoji: '💲', label: 'Precios de mercado' },
+    { href: '/precios', emoji: '📈', label: 'Mercado interno' },
   ];
 
-  const CIUDADES = ['Caerleon', 'Martlock', 'Fort Sterling', 'Thetford', 'Lymhurst', 'Bridgewatch', 'Brecilien'];
-  const CITY_COLORS: Record<string, string> = {
-    Caerleon: '#eab308',
-    Martlock: '#3b82f6',
-    'Fort Sterling': '#e5e7eb',
-    Lymhurst: '#22c55e',
-    Bridgewatch: '#f97316',
-    Thetford: '#a855f7',
-    Brecilien: '#ec4899',
-  };
   const PALETTE = ['#f59e0b', '#3b82f6', '#22c55e', '#ec4899', '#a855f7', '#f97316', '#14b8a6', '#eab308', '#ef4444', '#6366f1'];
 
   const TIPO_MOV: Record<string, string> = {
@@ -190,41 +179,6 @@
     },
   });
 
-  // --- Gráfico de precios ---
-  function defItem(): string {
-    return data.snaps[0]?.item_id ?? data.items[0]?.item_id ?? '';
-  }
-  let gItem = $state(defItem());
-  let gCiudad = $state('Todas');
-
-  const serie = $derived.by(() => {
-    const dates = new Set<string>();
-    const byCity = new Map<string, Map<string, { precio: number; volumen: number }>>();
-    for (const s of data.snaps) {
-      if (s.item_id !== gItem) continue;
-      if (gCiudad !== 'Todas' && s.city !== gCiudad) continue;
-      dates.add(s.fecha);
-      let m = byCity.get(s.city);
-      if (!m) {
-        m = new Map();
-        byCity.set(s.city, m);
-      }
-      m.set(s.fecha, { precio: Number(s.sell_order_min) || 0, volumen: Number(s.volume) || 0 });
-    }
-    const labels = [...dates].sort();
-    const cities = CIUDADES.filter((c) => byCity.has(c)).map((c) => {
-      const m = byCity.get(c)!;
-      return {
-        name: c,
-        color: CITY_COLORS[c] ?? '#f59e0b',
-        price: labels.map((f) => m.get(f)?.precio ?? null),
-        volume: labels.map((f) => m.get(f)?.volumen ?? null),
-      };
-    });
-    const totalVolume = labels.map((_, i) => cities.reduce((sum, c) => sum + (c.volume[i] ?? 0), 0));
-    return { labels, cities, totalVolume };
-  });
-
   // --- Doughnut de inventario ---
   const inventoryConfig = $derived({
     type: 'doughnut',
@@ -360,33 +314,6 @@
           <MiniChart config={gananciaConfig} height="h-64" />
         {/if}
       </div>
-    </div>
-
-    <!-- Gráfico de precios de mercado -->
-    <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
-      <div class="mb-3 flex flex-wrap items-end gap-3">
-        <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Precios de mercado</h2>
-        <label class="ml-auto block">
-          <span class="mb-1 block text-xs text-stone-400">Item</span>
-          <select bind:value={gItem} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm">
-            {#each data.items as it}<option value={it.item_id}>{it.name_es}</option>{/each}
-          </select>
-        </label>
-        <label class="block">
-          <span class="mb-1 block text-xs text-stone-400">Ciudad</span>
-          <select bind:value={gCiudad} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm">
-            <option value="Todas">Todas</option>
-            {#each CIUDADES as c}<option value={c}>{c}</option>{/each}
-          </select>
-        </label>
-      </div>
-      {#if serie.labels.length === 0}
-        <p class="py-16 text-center text-sm text-stone-500">
-          Sin precios para ese item. Regístralos en <a href="{base}/precios" class="text-amber-300 underline">Precios de mercado</a>.
-        </p>
-      {:else}
-        <PriceChart labels={serie.labels} cities={serie.cities} totalVolume={serie.totalVolume} />
-      {/if}
     </div>
 
     <!-- Inventario + movimientos -->

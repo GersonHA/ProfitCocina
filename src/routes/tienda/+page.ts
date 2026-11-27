@@ -27,19 +27,13 @@ export async function load({ parent }) {
       members: [],
       recipes: [] as Recipe[],
       names: {} as Record<string, string>,
-      marketPrice: {} as Record<string, number>,
     };
   const gid = group.id;
 
-  const [gmRes, recipesRes, itemsRes, priceRes, balRes] = await Promise.all([
+  const [gmRes, recipesRes, itemsRes, balRes] = await Promise.all([
     supabase.from('group_members').select('user_id').eq('group_id', gid),
     supabase.from('recipes').select('output_item, output_qty, station, recipe_ingredients(item_id, qty)'),
     supabase.from('items').select('item_id, name_es'),
-    supabase
-      .from('price_snapshots')
-      .select('item_id, fecha, sell_order_min')
-      .order('fecha', { ascending: false })
-      .limit(4000),
     supabase.from('inventory_balances').select('user_id, item_id, avg_cost').eq('group_id', gid),
   ]);
 
@@ -68,25 +62,6 @@ export async function load({ parent }) {
   const names: Record<string, string> = {};
   for (const it of itemsRes.data ?? []) names[it.item_id] = it.name_es;
 
-  // Precio de mercado: promedio del día más reciente por item (comidas e ingredientes).
-  const latestFecha = new Map<string, string>();
-  const acc = new Map<string, { sum: number; n: number }>();
-  for (const s of priceRes.data ?? []) {
-    if (s.sell_order_min == null) continue;
-    const lf = latestFecha.get(s.item_id);
-    if (lf == null || s.fecha > lf) {
-      latestFecha.set(s.item_id, s.fecha);
-      acc.set(s.item_id, { sum: 0, n: 0 });
-    }
-    if (s.fecha === latestFecha.get(s.item_id)) {
-      const a = acc.get(s.item_id)!;
-      a.sum += Number(s.sell_order_min);
-      a.n += 1;
-    }
-  }
-  const marketPrice: Record<string, number> = {};
-  for (const [item, a] of acc) if (a.n > 0) marketPrice[item] = a.sum / a.n;
-
   // Solo recetas de comida (platillos cocinados), con tier y encantamiento.
   const recipes: Recipe[] = (recipesRes.data ?? [])
     .filter((r) => (r.output_item as string).includes('_MEAL_'))
@@ -109,5 +84,5 @@ export async function load({ parent }) {
     })
     .sort((a, b) => (names[a.baseId] ?? a.baseId).localeCompare(names[b.baseId] ?? b.baseId) || a.enchant - b.enchant);
 
-  return { meId: me, groupId: gid, members, recipes, names, marketPrice };
+  return { meId: me, groupId: gid, members, recipes, names };
 }

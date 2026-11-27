@@ -6,7 +6,6 @@
     { href: '/registrar/mercado', emoji: '🏷️', titulo: 'Vender', desc: 'Vende lo que produjiste: sale de tu inventario y registra la venta con impuesto.' },
     { href: '/registrar/compra-miembro', emoji: '🤝', titulo: 'Comprar a un miembro', desc: 'Registra lo que le compras a otro miembro del grupo.' },
     { href: '/registrar/ajuste', emoji: '⚖️', titulo: 'Ajuste / pérdida', desc: 'Corrige el stock o registra una pérdida (gank, items borrados).' },
-    { href: '/precios', emoji: '💲', titulo: 'Precios de mercado', desc: 'Anota el precio del día de tus items y platillos.' },
   ];
 </script>
 

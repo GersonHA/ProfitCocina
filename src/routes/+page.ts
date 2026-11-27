@@ -42,7 +42,6 @@ export async function load({ parent }) {
   }> = [];
   const names: Record<string, string> = {};
   let items: { item_id: string; name_es: string }[] = [];
-  let snaps: Array<{ item_id: string; city: string; fecha: string; sell_order_min: number | null; volume: number | null }> = [];
 
   const invByDay = new Map<string, number>();
   const ventasByDay = new Map<string, number>();
@@ -52,7 +51,7 @@ export async function load({ parent }) {
 
   if (group) {
     const gid = group.id;
-    const [balRes, mktRes, trdRes, procRes, movRes, itemsRes, priceRes, adjRes] = await Promise.all([
+    const [balRes, mktRes, trdRes, procRes, movRes, itemsRes, adjRes] = await Promise.all([
       supabase.from('inventory_balances').select('item_id, value').eq('group_id', gid).eq('user_id', me),
       supabase.from('market_txns').select('kind, qty, price_unit, taxes, fecha, status').eq('group_id', gid).eq('user_id', me),
       supabase
@@ -69,16 +68,10 @@ export async function load({ parent }) {
         .order('seq', { ascending: false })
         .limit(5000),
       supabase.from('items').select('item_id, name_es'),
-      supabase
-        .from('price_snapshots')
-        .select('item_id, city, fecha, sell_order_min, volume')
-        .order('fecha', { ascending: true })
-        .limit(3000),
       supabase.from('stock_adjustments').select('id, kind').eq('group_id', gid).eq('user_id', me),
     ]);
 
     items = itemsRes.data ?? [];
-    snaps = (priceRes.data ?? []) as typeof snaps;
     for (const it of items) names[it.item_id] = it.name_es;
 
     for (const b of balRes.data ?? []) {
@@ -164,7 +157,6 @@ export async function load({ parent }) {
     movements,
     names,
     items,
-    snaps,
     dailyData,
   };
 }

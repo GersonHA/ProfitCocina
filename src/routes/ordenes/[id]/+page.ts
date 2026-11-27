@@ -15,7 +15,7 @@ export async function load({ params, parent }) {
   const itemList = (items ?? []).sort((a, b) => Number(b.qty) - Number(a.qty));
   const orderItemIds = itemList.map((i) => i.id);
 
-  const [purRes, catRes, gmRes, balRes, snapRes] = await Promise.all([
+  const [purRes, catRes, gmRes, balRes] = await Promise.all([
     supabase
       .from('order_purchases')
       .select('*')
@@ -23,7 +23,6 @@ export async function load({ params, parent }) {
     supabase.from('items').select('item_id, name_es'),
     supabase.from('group_members').select('user_id').eq('group_id', gid),
     supabase.from('inventory_balances').select('user_id, item_id, avg_cost').eq('group_id', gid),
-    supabase.from('price_snapshots').select('item_id, fecha, sell_order_min').order('fecha', { ascending: false }).limit(4000),
   ]);
 
   const memberIds = (gmRes.data ?? []).map((m) => m.user_id);
@@ -52,25 +51,6 @@ export async function load({ params, parent }) {
   const nicks: Record<string, string> = {};
   for (const m of members) nicks[m.id] = m.nick;
 
-  // Precio de mercado por item (día más reciente).
-  const latest = new Map<string, string>();
-  const acc = new Map<string, { sum: number; n: number }>();
-  for (const s of snapRes.data ?? []) {
-    if (s.sell_order_min == null) continue;
-    const lf = latest.get(s.item_id);
-    if (lf == null || s.fecha > lf) {
-      latest.set(s.item_id, s.fecha);
-      acc.set(s.item_id, { sum: 0, n: 0 });
-    }
-    if (s.fecha === latest.get(s.item_id)) {
-      const a = acc.get(s.item_id)!;
-      a.sum += Number(s.sell_order_min);
-      a.n += 1;
-    }
-  }
-  const marketPrice: Record<string, number> = {};
-  for (const [item, a] of acc) if (a.n > 0) marketPrice[item] = a.sum / a.n;
-
   // Lotes agrupados por order_item.
   const purchasesByItem: Record<string, typeof purRes.data> = {};
   for (const p of purRes.data ?? []) (purchasesByItem[p.order_item_id] ??= []).push(p);
@@ -82,10 +62,8 @@ export async function load({ params, parent }) {
     names,
     nicks,
     members,
-    marketPrice,
     meId: me,
     groupId: gid,
     isOwner: order.user_id === me,
-    mealPrice: marketPrice[order.output_item] ?? null,
   };
 }

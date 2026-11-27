@@ -92,7 +92,7 @@
   );
 
   // Precio de los ingredientes externos (los que nadie del grupo produce).
-  // Se precargan con el último precio de mercado y el usuario puede ajustarlos.
+  // El usuario lo coloca (lo que le costó comprarlo).
   let extPrices = $state<Record<string, number | null>>({});
   $effect(() => {
     const rec = recipe;
@@ -101,7 +101,7 @@
     const next = { ...extPrices };
     for (const ing of rec.ingredients) {
       if (productoresDe(ing.itemId).length === 0 && !(ing.itemId in next)) {
-        next[ing.itemId] = data.marketPrice[ing.itemId] ?? null;
+        next[ing.itemId] = null;
         changed = true;
       }
     }
@@ -156,8 +156,6 @@
   const costoTotal = $derived(filas.reduce((s, f) => s + (f.linea ?? 0), 0));
   const platillos = $derived((recipe?.outputQty ?? 0) * tandas);
   const costoPorPlatillo = $derived(platillos > 0 ? costoTotal / platillos : 0);
-  const precioMercado = $derived(recipe ? (data.marketPrice[recipe.outputItem] ?? null) : null);
-  const gananciaPorPlatillo = $derived(precioMercado != null ? precioMercado - costoPorPlatillo : null);
 </script>
 
 <section class="space-y-6">
@@ -287,38 +285,16 @@
             <span class="text-stone-400">Costo total ({plano(platillos)} und)</span>
             <span class="font-semibold tabular-nums">{completo ? plano(costoTotal) : '— faltan precios'}</span>
           </div>
-          <div class="flex justify-between">
+          <div class="flex justify-between border-t border-stone-800 pt-1.5">
             <span class="text-stone-400">Costo por platillo</span>
             <span class="font-semibold tabular-nums text-amber-300">{completo ? plano(costoPorPlatillo) : '—'}</span>
           </div>
-          <div class="flex justify-between border-t border-stone-800 pt-1.5">
-            <span class="text-stone-400">Precio de mercado del platillo</span>
-            <span class="tabular-nums text-stone-300">{precioMercado != null ? plano(precioMercado) : 'sin dato'}</span>
-          </div>
-          {#if completo && gananciaPorPlatillo != null}
-            <div class="flex justify-between">
-              <span class="text-stone-400">Ganancia por platillo (antes de impuesto)</span>
-              <span class="font-semibold tabular-nums {gananciaPorPlatillo >= 0 ? 'text-green-300' : 'text-red-300'}">
-                {gananciaPorPlatillo >= 0 ? '+' : ''}{plano(gananciaPorPlatillo)}
-              </span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-stone-400">Ganancia total estimada</span>
-              <span class="font-semibold tabular-nums {gananciaPorPlatillo >= 0 ? 'text-green-300' : 'text-red-300'}">
-                {gananciaPorPlatillo >= 0 ? '+' : ''}{plano(gananciaPorPlatillo * platillos)}
-              </span>
-            </div>
-          {/if}
+          <p class="pt-1 text-xs text-stone-500">La ganancia la ves al vender el platillo (módulo Vender): precio de venta − este costo.</p>
         </div>
 
         {#if filas.some((f) => f.externo)}
           <p class="mt-2 text-xs text-stone-500">
-            Los ingredientes de <span class="text-sky-300">compra externa</span> se registran al comprarlos en <a href="{base}/registrar/mercado" class="text-amber-300 underline">Mercado</a>; su costo entra al inventario y se consume al cocinar.
-          </p>
-        {/if}
-        {#if precioMercado == null}
-          <p class="mt-1 text-xs text-stone-500">
-            Registra el precio de este platillo en <a href="{base}/precios" class="text-amber-300 underline">Precios de mercado</a> para ver la ganancia.
+            Los ingredientes de <span class="text-sky-300">compra externa</span> se registran al comprarlos; su costo entra al inventario y se consume al cocinar.
           </p>
         {/if}
 
