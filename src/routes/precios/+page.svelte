@@ -28,12 +28,17 @@
     for (const s of data.snaps) if (s.item_id === item && s.city === city) r = s;
     return r;
   }
+  // Distingue los encantamientos (mismo nombre, distinto @N): "Guiso de ternera .3".
+  function etiqueta(it: { item_id: string; name_es: string }): string {
+    const ench = Number(it.item_id.split('@')[1] ?? 0);
+    return ench > 0 ? `${it.name_es} .${ench}` : it.name_es;
+  }
   function buildRows(city: string): Row[] {
     return data.items.map((it) => {
       const r = ultimo(it.item_id, city);
       return {
         item_id: it.item_id,
-        name: it.name_es,
+        name: etiqueta(it),
         venta: r?.sell_order_min ?? null,
         compra: r?.buy_order_max ?? null,
         volumen: r?.volume ?? null,
