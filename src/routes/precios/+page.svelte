@@ -99,18 +99,21 @@
   }
 
   // --- Gráfico dinámico ---
-  type Metrica = 'costo' | 'cantidad' | 'total';
+  type Metrica = 'costo' | 'cantidad' | 'total' | 'combo';
   let metrica = $state<Metrica>('costo');
-  const metricaLabel: Record<Metrica, string> = {
+  const metricaLabel: Record<string, string> = {
     costo: 'Costo c/u (silver)',
     cantidad: 'Cantidad (und)',
     total: 'Costo total (silver)',
   };
   const fechas = $derived([...new Set(visibles.map((p) => p.fecha))].sort());
+  function puntoDe(user_id: string, item_id: string, fecha: string) {
+    return visibles.find((x) => x.user_id === user_id && x.item_id === item_id && x.fecha === fecha) ?? null;
+  }
   function valorEn(user_id: string, item_id: string, fecha: string): number | null {
-    const p = visibles.find((x) => x.user_id === user_id && x.item_id === item_id && x.fecha === fecha);
+    const p = puntoDe(user_id, item_id, fecha);
     if (!p) return null;
-    return metrica === 'costo' ? p.cost : metrica === 'cantidad' ? p.qty : p.cost * p.qty;
+    return metrica === 'cantidad' ? p.qty : metrica === 'total' ? p.cost * p.qty : p.cost;
   }
   function comboLabel(c: { user_id: string; item_id: string }): string {
     const nick = data.nicks[c.user_id] ?? '—';
@@ -119,36 +122,82 @@
     if (fUser && !fItem) return itn; // un miembro -> por recurso
     return `${nick} · ${itn}`;
   }
-  const chartConfig = $derived.by(() => ({
-    type: 'line',
-    data: {
-      labels: fechas,
-      datasets: combos.map((c, i) => ({
-        label: comboLabel(c),
-        data: fechas.map((f) => valorEn(c.user_id, c.item_id, f)),
-        borderColor: PALETTE[i % PALETTE.length],
-        backgroundColor: PALETTE[i % PALETTE.length] + '22',
-        spanGaps: true,
-        tension: 0.3,
-        pointRadius: 2,
-        borderWidth: 2,
-      })),
-    },
-    options: {
+  const chartConfig = $derived.by(() => {
+    const baseOpts = {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: { mode: 'nearest', intersect: false },
+      interaction: { mode: 'index' as const, intersect: false },
       plugins: { legend: { labels: { color: '#a8a29e', boxWidth: 10, padding: 10, font: { size: 11 } } } },
-      scales: {
-        x: { ticks: { color: '#78716c', maxRotation: 0, autoSkip: true }, grid: { color: '#292524' } },
-        y: {
-          ticks: { color: '#78716c' },
-          grid: { color: '#292524' },
-          title: { display: true, text: metricaLabel[metrica], color: '#78716c' },
+    };
+    const xScale = { ticks: { color: '#78716c', maxRotation: 0, autoSkip: true }, grid: { color: '#292524' } };
+
+    if (metrica === 'combo') {
+      // Línea = costo c/u (eje izq.) + barras = cantidad (eje der.).
+      const datasets = combos.flatMap((c, i) => {
+        const color = PALETTE[i % PALETTE.length];
+        return [
+          {
+            type: 'line' as const,
+            label: `${comboLabel(c)} · c/u`,
+            data: fechas.map((f) => puntoDe(c.user_id, c.item_id, f)?.cost ?? null),
+            borderColor: color,
+            backgroundColor: color + '22',
+            yAxisID: 'y',
+            tension: 0.3,
+            pointRadius: 2,
+            borderWidth: 2,
+            spanGaps: true,
+            order: 0,
+          },
+          {
+            type: 'bar' as const,
+            label: `${comboLabel(c)} · cant.`,
+            data: fechas.map((f) => puntoDe(c.user_id, c.item_id, f)?.qty ?? null),
+            backgroundColor: color + '55',
+            borderColor: color + '88',
+            yAxisID: 'y1',
+            order: 1,
+          },
+        ];
+      });
+      return {
+        type: 'bar',
+        data: { labels: fechas, datasets },
+        options: {
+          ...baseOpts,
+          scales: {
+            x: xScale,
+            y: { position: 'left', ticks: { color: '#78716c' }, grid: { color: '#292524' }, title: { display: true, text: 'Costo c/u (silver)', color: '#78716c' } },
+            y1: { position: 'right', ticks: { color: '#78716c' }, grid: { drawOnChartArea: false }, title: { display: true, text: 'Cantidad (und)', color: '#78716c' } },
+          },
+        },
+      };
+    }
+
+    return {
+      type: 'line',
+      data: {
+        labels: fechas,
+        datasets: combos.map((c, i) => ({
+          label: comboLabel(c),
+          data: fechas.map((f) => valorEn(c.user_id, c.item_id, f)),
+          borderColor: PALETTE[i % PALETTE.length],
+          backgroundColor: PALETTE[i % PALETTE.length] + '22',
+          spanGaps: true,
+          tension: 0.3,
+          pointRadius: 2,
+          borderWidth: 2,
+        })),
+      },
+      options: {
+        ...baseOpts,
+        scales: {
+          x: xScale,
+          y: { ticks: { color: '#78716c' }, grid: { color: '#292524' }, title: { display: true, text: metricaLabel[metrica], color: '#78716c' } },
         },
       },
-    },
-  }));
+    };
+  });
 
   // Clave para forzar recreación del gráfico al cambiar filtros.
   const chartKey = $derived(`${fUser}|${fItem}|${periodo}|${mesSel}|${desde}|${hasta}|${metrica}|${combos.length}`);
@@ -217,7 +266,7 @@
         <div class="mb-2 flex flex-wrap items-center gap-2">
           <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Evolución</h2>
           <div class="ml-auto flex rounded-lg border border-stone-700 p-0.5 text-xs">
-            {#each [['costo', 'Costo c/u'], ['cantidad', 'Cantidad'], ['total', 'Costo total']] as [v, l]}
+            {#each [['costo', 'Costo c/u'], ['cantidad', 'Cantidad'], ['total', 'Costo total'], ['combo', 'Costo + Cant.']] as [v, l]}
               <button
                 onclick={() => (metrica = v as Metrica)}
                 class="rounded px-2.5 py-1 {metrica === v ? 'bg-amber-500 font-medium text-stone-950' : 'text-stone-400 hover:text-stone-100'}"
