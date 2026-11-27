@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { goto } from '$app/navigation';
   import { supabase } from '$lib/supabase';
   import { getChain } from '$lib/chains';
@@ -59,7 +60,7 @@
       const steps = chain.steps.map((s, i) => ({ run_id: run.id, idx: i, step_id: s.id, label: s.label, kind: s.kind }));
       const { error: e2 } = await supabase.from('run_steps').insert(steps);
       if (e2) throw e2;
-      await goto(`/cadena/${run.id}`);
+      await goto(`${base}/cadena/${run.id}`);
     } catch (e) {
       error = e instanceof Error ? e.message : String(e);
       creando = false;
@@ -76,7 +77,7 @@
       <h1 class="text-2xl font-semibold">Producción</h1>
       <p class="text-sm text-stone-400">Tus lotes de la cadena, con su estado guardado.</p>
     </div>
-    <a href="/mi-produccion" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">Mi inventario</a>
+    <a href="{base}/mi-produccion" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">Mi inventario</a>
   </div>
 
   {#if !data.group}
@@ -103,7 +104,7 @@
         <div class="space-y-2">
           {#each enCurso as r}
             {@const hechos = r.steps.filter((s) => s.done).length}
-            <a href="/cadena/{r.id}" class="flex items-center gap-3 rounded-2xl border border-amber-500/25 bg-stone-900/50 p-4 transition hover:border-amber-500/50">
+            <a href="{base}/cadena/{r.id}" class="flex items-center gap-3 rounded-2xl border border-amber-500/25 bg-stone-900/50 p-4 transition hover:border-amber-500/50">
               <div class="min-w-0 flex-1">
                 <p class="font-medium capitalize">{r.resource}</p>
                 <p class="text-xs text-stone-500">{fecha(r.created_at)} · paso {hechos}/{r.steps.length} · <span class="text-amber-300">siguiente: {proximoPaso(r)}</span></p>
@@ -141,7 +142,7 @@
         <h2 class="mb-2 text-sm font-medium tracking-wide text-stone-400 uppercase">Terminados</h2>
         <div class="space-y-1.5">
           {#each terminados as r}
-            <a href="/cadena/{r.id}" class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900/40 px-4 py-2.5 text-sm transition hover:border-stone-700">
+            <a href="{base}/cadena/{r.id}" class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900/40 px-4 py-2.5 text-sm transition hover:border-stone-700">
               <span class="flex-1 capitalize">{r.resource}</span>
               <span class="text-xs text-stone-500">{fecha(r.created_at)}</span>
               <span class="rounded-full px-2 py-0.5 text-xs {ESTADO[r.state]?.clase}">{ESTADO[r.state]?.label}</span>

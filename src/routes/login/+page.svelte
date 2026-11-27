@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { supabase } from '$lib/supabase';
   import { goto, invalidateAll } from '$app/navigation';
 
@@ -25,7 +26,7 @@
       return;
     }
     await invalidateAll();
-    await goto('/');
+    await goto(`${base}/`);
   }
 </script>
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import '../app.css';
   import { supabase } from '$lib/supabase';
   import { goto, invalidateAll } from '$app/navigation';
@@ -19,7 +20,7 @@
   async function logout() {
     await supabase.auth.signOut();
     await invalidateAll();
-    await goto('/login');
+    await goto(`${base}/login`);
   }
 </script>
 
@@ -27,7 +28,7 @@
   {#if data.session}
     <header class="sticky top-0 z-10 border-b border-stone-800 bg-stone-900/80 backdrop-blur">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <a href="/" class="flex items-center gap-2 font-semibold">
+        <a href="{base}/" class="flex items-center gap-2 font-semibold">
           <span class="text-xl">🍲</span>
           <span class="hidden sm:inline">Profit Cocina</span>
         </a>
@@ -52,7 +53,7 @@
       </div>
       {#if data.group}
         <div class="border-t border-stone-800/60 bg-stone-900/40">
-          <a href="/grupo" class="mx-auto block max-w-6xl px-4 py-1.5 text-xs text-stone-500 hover:text-stone-300">
+          <a href="{base}/grupo" class="mx-auto block max-w-6xl px-4 py-1.5 text-xs text-stone-500 hover:text-stone-300">
             Grupo: <span class="text-stone-300">{data.group.name}</span>
             · {data.group.server} <span class="text-stone-600">· ver equipo →</span>
           </a>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { invalidateAll } from '$app/navigation';
   import { supabase } from '$lib/supabase';
   import ChainStep from '$lib/components/ChainStep.svelte';
@@ -35,8 +36,8 @@
 
 <section class="mx-auto max-w-2xl space-y-5">
   <div class="flex items-center justify-between">
-    <a href="/cadena" class="text-sm text-stone-400 hover:text-stone-200">← Producción</a>
-    <a href="/" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">🏠 Inicio</a>
+    <a href="{base}/cadena" class="text-sm text-stone-400 hover:text-stone-200">← Producción</a>
+    <a href="{base}/" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">🏠 Inicio</a>
   </div>
 
   <div class="flex items-center gap-3 rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
@@ -92,8 +93,8 @@
         <p class="text-sm text-green-300">✓ Lote completado. Lo producido ya está en tu inventario con su costo.</p>
       </div>
       <div class="flex flex-wrap gap-2">
-        <a href="/" class="flex-1 rounded-xl bg-amber-500 px-4 py-2.5 text-center font-semibold text-stone-950 hover:bg-amber-400">🏠 Ir al inicio</a>
-        <a href="/mi-produccion" class="flex-1 rounded-xl border border-stone-700 px-4 py-2.5 text-center font-medium text-stone-300 hover:bg-stone-800">Ver inventario</a>
+        <a href="{base}/" class="flex-1 rounded-xl bg-amber-500 px-4 py-2.5 text-center font-semibold text-stone-950 hover:bg-amber-400">🏠 Ir al inicio</a>
+        <a href="{base}/mi-produccion" class="flex-1 rounded-xl border border-stone-700 px-4 py-2.5 text-center font-medium text-stone-300 hover:bg-stone-800">Ver inventario</a>
       </div>
     {/if}
   {/if}

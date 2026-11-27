@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { goto } from '$app/navigation';
   import { supabase } from '$lib/supabase';
   import { recompute } from '$lib/recompute';
@@ -80,7 +81,7 @@
         saving = false;
         return;
       }
-      await goto('/mi-produccion');
+      await goto(`${base}/mi-produccion`);
     } catch (err) {
       error = err instanceof Error ? err.message : String(err);
       saving = false;
@@ -90,7 +91,7 @@
 
 <section class="space-y-5">
   <div class="flex items-center gap-2 text-sm text-stone-400">
-    <a href="/registrar" class="hover:text-stone-200">Registrar</a> <span>/</span> <span class="text-stone-200">Vender</span>
+    <a href="{base}/registrar" class="hover:text-stone-200">Registrar</a> <span>/</span> <span class="text-stone-200">Vender</span>
   </div>
   <h1 class="text-2xl font-semibold">Vender en el mercado</h1>
   <p class="text-sm text-stone-400">Vende lo que produjiste. Se descuenta de tu inventario y se registra la venta (con impuesto).</p>
@@ -160,7 +161,7 @@
       {#if error}<p class="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{error}</p>{/if}
       {#if warn}
         <p class="rounded-lg bg-amber-500/10 px-3 py-2 text-sm text-amber-300">
-          Guardado, pero no se pudo recalcular: {warn} <a href="/mi-produccion" class="underline">Ir a Mi producción</a>
+          Guardado, pero no se pudo recalcular: {warn} <a href="{base}/mi-produccion" class="underline">Ir a Mi producción</a>
         </p>
       {/if}
 

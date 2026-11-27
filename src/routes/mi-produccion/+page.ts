@@ -1,10 +1,11 @@
 /** Mi producción: inventario valorizado (Kardex), movimientos y lotes recientes. */
+import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 
 export async function load({ parent }) {
   const { session, group } = await parent();
-  if (!session) throw redirect(303, '/login');
+  if (!session) throw redirect(303, `${base}/login`);
   if (!group) return { group: null, balances: [], movements: [], processes: [], names: {} as Record<string, string> };
 
   const me = session.user.id;

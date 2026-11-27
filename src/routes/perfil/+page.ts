@@ -1,10 +1,11 @@
 /** Mi perfil: datos del jugador (opcionales) + la meta de ganancia. */
+import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 
 export async function load({ parent }) {
   const { session } = await parent();
-  if (!session) throw redirect(303, '/login');
+  if (!session) throw redirect(303, `${base}/login`);
   const me = session.user.id;
 
   const { data: profile } = await supabase

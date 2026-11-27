@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { invalidateAll } from '$app/navigation';
   import { supabase } from '$lib/supabase';
   import ItemIcon from '$lib/components/ItemIcon.svelte';
@@ -58,7 +59,7 @@
 <section class="mx-auto max-w-2xl space-y-6">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold">Mi perfil</h1>
-    <a href="/" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">← Panel</a>
+    <a href="{base}/" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">← Panel</a>
   </div>
   <p class="text-sm text-stone-400">Tu correo: <span class="text-stone-200">{data.email}</span></p>
 

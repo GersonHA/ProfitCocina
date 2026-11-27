@@ -10,6 +10,11 @@ const config = {
   preprocess: vitePreprocess(),
   kit: {
     adapter: adapter({ fallback: 'index.html' }),
+    // En GitHub Pages la app vive en /ProfitCocina (subruta). El workflow
+    // define BASE_PATH al compilar; en local queda vacío (raíz).
+    paths: {
+      base: process.env.BASE_PATH ?? '',
+    },
   },
 };
 

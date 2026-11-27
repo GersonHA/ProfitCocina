@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { goto } from '$app/navigation';
   import { supabase } from '$lib/supabase';
   import ItemImg from '$lib/components/ItemImg.svelte';
@@ -28,7 +29,7 @@
       }));
       const { error: e2 } = await supabase.from('order_items').insert(items);
       if (e2) throw e2;
-      await goto(`/ordenes/${ord.id}`);
+      await goto(`${base}/ordenes/${ord.id}`);
     } catch (err) {
       errorOrden = err instanceof Error ? err.message : String(err);
       creando = false;
@@ -306,12 +307,12 @@
 
         {#if filas.some((f) => f.externo)}
           <p class="mt-2 text-xs text-stone-500">
-            Los ingredientes de <span class="text-sky-300">compra externa</span> se registran al comprarlos en <a href="/registrar/mercado" class="text-amber-300 underline">Mercado</a>; su costo entra al inventario y se consume al cocinar.
+            Los ingredientes de <span class="text-sky-300">compra externa</span> se registran al comprarlos en <a href="{base}/registrar/mercado" class="text-amber-300 underline">Mercado</a>; su costo entra al inventario y se consume al cocinar.
           </p>
         {/if}
         {#if precioMercado == null}
           <p class="mt-1 text-xs text-stone-500">
-            Registra el precio de este platillo en <a href="/precios" class="text-amber-300 underline">Precios de mercado</a> para ver la ganancia.
+            Registra el precio de este platillo en <a href="{base}/precios" class="text-amber-300 underline">Precios de mercado</a> para ver la ganancia.
           </p>
         {/if}
 

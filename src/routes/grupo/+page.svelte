@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { invalidateAll } from '$app/navigation';
   import ItemIcon from '$lib/components/ItemIcon.svelte';
   import MemberEditor from '$lib/components/MemberEditor.svelte';
@@ -58,7 +59,7 @@
 <section class="space-y-6">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold">Grupo</h1>
-    <a href="/" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">← Inicio</a>
+    <a href="{base}/" class="rounded-lg border border-stone-700 px-3 py-1.5 text-sm text-stone-300 hover:bg-stone-800">← Inicio</a>
   </div>
   <div>
     <p class="flex items-center gap-1.5 text-sm text-stone-400">

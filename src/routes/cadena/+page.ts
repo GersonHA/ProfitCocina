@@ -1,11 +1,12 @@
 /** Producción: lotes de la cadena (persistidos por estado) + diagrama. */
+import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 import { getChain } from '$lib/chains';
 
 export async function load({ parent }) {
   const { session, group } = await parent();
-  if (!session) throw redirect(303, '/login');
+  if (!session) throw redirect(303, `${base}/login`);
   const me = session.user.id;
 
   const { data: profile } = await supabase

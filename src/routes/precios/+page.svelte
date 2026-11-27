@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { invalidateAll } from '$app/navigation';
   import { supabase } from '$lib/supabase';
   import ItemImg from '$lib/components/ItemImg.svelte';
@@ -90,7 +91,7 @@
     <h1 class="text-2xl font-semibold">Precios de mercado</h1>
     <p class="mt-1 text-sm text-stone-400">
       Anota el precio y el volumen de cada item, por ciudad y por día (puedes poner el de ayer). Cualquiera del grupo puede registrar.
-      El gráfico vive en el <a href="/" class="text-amber-300 underline">Panel</a>.
+      El gráfico vive en el <a href="{base}/" class="text-amber-300 underline">Panel</a>.
     </p>
   </div>
 

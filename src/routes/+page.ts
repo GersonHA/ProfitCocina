@@ -6,6 +6,7 @@
  *   cogs     = costo de lo vendido (Kardex)   → ganancia = ventas − cogs
  *   perdida  = valor de los items dados de baja por ajuste de tipo "pérdida"
  */
+import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 
@@ -19,7 +20,7 @@ interface DayRow {
 
 export async function load({ parent }) {
   const { session, group } = await parent();
-  if (!session) throw redirect(303, '/login');
+  if (!session) throw redirect(303, `${base}/login`);
   const me = session.user.id;
 
   const { data: profile } = await supabase

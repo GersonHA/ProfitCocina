@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import ItemImg from '$lib/components/ItemImg.svelte';
   import MiniChart from '$lib/components/MiniChart.svelte';
   import PriceChart from '$lib/components/PriceChart.svelte';
@@ -317,7 +318,7 @@
       <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
         <div class="mb-1 flex items-center justify-between">
           <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Meta</h2>
-          <a href="/perfil" class="text-xs text-amber-300 hover:underline">editar</a>
+          <a href="{base}/perfil" class="text-xs text-amber-300 hover:underline">editar</a>
         </div>
         {#if data.metaAmount && data.metaAmount > 0}
           <div class="relative mx-auto h-32 max-w-[14rem]">
@@ -341,7 +342,7 @@
             {#if meta.cumplida}<p class="pt-1 text-center text-green-300">🎉 Meta cumplida</p>{/if}
           </div>
         {:else}
-          <p class="py-12 text-center text-sm text-stone-500">Pon tu meta en el <a href="/perfil" class="text-amber-300 underline">Perfil</a>.</p>
+          <p class="py-12 text-center text-sm text-stone-500">Pon tu meta en el <a href="{base}/perfil" class="text-amber-300 underline">Perfil</a>.</p>
         {/if}
       </div>
 
@@ -381,7 +382,7 @@
       </div>
       {#if serie.labels.length === 0}
         <p class="py-16 text-center text-sm text-stone-500">
-          Sin precios para ese item. Regístralos en <a href="/precios" class="text-amber-300 underline">Precios de mercado</a>.
+          Sin precios para ese item. Regístralos en <a href="{base}/precios" class="text-amber-300 underline">Precios de mercado</a>.
         </p>
       {:else}
         <PriceChart labels={serie.labels} cities={serie.cities} totalVolume={serie.totalVolume} />

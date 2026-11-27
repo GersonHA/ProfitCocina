@@ -4,6 +4,7 @@
  * hay FK directa entre group_members y profiles; RLS permite ver a tus
  * compañeros de grupo (shares_group).
  */
+import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 
@@ -29,7 +30,7 @@ function oneGroup(g: unknown): { name?: string; server?: string } | null {
 
 export async function load() {
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session) throw redirect(303, '/login');
+  if (!session) throw redirect(303, `${base}/login`);
 
   const me = session.user.id;
 

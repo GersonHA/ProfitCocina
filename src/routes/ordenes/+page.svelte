@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import ItemImg from '$lib/components/ItemImg.svelte';
 
   let { data } = $props();
@@ -31,7 +32,7 @@
 <section class="space-y-5">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold">Órdenes de producción</h1>
-    <a href="/tienda" class="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-semibold text-stone-950 hover:bg-amber-400">+ Nueva (desde Tienda)</a>
+    <a href="{base}/tienda" class="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-semibold text-stone-950 hover:bg-amber-400">+ Nueva (desde Tienda)</a>
   </div>
   <p class="text-sm text-stone-400">
     Cada orden sigue el flujo <span class="text-sky-300">compras</span> → <span class="text-amber-300">cocina</span> → <span class="text-green-300">completado</span>, registrando cada movimiento.
@@ -40,12 +41,12 @@
   {#if data.orders.length === 0}
     <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-8 text-center">
       <p class="text-sm text-stone-400">Aún no tienes órdenes.</p>
-      <a href="/tienda" class="mt-3 inline-block rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-stone-950 hover:bg-amber-400">Crear una desde la Tienda</a>
+      <a href="{base}/tienda" class="mt-3 inline-block rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-stone-950 hover:bg-amber-400">Crear una desde la Tienda</a>
     </div>
   {:else}
     <div class="space-y-2">
       {#each data.orders as o}
-        <a href="/ordenes/{o.id}" class="flex items-center gap-3 rounded-2xl border border-stone-800 bg-stone-900/50 p-4 transition hover:border-amber-500/40">
+        <a href="{base}/ordenes/{o.id}" class="flex items-center gap-3 rounded-2xl border border-stone-800 bg-stone-900/50 p-4 transition hover:border-amber-500/40">
           <ItemImg itemId={o.output_item} nombre={nombre(o.output_item)} size={36} />
           <div class="min-w-0 flex-1">
             <p class="truncate font-medium">

@@ -1,10 +1,11 @@
 /** Precios de mercado: catálogo + historial de precios (por item, ciudad y día). */
+import { base } from '$app/paths';
 import { redirect } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 
 export async function load({ parent }) {
   const { session, group } = await parent();
-  if (!session) throw redirect(303, '/login');
+  if (!session) throw redirect(303, `${base}/login`);
 
   const { data: items } = await supabase
     .from('items')
