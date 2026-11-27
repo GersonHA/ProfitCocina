@@ -56,7 +56,7 @@ Deno.serve(async (req: Request) => {
         .eq('user_id', uid),
       user
         .from('market_txns')
-        .select('id, item_id, qty, price_unit, kind, fecha, seq')
+        .select('id, item_id, qty, price_unit, kind, fecha, seq, status')
         .eq('group_id', groupId)
         .eq('user_id', uid),
       user
@@ -107,6 +107,9 @@ Deno.serve(async (req: Request) => {
     }
 
     for (const m of marketRes.data ?? []) {
+      // Una venta solo descuenta inventario cuando está 'vendido'. Si está
+      // 'en_venta' (listada) sigue siendo tuya; si está 'cancelado' ya volvió.
+      if (m.kind === 'sell' && m.status && m.status !== 'vendido') continue;
       events.push({
         kind: 'market_txn',
         id: m.id,

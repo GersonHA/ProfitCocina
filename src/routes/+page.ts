@@ -54,7 +54,7 @@ export async function load({ parent }) {
     const gid = group.id;
     const [balRes, mktRes, trdRes, procRes, movRes, itemsRes, priceRes, adjRes] = await Promise.all([
       supabase.from('inventory_balances').select('item_id, value').eq('group_id', gid).eq('user_id', me),
-      supabase.from('market_txns').select('kind, qty, price_unit, taxes, fecha').eq('group_id', gid).eq('user_id', me),
+      supabase.from('market_txns').select('kind, qty, price_unit, taxes, fecha, status').eq('group_id', gid).eq('user_id', me),
       supabase
         .from('member_trades')
         .select('seller_id, buyer_id, qty, price_unit, fecha')
@@ -89,8 +89,17 @@ export async function load({ parent }) {
 
     for (const m of mktRes.data ?? []) {
       const amt = (Number(m.qty) || 0) * (Number(m.price_unit) || 0);
-      if (m.kind === 'buy') add(invByDay, m.fecha, amt);
-      else add(ventasByDay, m.fecha, amt - (Number(m.taxes) || 0));
+      const tax = Number(m.taxes) || 0;
+      if (m.kind === 'buy') {
+        add(invByDay, m.fecha, amt);
+      } else if (m.status === 'cancelado') {
+        // Orden cancelada: el ítem volvió, pero el impuesto pagado es pérdida.
+        add(perdidaByDay, m.fecha, tax);
+      } else if (m.status !== 'en_venta') {
+        // Vendido (o filas antiguas sin estado): ingreso neto de impuesto.
+        add(ventasByDay, m.fecha, amt - tax);
+      }
+      // 'en_venta' (listada, aún no vendida): no cuenta todavía.
     }
 
     for (const t of trdRes.data ?? []) {
