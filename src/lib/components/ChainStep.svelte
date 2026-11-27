@@ -3,6 +3,7 @@
   import { supabase } from '$lib/supabase';
   import { recompute } from '$lib/recompute';
   import ItemImg from '$lib/components/ItemImg.svelte';
+  import { BASE_BUY_PRICE } from '$lib/resources';
   import type { ChainStep } from '$lib/chains';
 
   let {
@@ -46,19 +47,24 @@
   function initFeed() {
     return step.feedItem && disp(step.feedItem) > 0 ? disp(step.feedItem) : null;
   }
+  // Precio prellenado al comprar (precio de isla), editable.
+  function initPrice() {
+    return step.kind === 'comprar' ? (BASE_BUY_PRICE[step.outputItem] ?? null) : null;
+  }
   let inputQty = $state<number | null>(initInput());
   let outputQty = $state<number | null>(null);
   let subQty = $state<number | null>(null);
   let feedQty = $state<number | null>(initFeed());
   let silver = $state<number | null>(null);
-  let price = $state<number | null>(null);
+  let price = $state<number | null>(initPrice());
   let fecha = $state(hoy());
   let saving = $state(false);
   let error = $state('');
   let ok = $state(false);
 
   function reset() {
-    inputQty = outputQty = subQty = feedQty = silver = price = null;
+    inputQty = outputQty = subQty = feedQty = silver = null;
+    price = initPrice();
   }
 
   async function submit(e: SubmitEvent) {
@@ -178,8 +184,8 @@
             <input type="number" bind:value={outputQty} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
           <label class="block">
-            <span class="mb-1 block text-xs text-stone-400">Precio por unidad</span>
-            <input type="number" bind:value={price} min="0" class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
+            <span class="mb-1 block text-xs text-stone-400">Precio por unidad {#if BASE_BUY_PRICE[step.outputItem]}<span class="text-stone-600">(isla {fmtDisp(BASE_BUY_PRICE[step.outputItem])})</span>{/if}</span>
+            <input type="number" bind:value={price} min="0" placeholder={BASE_BUY_PRICE[step.outputItem] ? fmtDisp(BASE_BUY_PRICE[step.outputItem]) : ''} class="w-full rounded-lg border border-stone-700 bg-stone-950 px-3 py-2" />
           </label>
         </div>
       {:else if step.kind === 'cosechar'}

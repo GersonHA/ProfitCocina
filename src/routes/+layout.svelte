@@ -12,6 +12,7 @@
     { href: '/tienda', label: 'Tienda' },
     { href: '/ordenes', label: 'Órdenes' },
     { href: '/mi-produccion', label: 'Mi producción' },
+    { href: '/movimientos', label: 'Movimientos' },
     { href: '/perfil', label: 'Perfil' },
   ];
 

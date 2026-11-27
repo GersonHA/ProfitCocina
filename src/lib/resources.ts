@@ -81,6 +81,23 @@ export function resourceNombre(id: string): string {
   return NAME_BY_ID[id] ?? id;
 }
 
+/**
+ * Precio base de compra en la isla (NPC), por unidad. Se usa como valor
+ * PRELLENADO y editable al "comprar" en una cadena, para no teclear mal el
+ * precio (ej. poner el total en vez del unitario). Si lo consigues más barato,
+ * solo lo cambias.
+ */
+export const BASE_BUY_PRICE: Record<string, number> = {
+  T1_FARM_CARROT_SEED: 2312,
+  T2_FARM_BEAN_SEED: 3468,
+  T3_FARM_WHEAT_SEED: 5780,
+  T4_FARM_TURNIP_SEED: 8670,
+  T5_FARM_CABBAGE_SEED: 11560,
+  T6_FARM_POTATO_SEED: 17340,
+  T7_FARM_CORN_SEED: 24010,
+  T8_FARM_PUMPKIN_SEED: 34680,
+};
+
 /** Claves antiguas (un solo produce) -> id de item, para migrar perfiles viejos. */
 const LEGACY_KEY_TO_ID: Record<string, string> = {
   pan: 'T4_BREAD',
