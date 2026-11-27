@@ -19,7 +19,12 @@ export async function load({ parent }) {
   const { session, group } = await parent();
   if (!session) throw redirect(303, `${base}/login`);
   if (!group) {
-    return { items: [] as { item_id: string; name: string }[], points: [] as CostPoint[], nicks: {} as Record<string, string> };
+    return {
+      items: [] as { item_id: string; name: string }[],
+      points: [] as CostPoint[],
+      nicks: {} as Record<string, string>,
+      names: {} as Record<string, string>,
+    };
   }
 
   const [movRes, itemsRes, gmRes] = await Promise.all([
@@ -61,5 +66,5 @@ export async function load({ parent }) {
   const itemIds = [...new Set(points.map((p) => p.item_id))].sort((a, b) => (names[a] ?? a).localeCompare(names[b] ?? b));
   const items = itemIds.map((id) => ({ item_id: id, name: names[id] ?? id }));
 
-  return { items, points, nicks };
+  return { items, points, nicks, names };
 }
