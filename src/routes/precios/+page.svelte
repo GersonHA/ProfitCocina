@@ -29,8 +29,48 @@
   let fUser = $state(''); // '' = todos
   let fItem = $state(''); // '' = todos
 
+  // Filtro de tiempo (Hoy / 7 días / Mes / Todo / Fechas).
+  const hoy = new Date();
+  function ymd(d: Date): string {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+  const MES_NOMBRE = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const meses = $derived([...new Set(data.points.map((p) => p.fecha.slice(0, 7)))].sort().reverse());
+  function mesLabel(m: string): string {
+    const [y, mm] = m.split('-');
+    return `${MES_NOMBRE[Number(mm) - 1]} ${y}`;
+  }
+  type Periodo = 'hoy' | '7dias' | 'mes' | 'todo' | 'fechas';
+  let periodo = $state<Periodo>('todo');
+  let mesSel = $state('');
+  let desde = $state('');
+  let hasta = $state('');
+  $effect(() => {
+    if (!mesSel && meses.length) mesSel = meses[0];
+  });
+
+  const rango = $derived.by<[string, string] | null>(() => {
+    if (periodo === 'hoy') return [ymd(hoy), ymd(hoy)];
+    if (periodo === '7dias') {
+      const d = new Date(hoy);
+      d.setDate(hoy.getDate() - 6);
+      return [ymd(d), ymd(hoy)];
+    }
+    if (periodo === 'mes' && mesSel) {
+      const [y, m] = mesSel.split('-').map(Number);
+      return [`${mesSel}-01`, ymd(new Date(y, m, 0))];
+    }
+    if (periodo === 'fechas') return [desde || '0000-01-01', hasta || '9999-12-31'];
+    return null; // 'todo'
+  });
+
   const visibles = $derived(
-    data.points.filter((p) => (fUser === '' || p.user_id === fUser) && (fItem === '' || p.item_id === fItem)),
+    data.points.filter(
+      (p) =>
+        (fUser === '' || p.user_id === fUser) &&
+        (fItem === '' || p.item_id === fItem) &&
+        (!rango || (p.fecha >= rango[0] && p.fecha <= rango[1])),
+    ),
   );
 
   // Combinaciones (miembro × recurso) visibles = cada una es una línea.
@@ -92,13 +132,17 @@
       plugins: { legend: { labels: { color: '#a8a29e', boxWidth: 10, padding: 10, font: { size: 11 } } } },
       scales: {
         x: { ticks: { color: '#78716c', maxRotation: 0, autoSkip: true }, grid: { color: '#292524' } },
-        y: { ticks: { color: '#78716c' }, grid: { color: '#292524' } },
+        y: {
+          ticks: { color: '#78716c' },
+          grid: { color: '#292524' },
+          title: { display: true, text: 'Costo c/u (silver)', color: '#78716c' },
+        },
       },
     },
   }));
 
   // Clave para forzar recreación del gráfico al cambiar filtros.
-  const chartKey = $derived(`${fUser}|${fItem}|${combos.length}`);
+  const chartKey = $derived(`${fUser}|${fItem}|${periodo}|${mesSel}|${desde}|${hasta}|${combos.length}`);
 </script>
 
 <section class="space-y-5">
@@ -115,7 +159,29 @@
       Todavía no hay producción registrada. El mercado interno se arma solo con los costos de la cadena (Producción).
     </p>
   {:else}
-    <!-- Filtros -->
+    <!-- Filtro de tiempo -->
+    <div class="flex flex-wrap items-center gap-2 rounded-2xl border border-stone-800 bg-stone-900/50 p-3">
+      <div class="flex rounded-lg border border-stone-700 p-0.5 text-sm">
+        {#each [['hoy', 'Hoy'], ['7dias', '7 días'], ['mes', 'Mes'], ['todo', 'Todo'], ['fechas', 'Fechas']] as [v, l]}
+          <button
+            onclick={() => (periodo = v as Periodo)}
+            class="rounded px-3 py-1 {periodo === v ? 'bg-amber-500 font-medium text-stone-950' : 'text-stone-400 hover:text-stone-100'}"
+          >
+            {l}
+          </button>
+        {/each}
+      </div>
+      {#if periodo === 'mes'}
+        <select bind:value={mesSel} class="rounded-lg border border-stone-700 bg-stone-950 px-3 py-1.5 text-sm">
+          {#each meses as m}<option value={m}>{mesLabel(m)}</option>{/each}
+        </select>
+      {:else if periodo === 'fechas'}
+        <label class="flex items-center gap-1 text-xs text-stone-400">Desde <input type="date" bind:value={desde} class="rounded-lg border border-stone-700 bg-stone-950 px-2 py-1 text-sm" /></label>
+        <label class="flex items-center gap-1 text-xs text-stone-400">Hasta <input type="date" bind:value={hasta} class="rounded-lg border border-stone-700 bg-stone-950 px-2 py-1 text-sm" /></label>
+      {/if}
+    </div>
+
+    <!-- Filtros por miembro / recurso -->
     <div class="flex flex-wrap items-end gap-3 rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
       <label class="block">
         <span class="mb-1 block text-xs text-stone-400">Miembro</span>
