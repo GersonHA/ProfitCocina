@@ -99,9 +99,18 @@
   }
 
   // --- Gráfico dinámico ---
+  type Metrica = 'costo' | 'cantidad' | 'total';
+  let metrica = $state<Metrica>('costo');
+  const metricaLabel: Record<Metrica, string> = {
+    costo: 'Costo c/u (silver)',
+    cantidad: 'Cantidad (und)',
+    total: 'Costo total (silver)',
+  };
   const fechas = $derived([...new Set(visibles.map((p) => p.fecha))].sort());
-  function costoEn(user_id: string, item_id: string, fecha: string): number | null {
-    return visibles.find((p) => p.user_id === user_id && p.item_id === item_id && p.fecha === fecha)?.cost ?? null;
+  function valorEn(user_id: string, item_id: string, fecha: string): number | null {
+    const p = visibles.find((x) => x.user_id === user_id && x.item_id === item_id && x.fecha === fecha);
+    if (!p) return null;
+    return metrica === 'costo' ? p.cost : metrica === 'cantidad' ? p.qty : p.cost * p.qty;
   }
   function comboLabel(c: { user_id: string; item_id: string }): string {
     const nick = data.nicks[c.user_id] ?? '—';
@@ -116,7 +125,7 @@
       labels: fechas,
       datasets: combos.map((c, i) => ({
         label: comboLabel(c),
-        data: fechas.map((f) => costoEn(c.user_id, c.item_id, f)),
+        data: fechas.map((f) => valorEn(c.user_id, c.item_id, f)),
         borderColor: PALETTE[i % PALETTE.length],
         backgroundColor: PALETTE[i % PALETTE.length] + '22',
         spanGaps: true,
@@ -135,14 +144,14 @@
         y: {
           ticks: { color: '#78716c' },
           grid: { color: '#292524' },
-          title: { display: true, text: 'Costo c/u (silver)', color: '#78716c' },
+          title: { display: true, text: metricaLabel[metrica], color: '#78716c' },
         },
       },
     },
   }));
 
   // Clave para forzar recreación del gráfico al cambiar filtros.
-  const chartKey = $derived(`${fUser}|${fItem}|${periodo}|${mesSel}|${desde}|${hasta}|${combos.length}`);
+  const chartKey = $derived(`${fUser}|${fItem}|${periodo}|${mesSel}|${desde}|${hasta}|${metrica}|${combos.length}`);
 </script>
 
 <section class="space-y-5">
@@ -203,9 +212,21 @@
     </div>
 
     <!-- Gráfico dinámico -->
-    {#if fechas.length > 1 && combos.length > 0}
+    {#if fechas.length > 0 && combos.length > 0}
       <div class="rounded-2xl border border-stone-800 bg-stone-900/50 p-4">
-        <h2 class="mb-2 text-sm font-medium tracking-wide text-stone-400 uppercase">Evolución del costo</h2>
+        <div class="mb-2 flex flex-wrap items-center gap-2">
+          <h2 class="text-sm font-medium tracking-wide text-stone-400 uppercase">Evolución</h2>
+          <div class="ml-auto flex rounded-lg border border-stone-700 p-0.5 text-xs">
+            {#each [['costo', 'Costo c/u'], ['cantidad', 'Cantidad'], ['total', 'Costo total']] as [v, l]}
+              <button
+                onclick={() => (metrica = v as Metrica)}
+                class="rounded px-2.5 py-1 {metrica === v ? 'bg-amber-500 font-medium text-stone-950' : 'text-stone-400 hover:text-stone-100'}"
+              >
+                {l}
+              </button>
+            {/each}
+          </div>
+        </div>
         {#key chartKey}
           <MiniChart config={chartConfig} height="h-80" />
         {/key}
@@ -223,6 +244,7 @@
               <th class="px-4 py-2 text-left font-medium">Recurso</th>
               <th class="px-4 py-2 text-right font-medium">Cantidad</th>
               <th class="px-4 py-2 text-right font-medium">Costo c/u</th>
+              <th class="px-4 py-2 text-right font-medium">Costo total</th>
             </tr>
           </thead>
           <tbody>
@@ -237,12 +259,13 @@
                 </td>
                 <td class="px-4 py-2 text-right tabular-nums text-stone-300">{l ? fmt(l.qty) : '—'}</td>
                 <td class="px-4 py-2 text-right font-semibold tabular-nums text-amber-300">{l ? fmt(l.cost) : '—'}</td>
+                <td class="px-4 py-2 text-right tabular-nums text-stone-300">{l ? fmt(l.qty * l.cost) : '—'}</td>
               </tr>
             {/each}
           </tbody>
         </table>
       </div>
-      <p class="mt-2 text-xs text-stone-500">La "cantidad" es tu stock actual del recurso; el "costo c/u" es su costo de producción (tu precio interno). Para vender a otra ciudad, usa <strong>Vender</strong>.</p>
+      <p class="mt-2 text-xs text-stone-500"><strong>Cantidad</strong> = tu stock del recurso · <strong>Costo c/u</strong> = su costo de producción (tu precio interno) · <strong>Costo total</strong> = cantidad × c/u (el silver que representa). El gráfico de arriba muestra cualquiera de las tres en el tiempo.</p>
     </div>
   {/if}
 </section>
