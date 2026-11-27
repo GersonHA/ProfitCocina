@@ -1,6 +1,5 @@
 <script lang="ts">
   import { base } from '$app/paths';
-  import { invalidateAll } from '$app/navigation';
   import { supabase } from '$lib/supabase';
   import ItemImg from '$lib/components/ItemImg.svelte';
   import { RESOURCE_GROUPS, resourceNombre } from '$lib/resources';
@@ -25,14 +24,15 @@
   let metaAmount = $state<number | null>(init().metaAmount);
   let metaPeriod = $state<'day' | 'week' | 'month'>(init().metaPeriod);
 
-  let saving = $state(false);
-  let msg = $state('');
-  let error = $state('');
+  // Auto-guardado: cualquier cambio se sincroniza solo (sin botón).
+  let status = $state<'' | 'saving' | 'saved' | 'error'>('');
+  let errMsg = $state('');
+  let primeraPasada = true;
+  let timer: ReturnType<typeof setTimeout> | undefined;
 
-  async function guardar() {
-    error = '';
-    msg = '';
-    saving = true;
+  async function save() {
+    status = 'saving';
+    errMsg = '';
     try {
       const { error: e1 } = await supabase
         .from('profiles')
@@ -53,14 +53,24 @@
         })
         .eq('user_id', data.meId);
       if (e1) throw e1;
-      msg = 'Perfil guardado.';
-      await invalidateAll();
+      status = 'saved';
     } catch (err) {
-      error = err instanceof Error ? err.message : String(err);
-    } finally {
-      saving = false;
+      status = 'error';
+      errMsg = err instanceof Error ? err.message : String(err);
     }
   }
+
+  $effect(() => {
+    // Leer los campos aquí los vuelve dependencias: el efecto corre con cualquier cambio.
+    void [nick, juego, gremio, discord, produces, premium, notas, islas, islasNotas, metaAmount, metaPeriod];
+    if (primeraPasada) {
+      primeraPasada = false;
+      return; // no guardar al montar
+    }
+    status = 'saving';
+    clearTimeout(timer);
+    timer = setTimeout(save, 600);
+  });
 </script>
 
 <section class="mx-auto max-w-2xl space-y-6">
@@ -155,10 +165,15 @@
     </div>
   </div>
 
-  {#if msg}<p class="rounded-lg bg-green-500/10 px-3 py-2 text-sm text-green-300">{msg}</p>{/if}
-  {#if error}<p class="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{error}</p>{/if}
-
-  <button onclick={guardar} disabled={saving} class="w-full rounded-xl bg-amber-500 px-4 py-3 font-semibold text-stone-950 transition hover:bg-amber-400 disabled:opacity-60">
-    {saving ? 'Guardando…' : 'Guardar perfil'}
-  </button>
+  <div class="flex items-center gap-2 text-sm">
+    {#if status === 'saving'}
+      <span class="text-stone-400">Guardando…</span>
+    {:else if status === 'saved'}
+      <span class="text-green-400">✓ Guardado</span>
+    {:else if status === 'error'}
+      <span class="text-red-300">Error al guardar: {errMsg}</span>
+    {:else}
+      <span class="text-stone-500">Los cambios se guardan solos.</span>
+    {/if}
+  </div>
 </section>
