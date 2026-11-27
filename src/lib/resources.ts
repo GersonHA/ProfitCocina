@@ -50,14 +50,17 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
       { id: 'T4_MILK', nombre: 'Leche de cabra' },
       { id: 'T6_MILK', nombre: 'Leche de oveja' },
       { id: 'T8_MILK', nombre: 'Leche de vaca' },
+    ],
+  },
+  {
+    grupo: 'Cocinados / refinados',
+    items: [
+      { id: 'T3_FLOUR', nombre: 'Harina' },
+      { id: 'T4_BREAD', nombre: 'Pan' },
       { id: 'T4_BUTTER', nombre: 'Manteca de cabra' },
       { id: 'T6_BUTTER', nombre: 'Manteca de oveja' },
       { id: 'T8_BUTTER', nombre: 'Manteca de vaca' },
     ],
-  },
-  {
-    grupo: 'Cocinados',
-    items: [{ id: 'T4_BREAD', nombre: 'Pan' }],
   },
 ];
 

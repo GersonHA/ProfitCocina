@@ -145,6 +145,17 @@ const CHAINS: Record<string, Chain> = {
       { id: 'hornear-pan', label: 'Hornear pan (Cocina)', kind: 'cocinar', processType: 'cocina', station: 'Cocina', inputItem: 'T3_FLOUR', outputItem: 'T4_BREAD' },
     ],
   },
+
+  // Harina: trigo -> harina (para quien se especializa en harina).
+  T3_FLOUR: {
+    resource: 'T3_FLOUR',
+    nodes: ['T3_FARM_WHEAT_SEED', 'T3_WHEAT', 'T3_FLOUR'],
+    steps: [
+      { id: 'comprar-semilla', label: 'Comprar semillas', kind: 'comprar', processType: 'siembra', outputItem: 'T3_FARM_WHEAT_SEED' },
+      { id: 'cosechar-trigo', label: 'Cosechar trigo', kind: 'cosechar', processType: 'siembra', inputItem: 'T3_FARM_WHEAT_SEED', outputItem: 'T3_WHEAT', subproductItem: 'T3_FARM_WHEAT_SEED' },
+      { id: 'refinar-harina', label: 'Refinar harina (Molino)', kind: 'refinar', processType: 'refinado', station: 'Molino', inputItem: 'T3_WHEAT', outputItem: 'T3_FLOUR' },
+    ],
+  },
 };
 
 for (const [key, seed, crop] of CROPS) CHAINS[key] = cropChain(key, seed, crop);
@@ -167,6 +178,7 @@ export const CHAIN_KEY_BY_ITEM: Record<string, string> = {
   T4_BREAD: 'pan',
   T8_PUMPKIN: 'calabaza',
   T8_MEAT: 'ternera',
+  T3_FLOUR: 'T3_FLOUR',
 };
 for (const [key, , crop] of CROPS) if (!(crop in CHAIN_KEY_BY_ITEM)) CHAIN_KEY_BY_ITEM[crop] = key;
 for (const [key, , , meat] of MEATS) if (!(meat in CHAIN_KEY_BY_ITEM)) CHAIN_KEY_BY_ITEM[meat] = key;
